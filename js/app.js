@@ -2,6 +2,23 @@ function derivedBadge(note) {
   return `<span class="derived-badge" title="${note.replace(/"/g, "&quot;")}">calc.</span>`;
 }
 
+const VERDICT_ICON = { good: "✓", warning: "!", critical: "✕" };
+const VERDICT_TAG = { good: "Conclusión", warning: "Conclusión — con salvedad", critical: "Conclusión" };
+
+function renderVerdict() {
+  const v = MODEL.verdict;
+  const card = document.getElementById("verdict-card");
+  card.className = `verdict-card status-${v.status}`;
+  card.innerHTML = `
+    <span class="verdict-icon">${VERDICT_ICON[v.status]}</span>
+    <div class="verdict-body">
+      <p class="verdict-tag">${VERDICT_TAG[v.status]}</p>
+      <h2>${v.headline}</h2>
+      <p>${v.detail}</p>
+    </div>
+  `;
+}
+
 function renderKpis() {
   const m = MODEL;
   const grid = document.getElementById("kpi-grid");
@@ -212,24 +229,49 @@ function renderRegulatory() {
   document.getElementById("reg-funciones-adicionales").textContent = r.funciones.adicionales;
 }
 
-function initNav() {
+const TAB_ORDER = ["resumen", "financials", "costos", "regulatorio", "fondos"];
+const TAB_TITLES = { resumen: "Resumen", financials: "Financials", costos: "Costos", regulatorio: "Regulatorio", fondos: "Fondos & supuestos" };
+
+function goToTab(tab) {
   const items = document.querySelectorAll(".nav-item");
   const panels = document.querySelectorAll(".tab-panel");
-  items.forEach(item => {
-    item.addEventListener("click", () => {
-      const tab = item.dataset.tab;
-      items.forEach(i => i.classList.toggle("active", i === item));
-      panels.forEach(p => p.classList.toggle("active", p.dataset.panel === tab));
-      document.querySelector(".content").scrollTo({ top: 0, behavior: "instant" });
-      history.replaceState(null, "", `#${tab}`);
-    });
+  items.forEach(i => i.classList.toggle("active", i.dataset.tab === tab));
+  panels.forEach(p => p.classList.toggle("active", p.dataset.panel === tab));
+  document.querySelector(".content").scrollTo({ top: 0, behavior: "instant" });
+  window.scrollTo({ top: 0, behavior: "instant" });
+  history.replaceState(null, "", `#${tab}`);
+  updateDeckNav(tab);
+}
+
+function updateDeckNav(tab) {
+  const idx = TAB_ORDER.indexOf(tab);
+  document.getElementById("deck-step").textContent = `${idx + 1} / ${TAB_ORDER.length} · ${TAB_TITLES[tab]}`;
+  const prevBtn = document.getElementById("deck-prev");
+  const nextBtn = document.getElementById("deck-next");
+  prevBtn.disabled = idx <= 0;
+  nextBtn.disabled = idx >= TAB_ORDER.length - 1;
+  nextBtn.textContent = idx >= TAB_ORDER.length - 1 ? "Fin de la presentación" : "Siguiente →";
+}
+
+function initNav() {
+  document.querySelectorAll(".nav-item").forEach(item => {
+    item.addEventListener("click", () => goToTab(item.dataset.tab));
   });
+  document.getElementById("deck-prev").addEventListener("click", () => {
+    const idx = TAB_ORDER.indexOf(location.hash.replace("#", "") || "resumen");
+    if (idx > 0) goToTab(TAB_ORDER[idx - 1]);
+  });
+  document.getElementById("deck-next").addEventListener("click", () => {
+    const idx = TAB_ORDER.indexOf(location.hash.replace("#", "") || "resumen");
+    if (idx < TAB_ORDER.length - 1) goToTab(TAB_ORDER[idx + 1]);
+  });
+
   const initial = location.hash.replace("#", "");
-  const initialItem = initial && document.querySelector(`.nav-item[data-tab="${initial}"]`);
-  if (initialItem) initialItem.click();
+  goToTab(TAB_ORDER.includes(initial) ? initial : "resumen");
 }
 
 function renderAll() {
+  renderVerdict();
   renderKpis();
   renderAumChart("chart-aum", MODEL);
   renderYearsChart("chart-years", MODEL);

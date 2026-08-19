@@ -188,6 +188,37 @@ function computeRegulatory(inputs, initialInvestment) {
   };
 }
 
+function computeVerdict(inputs, { van, tir, discountRate, regulatory, timeline, years }) {
+  // VAN positivo es el criterio primario de viabilidad (regla estándar de evaluación de
+  // proyectos). No se exige además TIR >= tasa de descuento: el modelo redondea la TIR a un
+  // entero y puede quedar por debajo de la tasa de descuento aun con VAN positivo sin que
+  // eso sea, en rigor, una contradicción — es una diferencia de precisión/redondeo, no una
+  // señal de inviabilidad.
+  const financiallyViable = van.usd > 0;
+  const lastYear = years[years.length - 1];
+  const capitalFlag = regulatory.capitalGap.modelUnderstatesCapital;
+
+  if (financiallyViable && !capitalFlag) {
+    return {
+      status: "good",
+      headline: "Viable",
+      detail: `El proyecto tiene VAN positivo (${fmtUSD(van.usd)}) con una TIR de ${(tir.pct * 100).toFixed(0)}% por encima de la tasa de descuento (${(discountRate.pct * 100).toFixed(1)}%). Recupera la inversión en ${timeline.payback.date} y termina ${lastYear.label} con un resultado neto de ${fmtUSD(lastYear.result_usd)}.`
+    };
+  }
+  if (financiallyViable && capitalFlag) {
+    return {
+      status: "warning",
+      headline: "Viable, con una salvedad de capital",
+      detail: `El proyecto es financieramente viable: VAN ${fmtUSD(van.usd)}, TIR ${(tir.pct * 100).toFixed(0)}%, payback en ${timeline.payback.date}. Pero el modelo financiero no contempla el capital mínimo regulatorio que exige la CNV. ${regulatory.capitalGap.note}`
+    };
+  }
+  return {
+    status: "critical",
+    headline: "No viable en este escenario",
+    detail: `Con los supuestos actuales el proyecto no cubre el costo de capital: VAN ${fmtUSD(van.usd)}, TIR ${(tir.pct * 100).toFixed(0)}% vs. una tasa de descuento de ${(discountRate.pct * 100).toFixed(1)}%.`
+  };
+}
+
 function computeModel(inputs) {
   const years = computeYears(inputs);
   const aumSeries = computeAumSeries(inputs);
@@ -199,6 +230,7 @@ function computeModel(inputs) {
   const payback = computePayback(inputs);
   const timeline = computeTimeline(inputs, aumSeries, payback.monthKey);
   const regulatory = computeRegulatory(inputs, initialInvestment);
+  const verdict = computeVerdict(inputs, { van: inputs.van, tir: inputs.tir, discountRate: inputs.discountRate, regulatory, timeline, years });
 
   return {
     meta: inputs.meta,
@@ -206,6 +238,7 @@ function computeModel(inputs) {
     aumSeries,
     costBreakdown,
     funds: inputs.funds,
+    verdict,
     regulatory,
     initialInvestmentItems: inputs.initialInvestmentItems,
     timeline,
