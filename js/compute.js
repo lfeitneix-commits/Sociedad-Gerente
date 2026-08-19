@@ -73,7 +73,7 @@ function computeCostBreakdown(inputs) {
   if (rest.length > 0) {
     finalItems.push({ label: `Otros (${rest.length} conceptos menores)`, ars: restSum });
   }
-  return { total_ars, items: finalItems };
+  return { total_ars, items: finalItems, allItems: items };
 }
 
 function computeAvgMonthlyCost(inputs) {
@@ -159,6 +159,20 @@ function computeTimeline(inputs, aumSeries) {
   };
 }
 
+function computeRegulatory(inputs, initialInvestment) {
+  const reg = inputs.regulatory;
+  const capitalGapUsd = reg.capitalMinimoPrimerFci.usd - initialInvestment.usd;
+  return {
+    ...reg,
+    capitalGap: {
+      usd: capitalGapUsd,
+      // true si el capital mínimo regulatorio (CNV) supera la inversión inicial estimada en el modelo financiero
+      modelUnderstatesCapital: capitalGapUsd > 0,
+      note: `El capital mínimo regulatorio (CNV, ${fmtUSD(reg.capitalMinimoPrimerFci.usd)}) es ${capitalGapUsd > 0 ? `${fmtUSD(capitalGapUsd)} mayor` : `${fmtUSD(-capitalGapUsd)} menor`} que la inversión inicial estimada en el modelo financiero (${fmtUSD(initialInvestment.usd)}). El modelo financiero cubre costos de puesta en marcha (inscripciones, legal, software) pero no incluye el patrimonio neto mínimo que exige la CNV para operar el primer fondo.`
+    }
+  };
+}
+
 function computeModel(inputs) {
   const years = computeYears(inputs);
   const aumSeries = computeAumSeries(inputs);
@@ -168,6 +182,7 @@ function computeModel(inputs) {
   const employees = computeEmployees(inputs);
   const providers = computeProviders(inputs);
   const timeline = computeTimeline(inputs, aumSeries);
+  const regulatory = computeRegulatory(inputs, initialInvestment);
 
   return {
     meta: inputs.meta,
@@ -175,6 +190,8 @@ function computeModel(inputs) {
     aumSeries,
     costBreakdown,
     funds: inputs.funds,
+    regulatory,
+    initialInvestmentItems: inputs.initialInvestmentItems,
     timeline,
     kpis: {
       breakEven: inputs.breakEven,

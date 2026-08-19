@@ -181,5 +181,58 @@ const INPUTS = {
   timeline: {
     start: { label: "Inicio", date: "Jul-2026", detail: "Constitución de la Sociedad Gerente e inicio de costos de puesta en marcha." }
     // el hito de break-even y el label de fecha se calculan en compute.js a partir de aum_total_ars vs. breakEven.usd
+  },
+
+  // Marco regulatorio: fuente "Neix Asset Management · Proyección Interna · Agosto 2026"
+  // (deck interno, RG 1089/2025 de la CNV). Es información de contexto/riesgo, no forma
+  // parte del modelo financiero del Sheet — por eso vive en su propio bloque.
+  regulatory: {
+    referenceDate: "23/7/2026",
+    capitalMinimoPrimerFci: { uva: 150000, ars: 307203000.00, usd: 202191, note: "Patrimonio neto mínimo exigido para operar el primer fondo. Ajusta automáticamente con inflación vía UVA." },
+    capitalAdicionalPorFondo: { uva: 20000, ars: 40960400.00, usd: 26959, note: "El capital mínimo se incrementa en 20.000 UVA por cada fondo adicional que se administre." },
+    contrapartidaLiquida: { pct: 0.50, usd: 141534, note: "Al menos el 50% del capital mínimo debe estar invertido en activos elegibles según Anexo I, Cap. I, Tít. VI de las Normas CNV." },
+    categoriaRegulatoria: "Agente de Administración de Productos de Inversión Colectiva de Fondos Comunes de Inversión (CNV)",
+
+    normasConstitucion: [
+      "Segregación funcional y administrativa",
+      "Autonomía de la Sociedad Gerente (mesas separadas)",
+      "Estructura acorde a la licencia",
+      "Los FCI bajo administración propia no podrían operar con la mesa de Neix",
+      "Contar con personal idóneo",
+      "Estados contables con apertura de ingresos netos del ejercicio por cada unidad operativa",
+      "Responsable de cumplimiento regulatorio y control interno",
+      "Evitar conflictos de intereses entre los clientes de la ALyC y los cuotapartistas de los FCI que administra"
+    ],
+
+    requisitosOperativos: [
+      { titulo: "Inscripción en registro CNV — documentación", detalle: "Presentar vía TAD: estatuto inscripto, nómina de autoridades, declaraciones juradas, EECC con antigüedad máxima de 5 meses examinados por auditor independiente, informe de contador que acredite organización administrativa adecuada, Código de Protección al Inversor y declaración jurada de prevención de lavado de activos.", art: "Art. 1°, RG 1089/2025" },
+      { titulo: "Registro de Idóneos CNV", detalle: "Previo al inicio de actividades, todo el personal que venda, promocione o asesore a inversores sobre cuotapartes debe inscribirse en el Registro de Idóneos de la CNV.", art: "Art. 4°, RG 1089/2025" },
+      { titulo: "Manual de procedimientos de control interno", detalle: "Debe estar a disposición permanente de la CNV, incluyendo el acceso y salvaguarda de los sistemas informáticos utilizados.", art: "Art. 1°, Sección I, RG 1089/2025" },
+      { titulo: "Régimen informativo — AIF", detalle: "Remitir información a través de la Autopista de la Información Financiera (Sistema CNV-CAFCI), con plazos de implementación transitorios.", art: "Art. 11°, RG 1089/2025" },
+      { titulo: "Sociedad Depositaria", detalle: "La custodia de activos debe estar a cargo de una entidad financiera regida por la Ley de Entidades Financieras. Sin Sociedad Depositaria aprobada por la CNV no se pueden aceptar suscripciones.", art: "Arts. 12° y 6° inc. 5, RG 1089/2025" },
+      { titulo: "Documentación definitiva post-autorización", detalle: "Tras la autorización de la CNV, hay 30 días corridos para formalizar el reglamento de gestión (escritura pública o instrumento privado) y publicarlo en la AIF. La fecha de inicio de actividades debe informarse con 5 días hábiles de anticipación vía Hechos Relevantes.", art: "Art. 5°, RG 1089/2025" }
+    ],
+
+    funciones: {
+      principales: "Administración discrecional del patrimonio del FCI, representación de cuotapartistas, contabilidad del fondo, publicaciones legales, sustitución de la Sociedad Depositaria en caso de cese, y liquidación conjunta.",
+      adicionales: "Asesoramiento en inversiones, gestión de órdenes, administración de carteras con mandato expreso, colocación y distribución de cuotapartes propias y de otras gerentes. Puede inscribirse simultáneamente como Agente de Negociación y/o ALyC."
+    },
+
+    ventajas: [
+      "Mayor control sobre los fondos: gestión operativa y comercial totalmente propia",
+      "Participación plena en los ingresos generados por el management fee",
+      "Escalabilidad: al sumar fondos y crecer el AUM, los costos fijos se diluyen y mejora la rentabilidad",
+      "Flexibilidad para innovar con estructuras de fondos propios",
+      "Sin dependencia de terceros para aprobar o modificar fondos — time to market más ágil",
+      "Aporte reputacional e institucional para Neix como ALyC",
+      "Eficiencia de costos al aprovechar recursos humanos, tecnológicos y físicos ya existentes en Neix"
+    ],
+    desventajas: [
+      "Proceso de constitución más lento y más complejo",
+      "Mayor exposición al riesgo — costos iniciales significativos",
+      "Carga regulatoria y administrativa elevada",
+      "Necesidad de desarrollar una estructura operativa y física específica",
+      "Restricción para operar los FCI propios con la mesa de Neix"
+    ]
   }
 };

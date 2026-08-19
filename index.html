@@ -3,92 +3,187 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
 <title>Sociedad Gerente — Dashboard Ejecutivo</title>
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-<div class="wrap">
+<div class="app-shell">
 
-  <header class="page-header">
-    <div>
-      <h1>Sociedad Gerente — Dashboard Ejecutivo</h1>
-      <p>Viabilidad del proyecto en un vistazo · horizonte jul-2026 a dic-2028</p>
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark">SG</span>
+      <div class="brand-text">
+        <strong>Sociedad Gerente</strong>
+        <span>Dashboard Ejecutivo</span>
+      </div>
     </div>
-    <div class="header-actions">
+
+    <nav class="nav" id="nav">
+      <button class="nav-item active" data-tab="resumen" type="button">
+        <svg viewBox="0 0 20 20" fill="none"><rect x="2.5" y="2.5" width="6.5" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="11" y="2.5" width="6.5" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="2.5" y="11" width="6.5" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="11" y="11" width="6.5" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.6"/></svg>
+        Resumen
+      </button>
+      <button class="nav-item" data-tab="financials" type="button">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M2.5 15.5 8 9l3.5 3.5L17.5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M12.5 5h5v5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Financials
+      </button>
+      <button class="nav-item" data-tab="costos" type="button">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M3 17V8.5M9.5 17V3M16 17v-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        Costos
+      </button>
+      <button class="nav-item" data-tab="regulatorio" type="button">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M10 2.5 16.5 5v4.5c0 4-2.8 6.8-6.5 8-3.7-1.2-6.5-4-6.5-8V5L10 2.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.5 10 9 11.5l3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Regulatorio
+      </button>
+      <button class="nav-item" data-tab="fondos" type="button">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M2.5 7.5 10 3l7.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 8v7.5M8 8v7.5M12 8v7.5M16 8v7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M2.5 16.5h15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        Fondos &amp; supuestos
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
       <span class="scenario-tag">Escenario: captación 30% AUM MM / 80% resto</span>
       <button id="sync-btn" type="button" class="sync-btn">↻ Sincronizar con Google Sheets</button>
+      <p id="sync-status" class="sync-status"></p>
+      <p class="sidebar-source">Fuente: modelo "Análisis SG" (Google Sheets)</p>
     </div>
-  </header>
-  <p id="sync-status" class="sync-status"></p>
+  </aside>
 
-  <h2 class="section-title">Indicadores clave</h2>
-  <div class="kpi-grid" id="kpi-grid"></div>
+  <main class="content">
 
-  <h2 class="section-title">Del inicio a la rentabilidad</h2>
-  <div class="timeline-card">
-    <div class="timeline-track" id="timeline-track"></div>
-  </div>
+    <section class="tab-panel active" data-panel="resumen">
+      <header class="panel-header">
+        <h1>Resumen ejecutivo</h1>
+        <p>Viabilidad del proyecto en un vistazo · horizonte jul-2026 a dic-2028</p>
+      </header>
 
-  <h2 class="section-title">Cómo se llega ahí</h2>
-  <div class="chart-grid">
+      <h2 class="section-title">Indicadores clave</h2>
+      <div class="kpi-grid" id="kpi-grid"></div>
 
-    <div class="chart-card">
-      <h3>Evolución de AUM vs. AUM break-even</h3>
-      <p class="chart-caption">AUM total gestionado (USD) mes a mes, frente al umbral de equilibrio.</p>
-      <div id="chart-aum"></div>
-      <div class="chart-legend">
-        <span class="swatch"><span class="line" style="background:var(--series-1)"></span>AUM total</span>
-        <span class="swatch"><span class="line" style="background:var(--series-ref); border-top:2px dashed var(--series-ref)"></span>Break-even</span>
+      <h2 class="section-title">Del inicio a la rentabilidad</h2>
+      <div class="timeline-card">
+        <div class="timeline-track" id="timeline-track"></div>
       </div>
-    </div>
+    </section>
 
-    <div class="chart-card">
-      <h3>Distribución de costos</h3>
-      <p class="chart-caption">Principales conceptos de la estructura de costos anual (en pesos).</p>
-      <div id="chart-costs"></div>
-    </div>
+    <section class="tab-panel" data-panel="financials">
+      <header class="panel-header">
+        <h1>Financials</h1>
+        <p>Cómo evoluciona el negocio mes a mes y año a año.</p>
+      </header>
 
-    <div class="chart-card full">
-      <h3>Ingresos vs. costos vs. resultado por año</h3>
-      <p class="chart-caption">Comparación anual en USD. El resultado es neto de Impuesto a las Ganancias.</p>
-      <div id="chart-years"></div>
-      <div class="chart-legend">
-        <span class="swatch"><span class="dot" style="background:var(--series-1)"></span>Ingresos</span>
-        <span class="swatch"><span class="dot" style="background:var(--series-2)"></span>Costos</span>
-        <span class="swatch"><span class="dot" style="background:var(--good)"></span>Resultado neto ▲ ganancia</span>
-        <span class="swatch"><span class="dot" style="background:var(--critical)"></span>Resultado neto ▼ pérdida</span>
+      <div class="chart-grid">
+        <div class="chart-card full">
+          <h3>Evolución de AUM vs. AUM break-even</h3>
+          <p class="chart-caption">AUM total gestionado (USD) mes a mes, frente al umbral de equilibrio.</p>
+          <div id="chart-aum"></div>
+          <div class="chart-legend">
+            <span class="swatch"><span class="line" style="background:var(--series-1)"></span>AUM total</span>
+            <span class="swatch"><span class="line" style="background:var(--series-ref); border-top:2px dashed var(--series-ref)"></span>Break-even</span>
+          </div>
+        </div>
+
+        <div class="chart-card full">
+          <h3>Ingresos vs. costos vs. resultado por año</h3>
+          <p class="chart-caption">Comparación anual en USD. El resultado es neto de Impuesto a las Ganancias.</p>
+          <div id="chart-years"></div>
+          <div class="chart-legend">
+            <span class="swatch"><span class="dot" style="background:var(--series-1)"></span>Ingresos</span>
+            <span class="swatch"><span class="dot" style="background:var(--series-2)"></span>Costos</span>
+            <span class="swatch"><span class="dot" style="background:var(--good)"></span>Resultado neto ▲ ganancia</span>
+            <span class="swatch"><span class="dot" style="background:var(--critical)"></span>Resultado neto ▼ pérdida</span>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
 
-  </div>
+    <section class="tab-panel" data-panel="costos">
+      <header class="panel-header">
+        <h1>Costos</h1>
+        <p>Estructura de costos y qué compone la inversión inicial.</p>
+      </header>
 
-  <h2 class="section-title">Preguntale al modelo</h2>
-  <div class="assistant-card">
-    <div class="assistant-header">
-      <span class="icon">✦</span>
-      <h3>Asistente del modelo financiero</h3>
-    </div>
-    <p class="chart-caption">Responde exclusivamente con datos de la planilla. Probá una de estas o escribí la tuya.</p>
-    <div class="chip-row" id="chip-row"></div>
-    <div class="assistant-log" id="assistant-log"></div>
-    <form class="assistant-input-row" id="assistant-form">
-      <input type="text" id="assistant-input" placeholder="Escribí tu pregunta sobre el modelo..." autocomplete="off">
-      <button type="submit">Preguntar</button>
-    </form>
-    <p class="assistant-footnote">Las respuestas se generan a partir de los datos del Google Sheet, sin conexión a servicios externos.</p>
-  </div>
+      <div class="chart-grid">
+        <div class="chart-card full">
+          <h3>Distribución de costos</h3>
+          <p class="chart-caption">Principales conceptos de la estructura de costos anual (en pesos).</p>
+          <div id="chart-costs"></div>
+        </div>
 
-  <footer class="page-footer">
-    Fuente: modelo financiero "Análisis SG" (Google Sheets) · Escenario de captación 30% AUM (Money Market) / 80% resto de los fondos.
-  </footer>
+        <div class="chart-card">
+          <h3>Detalle de costos</h3>
+          <p class="chart-caption">Todos los conceptos, ordenados de mayor a menor.</p>
+          <div class="table-wrap"><table class="data-table" id="cost-table"></table></div>
+        </div>
 
+        <div class="chart-card">
+          <h3>Inversión inicial</h3>
+          <p class="chart-caption">Conceptos no recurrentes de puesta en marcha.</p>
+          <div class="table-wrap"><table class="data-table" id="investment-table"></table></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-panel" data-panel="regulatorio">
+      <header class="panel-header">
+        <h1>Marco regulatorio</h1>
+        <p>Barreras de entrada y requisitos para constituir la Sociedad Gerente ante la CNV.</p>
+      </header>
+
+      <p class="panel-note">Categoría regulatoria: <strong id="reg-categoria"></strong> · capital mínimo expresado en UVA, referencia de conversión al <span id="reg-ref-date"></span>.</p>
+
+      <div class="kpi-grid" id="reg-capital-grid"></div>
+
+      <div class="alert-card" id="reg-alert-card"></div>
+
+      <h2 class="section-title">Ventajas y desventajas</h2>
+      <div class="pro-con-grid">
+        <div class="pro-con-col pro">
+          <h3>Ventajas</h3>
+          <ul id="reg-ventajas"></ul>
+        </div>
+        <div class="pro-con-col con">
+          <h3>Desventajas</h3>
+          <ul id="reg-desventajas"></ul>
+        </div>
+      </div>
+
+      <h2 class="section-title">Requisitos operativos (RG 1089/2025)</h2>
+      <div class="req-list" id="reg-requisitos"></div>
+
+      <h2 class="section-title">Funciones de la Sociedad Gerente</h2>
+      <div class="chart-grid">
+        <div class="chart-card">
+          <h3>Principales</h3>
+          <p class="chart-caption" id="reg-funciones-principales"></p>
+        </div>
+        <div class="chart-card">
+          <h3>Adicionales permitidas</h3>
+          <p class="chart-caption" id="reg-funciones-adicionales"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-panel" data-panel="fondos">
+      <header class="panel-header">
+        <h1>Fondos &amp; supuestos</h1>
+        <p>Los 4 fondos proyectados y las hipótesis clave del modelo.</p>
+      </header>
+
+      <div class="fund-grid" id="fund-grid"></div>
+
+      <h2 class="section-title">Supuestos clave</h2>
+      <div class="kpi-grid" id="assumptions-grid"></div>
+    </section>
+
+  </main>
 </div>
 
 <script src="js/format.js"></script>
 <script src="js/data.js"></script>
 <script src="js/compute.js"></script>
 <script src="js/charts.js"></script>
-<script src="js/assistant.js"></script>
 <script src="js/app.js"></script>
 <script src="js/sync.js"></script>
 </body>

@@ -1,18 +1,18 @@
-/* Shared number formatting, used by compute.js, charts.js and assistant.js. */
+/* Shared number formatting, used by compute.js, charts.js and app.js. */
 
 const fmtUSD = (v, opts = {}) => {
   const abs = Math.abs(v);
   const sign = v < 0 ? "-" : "";
   if (abs >= 1e6) return `${sign}US$ ${(abs / 1e6).toFixed(opts.decimals ?? 1)}M`;
   if (abs >= 1e3) return `${sign}US$ ${(abs / 1e3).toFixed(0)}K`;
-  return `${sign}US$ ${abs.toFixed(0)}`;
+  return `${sign}US$ ${abs.toLocaleString("es-AR", { maximumFractionDigits: 0 })}`;
 };
 const fmtARS = (v, opts = {}) => {
   const abs = Math.abs(v);
   const sign = v < 0 ? "-" : "";
   if (abs >= 1e9) return `${sign}$ ${(abs / 1e9).toFixed(opts.decimals ?? 1)}MM ARS`;
   if (abs >= 1e6) return `${sign}$ ${(abs / 1e6).toFixed(opts.decimals ?? 1)}M ARS`;
-  return `${sign}$ ${abs.toFixed(0)} ARS`;
+  return `${sign}$ ${abs.toLocaleString("es-AR", { maximumFractionDigits: 0 })} ARS`;
 };
 
 const MONTH_EN_TO_ES = { Jan: "Ene", Feb: "Feb", Mar: "Mar", Apr: "Abr", May: "May", Jun: "Jun", Jul: "Jul", Aug: "Ago", Sep: "Sep", Oct: "Oct", Nov: "Nov", Dec: "Dic" };
