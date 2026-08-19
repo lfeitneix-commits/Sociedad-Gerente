@@ -174,16 +174,42 @@ function computeTimeline(inputs, aumSeries, paybackKey) {
   };
 }
 
+// Capital consolidado (Art. 20°, RG 1089/2025): 100% de la categoría más exigente de las 3
+// (ALyC, ACyDI, AG/Sociedad Gerente) + 50% de cada una de las otras dos. El capital de ALyC
+// ya lo sostiene Neix hoy (no es plata nueva para este proyecto) — lo que hay que conseguir de
+// nuevo es la diferencia entre el consolidado total y lo que ya se tiene puesto como ALyC.
+function computeCapitalConsolidation(inputs) {
+  const cc = inputs.regulatory.capitalConsolidation;
+  const ag = inputs.regulatory.capitalMinimoPrimerFci;
+  const amounts = [
+    { key: "alyc", ars: cc.alyc.ars },
+    { key: "acydi", ars: cc.acydi.ars },
+    { key: "ag", ars: ag.ars }
+  ];
+  const largest = amounts.reduce((a, b) => (b.ars > a.ars ? b : a));
+  const consolidated_ars = amounts.reduce((sum, a) => sum + (a.key === largest.key ? a.ars : a.ars * 0.5), 0);
+  const incrementalNew_ars = consolidated_ars - cc.alyc.ars; // más allá de lo que ya se tiene como ALyC
+  const fx = ag.ars / ag.usd; // mismo tipo de cambio de referencia que el resto del bloque regulatorio
+  return {
+    consolidated: { ars: consolidated_ars, usd: consolidated_ars / fx },
+    incrementalNew: { ars: incrementalNew_ars, usd: incrementalNew_ars / fx },
+    largestCategory: largest.key
+  };
+}
+
 function computeRegulatory(inputs, initialInvestment) {
   const reg = inputs.regulatory;
-  const capitalGapUsd = reg.capitalMinimoPrimerFci.usd - initialInvestment.usd;
+  const consolidation = computeCapitalConsolidation(inputs);
+  const capitalGapUsd = consolidation.incrementalNew.usd - initialInvestment.usd;
   return {
     ...reg,
+    capitalConsolidation: { ...reg.capitalConsolidation, ...consolidation },
     capitalGap: {
       usd: capitalGapUsd,
-      // true si el capital mínimo regulatorio (CNV) supera la inversión inicial estimada en el modelo financiero
+      // true si el capital incremental que exige la CNV (ya neteado de lo que Neix sostiene como ALyC)
+      // supera la inversión inicial estimada en el modelo financiero
       modelUnderstatesCapital: capitalGapUsd > 0,
-      note: `El capital mínimo regulatorio (CNV, ${fmtUSD(reg.capitalMinimoPrimerFci.usd)}) es ${capitalGapUsd > 0 ? `${fmtUSD(capitalGapUsd)} mayor` : `${fmtUSD(-capitalGapUsd)} menor`} que la inversión inicial estimada en el modelo financiero (${fmtUSD(initialInvestment.usd)}). El modelo financiero cubre costos de puesta en marcha (inscripciones, legal, software) pero no incluye el patrimonio neto mínimo que exige la CNV para operar el primer fondo.`
+      note: `Al ser ALyC, Neix ya sostiene ${fmtUSD(reg.capitalConsolidation.alyc.usd)} de capital mínimo — eso no es plata nueva para este proyecto. Lo incremental es la diferencia hasta el consolidado de las 3 categorías (ALyC + ACyDI + Sociedad Gerente, Art. 20° RG 1089/2025): ${fmtUSD(consolidation.incrementalNew.usd)}. Eso es ${capitalGapUsd > 0 ? `${fmtUSD(capitalGapUsd)} más` : `${fmtUSD(-capitalGapUsd)} menos`} que la inversión inicial estimada en el modelo financiero (${fmtUSD(initialInvestment.usd)}), que solo cubre costos de puesta en marcha (inscripciones, legal, software) y no patrimonio neto regulatorio.`
     }
   };
 }

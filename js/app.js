@@ -192,6 +192,7 @@ function renderRegulatory() {
   document.getElementById("reg-categoria").textContent = r.categoriaRegulatoria;
   document.getElementById("reg-ref-date").textContent = r.referenceDate;
 
+  const cc = r.capitalConsolidation;
   document.getElementById("reg-capital-grid").innerHTML = `
     <div class="kpi-card">
       <p class="kpi-label">Capital mínimo · primer FCI</p>
@@ -207,6 +208,16 @@ function renderRegulatory() {
       <p class="kpi-label">Contrapartida líquida</p>
       <div class="kpi-value">${(r.contrapartidaLiquida.pct * 100).toFixed(0)}%</div>
       <p class="kpi-sub">del patrimonio neto mínimo · ≈ ${fmtUSD(r.contrapartidaLiquida.usd)}</p>
+    </div>
+    <div class="kpi-card">
+      <p class="kpi-label">Capital consolidado (3 categorías) ${derivedBadge(cc.note)}</p>
+      <div class="kpi-value">${fmtUSD(cc.consolidated.usd)}</div>
+      <p class="kpi-sub">${fmtARS(cc.consolidated.ars)} · ALyC + ACyDI + Sociedad Gerente</p>
+    </div>
+    <div class="kpi-card wide">
+      <p class="kpi-label">Capital NUEVO real a conseguir ${derivedBadge("Consolidado total menos el capital de ALyC (" + fmtUSD(cc.alyc.usd) + ") que Neix ya sostiene hoy — no es plata nueva para este proyecto.")}</p>
+      <div class="kpi-value">${fmtUSD(cc.incrementalNew.usd)}</div>
+      <p class="kpi-sub">${fmtARS(cc.incrementalNew.ars)} · ya neteado de lo que Neix sostiene como ALyC (${fmtUSD(cc.alyc.usd)})</p>
     </div>
   `;
 

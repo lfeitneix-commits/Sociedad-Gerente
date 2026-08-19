@@ -210,6 +210,19 @@ const INPUTS = {
     contrapartidaLiquida: { pct: 0.50, usd: 141534, note: "Al menos el 50% del capital mínimo debe estar invertido en activos elegibles según Anexo I, Cap. I, Tít. VI de las Normas CNV." },
     categoriaRegulatoria: "Agente de Administración de Productos de Inversión Colectiva de Fondos Comunes de Inversión (CNV)",
 
+    // Neix ya opera como ALyC, y al armar la Sociedad Gerente queda inscripta simultáneamente
+    // en 3 categorías ante la CNV: ALyC, ACyDI (distribución de FCI, habilitada por ser ALyC)
+    // y AG (la Sociedad Gerente nueva). El capital mínimo consolidado no es la suma de las 3:
+    // es el 100% de la categoría más exigente + el 50% de cada una de las otras dos
+    // (Art. 20°, RG 1089/2025). Como el capital de ALyC ya lo sostiene Neix hoy (no es plata
+    // nueva para este proyecto), lo relevante para el business case es el capital INCREMENTAL:
+    // consolidado total menos lo que ya se tiene puesto como ALyC.
+    capitalConsolidation: {
+      alyc: { uva: 470350, ars: 963286207, usd: 634004, subcategoria: "ALyC general (no ALyC Integral Agro, que exige 1.175.000 UVA)" },
+      acydi: { ars: 250000, usd: 165, note: "Monto fijo en pesos (no UVA): patrimonio neto mínimo no inferior a $250.000, acreditado con estados contables de antigüedad no mayor a 5 meses." },
+      note: "Al constituir la Sociedad Gerente, Neix queda inscripta simultáneamente en 3 categorías ante la CNV (ALyC, ACyDI y AG/Sociedad Gerente). El capital mínimo consolidado es el 100% de la categoría más exigente más el 50% de cada una de las otras dos (Art. 20°, RG 1089/2025)."
+    },
+
     normasConstitucion: [
       "Segregación funcional y administrativa",
       "Autonomía de la Sociedad Gerente (mesas separadas)",
