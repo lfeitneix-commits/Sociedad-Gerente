@@ -2,6 +2,20 @@ function derivedBadge(note) {
   return `<span class="derived-badge" title="${note.replace(/"/g, "&quot;")}">calc.</span>`;
 }
 
+const SVG_ATTRS = 'viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"';
+const ICONS = {
+  target: `<svg ${SVG_ATTRS}><circle cx="10" cy="10" r="7"/><circle cx="10" cy="10" r="3.6"/><circle cx="10" cy="10" r="0.6" fill="currentColor"/></svg>`,
+  calendar: `<svg ${SVG_ATTRS}><rect x="2.8" y="4" width="14.4" height="13" rx="2"/><path d="M2.8 8h14.4M6.5 2.5v3M13.5 2.5v3"/></svg>`,
+  seed: `<svg ${SVG_ATTRS}><path d="M10 17V9"/><path d="M10 9c0-3.5-2.5-6-6.5-6.3C3.3 6.7 5.8 9.2 10 9Z"/><path d="M10 12c0-2.6 2-4.5 5-4.7.2 3-2 5.5-5 4.7Z"/></svg>`,
+  clockCheck: `<svg ${SVG_ATTRS}><circle cx="9.5" cy="10.5" r="6.8"/><path d="M9.5 6.5v4l2.6 1.6"/><path d="M15 3.2l1.8 1.8"/></svg>`,
+  people: `<svg ${SVG_ATTRS}><circle cx="7.2" cy="7" r="3"/><path d="M2 17c0-3 2.3-5 5.2-5s5.2 2 5.2 5"/><circle cx="14.5" cy="7.6" r="2.3"/><path d="M13 12.2c2.4.2 4 1.9 4 4.8"/></svg>`,
+  building: `<svg ${SVG_ATTRS}><rect x="3.5" y="3" width="9" height="14" rx="1"/><path d="M12.5 8.5H16a1 1 0 0 1 1 1V17"/><path d="M6.3 6.5h3M6.3 9.5h3M6.3 12.5h3"/></svg>`,
+  network: `<svg ${SVG_ATTRS}><circle cx="4.5" cy="5" r="2"/><circle cx="4.5" cy="15" r="2"/><circle cx="15.5" cy="10" r="2.3"/><path d="M6.3 5.9 13.4 9M6.3 14.1 13.4 11"/></svg>`,
+  trendUp: `<svg ${SVG_ATTRS}><path d="M2.5 15.5 8 9l3.5 3.5L17.5 5"/><path d="M12.5 5h5v5"/></svg>`,
+  trophy: `<svg ${SVG_ATTRS}><path d="M6 3.5h8v5a4 4 0 0 1-8 0v-5Z"/><path d="M6 5H3.8C3.8 7.5 4.8 9 6 9M14 5h2.2c0 2.5-1 4-2.2 4"/><path d="M10 12.5V15M7 17h6"/></svg>`
+};
+function kpiIcon(key) { return `<span class="kpi-icon">${ICONS[key]}</span>`; }
+
 const VERDICT_ICON = { good: "✓", warning: "!", critical: "✕" };
 const VERDICT_TAG = { good: "Conclusión", warning: "Conclusión — con salvedad", critical: "Conclusión" };
 
@@ -26,48 +40,56 @@ function renderKpis() {
 
   const cards = [
     {
+      icon: "target",
       label: "AUM break-even",
       value: fmtUSD(m.kpis.breakEven.usd),
       sub: fmtARS(m.kpis.breakEven.ars),
       badge: null
     },
     {
+      icon: "calendar",
       label: "Costo promedio mensual",
       value: fmtUSD(m.kpis.avgMonthlyCost.usd),
       sub: fmtARS(m.kpis.avgMonthlyCost.ars) + " · operación plena",
       badge: m.kpis.avgMonthlyCost.calc
     },
     {
+      icon: "seed",
       label: "Inversión inicial",
       value: fmtUSD(m.kpis.initialInvestment.usd),
       sub: fmtARS(m.kpis.initialInvestment.ars),
       badge: m.kpis.initialInvestment.calc
     },
     {
+      icon: "clockCheck",
       label: "Payback",
       value: m.kpis.payback.label,
       sub: m.kpis.payback.periodsFromLaunch,
       badge: m.kpis.payback.note
     },
     {
+      icon: "people",
       label: "Empleados necesarios",
       value: `${m.kpis.employees.total}`,
       sub: m.kpis.employees.breakdown.map(b => `${b.count} ${b.role}`).join(" · "),
       badge: m.kpis.employees.calc
     },
     {
+      icon: "building",
       label: "Proveedores",
       value: `${m.kpis.providers.total}`,
       sub: m.kpis.providers.list.slice(0, 3).map(p => p.split(" (")[0]).join(", ") + "...",
       badge: m.kpis.providers.calc
     },
     {
+      icon: "network",
       label: "Canal de venta",
       value: "Productores + comercial propio",
       sub: "Distribución mixta (dato parcial en el modelo)",
       badge: m.kpis.salesChannel.calc
     },
     {
+      icon: "trendUp",
       label: "VAN / TIR",
       value: `${fmtUSD(m.kpis.van.usd)}`,
       sub: `TIR ${(m.kpis.tir.pct * 100).toFixed(0)}% · tasa desc. ${(m.kpis.discountRate.pct * 100).toFixed(1)}%`,
@@ -77,6 +99,7 @@ function renderKpis() {
 
   grid.innerHTML = cards.map(c => `
     <div class="kpi-card">
+      ${kpiIcon(c.icon)}
       <p class="kpi-label">${c.label} ${c.badge ? derivedBadge(c.badge) : ""}</p>
       <div class="kpi-value">${c.value}</div>
       <p class="kpi-sub">${c.sub}</p>
@@ -87,6 +110,7 @@ function renderKpis() {
   const resultCard = document.createElement("div");
   resultCard.className = "kpi-card wide";
   resultCard.innerHTML = `
+    ${kpiIcon("trophy")}
     <p class="kpi-label">Resultado neto por año ${derivedBadge("Suma de Resultado Neto SG mensual del modelo por año calendario. Los años con menos de 12 meses de datos lo indican en el detalle del gráfico.")}</p>
     <div class="result-trio">
       ${m.years.map(y => `
@@ -260,8 +284,10 @@ function updateDeckNav(tab) {
   const prevBtn = document.getElementById("deck-prev");
   const nextBtn = document.getElementById("deck-next");
   prevBtn.disabled = idx <= 0;
-  nextBtn.disabled = idx >= TAB_ORDER.length - 1;
-  nextBtn.textContent = idx >= TAB_ORDER.length - 1 ? "Fin de la presentación" : "Siguiente →";
+  const isLast = idx >= TAB_ORDER.length - 1;
+  nextBtn.disabled = isLast;
+  nextBtn.textContent = isLast ? "Fin de la presentación" : "Siguiente →";
+  nextBtn.classList.toggle("deck-btn-primary", !isLast);
 }
 
 function initNav() {
