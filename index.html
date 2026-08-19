@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sociedad Gerente — Dashboard Ejecutivo</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page-header">
+    <div>
+      <h1>Sociedad Gerente — Dashboard Ejecutivo</h1>
+      <p>Viabilidad del proyecto en un vistazo · horizonte jul-2026 a dic-2028</p>
+    </div>
+    <span class="scenario-tag">Escenario: captación 30% AUM MM / 80% resto</span>
+  </header>
+
+  <h2 class="section-title">Indicadores clave</h2>
+  <div class="kpi-grid" id="kpi-grid"></div>
+
+  <h2 class="section-title">Del inicio a la rentabilidad</h2>
+  <div class="timeline-card">
+    <div class="timeline-track" id="timeline-track"></div>
+  </div>
+
+  <h2 class="section-title">Cómo se llega ahí</h2>
+  <div class="chart-grid">
+
+    <div class="chart-card">
+      <h3>Evolución de AUM vs. AUM break-even</h3>
+      <p class="chart-caption">AUM total gestionado (USD) mes a mes, frente al umbral de equilibrio.</p>
+      <div id="chart-aum"></div>
+      <div class="chart-legend">
+        <span class="swatch"><span class="line" style="background:var(--series-1)"></span>AUM total</span>
+        <span class="swatch"><span class="line" style="background:var(--series-ref); border-top:2px dashed var(--series-ref)"></span>Break-even</span>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h3>Distribución de costos</h3>
+      <p class="chart-caption">Principales conceptos de la estructura de costos anual (en pesos).</p>
+      <div id="chart-costs"></div>
+    </div>
+
+    <div class="chart-card full">
+      <h3>Ingresos vs. costos vs. resultado por año</h3>
+      <p class="chart-caption">Comparación anual en USD. El resultado es neto de Impuesto a las Ganancias.</p>
+      <div id="chart-years"></div>
+      <div class="chart-legend">
+        <span class="swatch"><span class="dot" style="background:var(--series-1)"></span>Ingresos</span>
+        <span class="swatch"><span class="dot" style="background:var(--series-2)"></span>Costos</span>
+        <span class="swatch"><span class="dot" style="background:var(--good)"></span>Resultado neto ▲ ganancia</span>
+        <span class="swatch"><span class="dot" style="background:var(--critical)"></span>Resultado neto ▼ pérdida</span>
+      </div>
+    </div>
+
+  </div>
+
+  <h2 class="section-title">Preguntale al modelo</h2>
+  <div class="assistant-card">
+    <div class="assistant-header">
+      <span class="icon">✦</span>
+      <h3>Asistente del modelo financiero</h3>
+    </div>
+    <p class="chart-caption">Responde exclusivamente con datos de la planilla. Probá una de estas o escribí la tuya.</p>
+    <div class="chip-row" id="chip-row"></div>
+    <div class="assistant-log" id="assistant-log"></div>
+    <form class="assistant-input-row" id="assistant-form">
+      <input type="text" id="assistant-input" placeholder="Escribí tu pregunta sobre el modelo..." autocomplete="off">
+      <button type="submit">Preguntar</button>
+    </form>
+    <p class="assistant-footnote">Las respuestas se generan a partir de los datos del Google Sheet, sin conexión a servicios externos.</p>
+  </div>
+
+  <footer class="page-footer">
+    Fuente: modelo financiero "Análisis SG" (Google Sheets) · Escenario de captación 30% AUM (Money Market) / 80% resto de los fondos.
+  </footer>
+
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/assistant.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
