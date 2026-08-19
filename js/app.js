@@ -16,7 +16,7 @@ function renderKpis() {
     {
       label: "Costo promedio mensual",
       value: fmtUSD(m.kpis.avgMonthlyCost.usd),
-      sub: fmtARS(m.kpis.avgMonthlyCost.ars) + " · promedio 2027–2028",
+      sub: fmtARS(m.kpis.avgMonthlyCost.ars) + " · operación plena",
       badge: m.kpis.avgMonthlyCost.calc
     },
     {
@@ -40,7 +40,7 @@ function renderKpis() {
     {
       label: "Proveedores",
       value: `${m.kpis.providers.total}`,
-      sub: "CAFCI, legal, software, auditoría, calificadora, escribanía...",
+      sub: m.kpis.providers.list.slice(0, 3).map(p => p.split(" (")[0]).join(", ") + "...",
       badge: m.kpis.providers.calc
     },
     {
@@ -69,7 +69,7 @@ function renderKpis() {
   const resultCard = document.createElement("div");
   resultCard.className = "kpi-card wide";
   resultCard.innerHTML = `
-    <p class="kpi-label">Resultado neto por año ${derivedBadge("Suma de Resultado Neto SG mensual del modelo por año calendario. 2026 excluye jul–ago (sin datos).")}</p>
+    <p class="kpi-label">Resultado neto por año ${derivedBadge("Suma de Resultado Neto SG mensual del modelo por año calendario. Los años con menos de 12 meses de datos lo indican en el detalle del gráfico.")}</p>
     <div class="result-trio">
       ${m.years.map(y => `
         <div>
@@ -145,11 +145,15 @@ function renderAssistant() {
   pushMessage("bot", "Preguntame lo que quieras sobre el modelo financiero (AUM, costos, resultados, payback, empleados, proveedores). Respondo solo con datos de la planilla.");
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+function renderAll() {
   renderKpis();
   renderAumChart("chart-aum", MODEL);
   renderYearsChart("chart-years", MODEL);
   renderCostChart("chart-costs", MODEL);
   renderTimeline();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderAll();
   renderAssistant();
 });

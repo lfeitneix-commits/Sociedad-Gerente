@@ -30,7 +30,7 @@ const INTENTS = [
   {
     key: "costo_mensual",
     keywords: ["cuanto cuesta operar", "costo mensual", "costo promedio", "gasto mensual", "cuesta por mes", "cuanto sale operar"],
-    answer: (m) => `El **costo mensual promedio** de operar la Sociedad Gerente es de ${fmtUSD(m.kpis.avgMonthlyCost.usd)} (≈ ${fmtARS(m.kpis.avgMonthlyCost.ars)}), calculado sobre 2027–2028 (operación plena, sin contar la rampa de arranque de 2026).`
+    answer: (m) => `El **costo mensual promedio** de operar la Sociedad Gerente es de ${fmtUSD(m.kpis.avgMonthlyCost.usd)} (≈ ${fmtARS(m.kpis.avgMonthlyCost.ars)}).\n${m.kpis.avgMonthlyCost.calc}`
   },
   {
     key: "resultado_1",
@@ -89,7 +89,7 @@ const INTENTS = [
   {
     key: "fee",
     keywords: ["fee", "comision", "cuanto cobramos", "fee promedio", "cuanto cobra la sociedad gerente"],
-    answer: (m) => `El **fee anual promedio** de la Sociedad Gerente es de ${pct(m.kpis.feeAnnualAvg.pct)}. Por tipo de fondo: ${m.funds.items.map(f => `${f.name} ${pct(f.fee_annual_pct)}`).join(", ")}.`
+    answer: (m) => `El **fee anual promedio** de la Sociedad Gerente es de ${pct(m.kpis.feeAnnualAvg.pct)}. Por tipo de fondo: ${m.funds.map(f => `${f.name} ${pct(f.fee_annual_pct)}`).join(", ")}.`
   },
   {
     key: "aum_total",
