@@ -5,6 +5,7 @@ function derivedBadge(note) {
 function renderKpis() {
   const m = MODEL;
   const grid = document.getElementById("kpi-grid");
+  document.getElementById("scenario-tag-text").textContent = m.meta.scenario;
 
   const cards = [
     {
@@ -29,7 +30,7 @@ function renderKpis() {
       label: "Payback",
       value: m.kpis.payback.label,
       sub: m.kpis.payback.periodsFromLaunch,
-      badge: null
+      badge: m.kpis.payback.note
     },
     {
       label: "Empleados necesarios",

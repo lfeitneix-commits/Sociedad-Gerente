@@ -97,6 +97,7 @@ async function syncFromGoogleSheets() {
     applySeries("Costos totales USD", INPUTS.monthly.costos_usd);
     applySeries("Resultado Neto SG $", INPUTS.monthly.resultado_neto_ars);
     applySeries("Resultado Neto SG USD", INPUTS.monthly.resultado_neto_usd);
+    applySeries("Rdo Neto SG USD descontado", INPUTS.monthly.resultado_neto_usd_descontado);
 
     const tcRow = findRow(rows, "Tipo de cambio oficial");
     if (tcRow) {
@@ -121,10 +122,13 @@ async function syncFromGoogleSheets() {
     const feeRow = findRow(rows, "Fee anual promedio");
     if (feeRow) { const v = parseMoney(feeRow[1]); if (v !== undefined) { INPUTS.feeAnnualAvg.pct = v > 1 ? v / 100 : v; updated++; } }
 
+    // Nota: el payback mostrado en el dashboard se calcula a partir de la serie
+    // resultado_neto_usd_descontado (ver compute.js), no de este texto — pero igual
+    // guardamos el texto de la celda como referencia por si difiere.
     const paybackRow = findRow(rows, "Payback descontado (en meses)");
     if (paybackRow) {
       const noteCell = paybackRow.find((c, i) => i > 0 && /recuperar/i.test(c));
-      if (noteCell) { INPUTS.payback.note = `Texto literal del modelo: "${noteCell}".`; }
+      if (noteCell) { INPUTS.payback.sheetLabel = noteCell; INPUTS.payback.sheetNote = `Texto literal del modelo: "${noteCell}".`; }
     }
 
     if (updated === 0) throw new Error("Se leyó la hoja pero no se reconoció ninguna fila esperada.");

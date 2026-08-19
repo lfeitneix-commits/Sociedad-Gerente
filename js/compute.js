@@ -121,9 +121,24 @@ function computeProviders(inputs) {
   };
 }
 
-function computeTimeline(inputs, aumSeries) {
+// Payback = primer mes en que la suma acumulada de "resultado_neto_usd_descontado" (en
+// orden cronológico) se vuelve >= 0. Es la misma serie con la que el modelo llega al VAN
+// (la suma de todos los meses coincide con kpis.van.usd), así que este cálculo es
+// consistente con el resto del modelo aunque la celda de texto del Sheet no se recalcule.
+function computePayback(inputs) {
+  let cum = 0;
+  for (const m of inputs.months) {
+    const v = inputs.monthly.resultado_neto_usd_descontado[m.label];
+    if (v === undefined) continue;
+    cum += v;
+    if (cum >= 0) return { monthKey: m.label, cumUsd: cum };
+  }
+  return { monthKey: null, cumUsd: cum };
+}
+
+function computeTimeline(inputs, aumSeries, paybackKey) {
   const crossLabel = aumSeries.breakEvenCrossMonth; // ya en español, ej. "Nov-27"
-  const paybackKey = parseSpanishMonthYear(inputs.payback.label);
+  const paybackLabel = paybackKey ? monthLabelToEs(paybackKey) : null;
   const launchKey = "Jan-27";
   const startKey = "Jul-26";
 
@@ -152,8 +167,8 @@ function computeTimeline(inputs, aumSeries) {
     },
     payback: {
       label: "Payback",
-      date: paybackKey ? `${paybackKey.split("-")[0]}-20${paybackKey.split("-")[1]}` : inputs.payback.label,
-      detail: "Punto en el que el resultado acumulado descontado recupera la inversión, según el modelo."
+      date: paybackLabel ? `${paybackLabel.split("-")[0]}-20${paybackLabel.split("-")[1]}` : inputs.payback.sheetLabel,
+      detail: "Mes en que el flujo de caja neto descontado, acumulado desde el inicio, se vuelve positivo (mismo cálculo que llega al VAN)."
     },
     periodsFromLaunch
   };
@@ -181,7 +196,8 @@ function computeModel(inputs) {
   const initialInvestment = computeInitialInvestment(inputs);
   const employees = computeEmployees(inputs);
   const providers = computeProviders(inputs);
-  const timeline = computeTimeline(inputs, aumSeries);
+  const payback = computePayback(inputs);
+  const timeline = computeTimeline(inputs, aumSeries, payback.monthKey);
   const regulatory = computeRegulatory(inputs, initialInvestment);
 
   return {
@@ -197,7 +213,11 @@ function computeModel(inputs) {
       breakEven: inputs.breakEven,
       avgMonthlyCost,
       initialInvestment,
-      payback: { label: inputs.payback.label, periodsFromLaunch: timeline.periodsFromLaunch, note: inputs.payback.note },
+      payback: {
+        label: timeline.payback.date,
+        periodsFromLaunch: timeline.periodsFromLaunch,
+        note: `Calculado como el primer mes en que el flujo de caja neto descontado acumulado del modelo se vuelve positivo (la suma total de esa serie coincide con el VAN: ${fmtUSD(inputs.van.usd)}). ${inputs.payback.sheetNote}`
+      },
       van: inputs.van,
       tir: inputs.tir,
       discountRate: inputs.discountRate,
