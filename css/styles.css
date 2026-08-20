@@ -294,7 +294,6 @@ body {
   background: var(--accent);
   flex: none;
 }
-.section-title:first-of-type { margin-top: 0; }
 
 .kpi-grid {
   display: grid;
@@ -622,7 +621,7 @@ body {
 .pro-con-col.pro h3 { color: var(--good-text); }
 .pro-con-col.con h3 { color: var(--critical); }
 .pro-con-col ul { margin: 0; padding: 0; list-style: none; }
-.pro-con-col li { font-size: 13px; color: var(--text-secondary); padding: 7px 0 7px 20px; position: relative; border-top: 1px solid var(--border); line-height: 1.5; }
+.pro-con-col li { font-size: 13px; color: var(--text-secondary); padding: 11px 0 11px 20px; position: relative; border-top: 1px solid var(--border); line-height: 1.5; }
 .pro-con-col li:first-child { border-top: none; }
 .pro-con-col.pro li::before { content: "+"; position: absolute; left: 0; color: var(--good-text); font-weight: 700; }
 .pro-con-col.con li::before { content: "–"; position: absolute; left: 0; color: var(--critical); font-weight: 700; }
