@@ -39,11 +39,17 @@ function renderHeroStats() {
   document.getElementById("scenario-tag-text").textContent = m.meta.scenario;
   document.getElementById("scenario-inline").textContent = m.meta.scenario;
 
+  const tirValue = m.kpis.tir.pct === null || m.kpis.tir.pct === undefined ? "N/D" : `${(m.kpis.tir.pct * 100).toFixed(0)}%`;
+  const tirSub = m.kpis.tir.pct === null || m.kpis.tir.pct === undefined ? (m.kpis.tir.note || "no calculable") : "anual";
+  const paybackSub = m.kpis.payback.periodsFromLaunch
+    ? m.kpis.payback.periodsFromLaunch.split(" / ")[0]
+    : "No se recupera en el horizonte modelado";
+
   const stats = [
     { label: "AUM break-even", value: fmtUSD(m.kpis.breakEven.usd), sub: fmtARS(m.kpis.breakEven.ars) },
     { label: "VAN", value: fmtUSD(m.kpis.van.usd), sub: `tasa desc. ${(m.kpis.discountRate.pct * 100).toFixed(1)}%` },
-    { label: "TIR", value: `${(m.kpis.tir.pct * 100).toFixed(0)}%`, sub: "anual" },
-    { label: "Payback", value: m.kpis.payback.label, sub: m.kpis.payback.periodsFromLaunch.split(" / ")[0] }
+    { label: "TIR", value: tirValue, sub: tirSub },
+    { label: "Payback", value: m.kpis.payback.label, sub: paybackSub }
   ];
 
   document.getElementById("hero-stats").innerHTML = stats.map(s => `

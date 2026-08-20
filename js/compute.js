@@ -77,18 +77,9 @@ function computeAumSeries(inputs) {
 }
 
 function computeCostBreakdown(inputs) {
-  const items = [...inputs.costBreakdownItems].sort((a, b) => b.ars - a.ars);
-  const total_ars = items.reduce((sum, i) => sum + i.ars, 0);
-  const topN = inputs.costBreakdownTopN ?? items.length;
-  const top = items.slice(0, topN);
-  const rest = items.slice(topN);
-  const restSum = rest.reduce((sum, i) => sum + i.ars, 0);
-
-  const finalItems = [...top];
-  if (rest.length > 0) {
-    finalItems.push({ label: `Otros (${rest.length} conceptos menores)`, ars: restSum });
-  }
-  return { total_ars, items: finalItems, allItems: items };
+  const allItems = [...inputs.costBreakdownItems].sort((a, b) => b.ars - a.ars);
+  const total_ars = allItems.reduce((sum, i) => sum + i.ars, 0);
+  return { total_ars, allItems };
 }
 
 function computeAvgMonthlyCost(inputs) {
@@ -182,8 +173,10 @@ function computeTimeline(inputs, aumSeries, paybackKey) {
     },
     payback: {
       label: "Payback",
-      date: paybackLabel ? `${paybackLabel.split("-")[0]}-20${paybackLabel.split("-")[1]}` : inputs.payback.sheetLabel,
-      detail: "Mes en que el flujo de caja neto descontado, acumulado desde el inicio, se vuelve positivo (mismo cálculo que llega al VAN)."
+      date: paybackLabel ? `${paybackLabel.split("-")[0]}-20${paybackLabel.split("-")[1]}` : "> Dic-2028",
+      detail: paybackLabel
+        ? "Mes en que el flujo de caja neto descontado, acumulado desde el inicio, se vuelve positivo (mismo cálculo que llega al VAN)."
+        : "El flujo de caja neto descontado, acumulado desde el inicio, no llega a cruzar cero dentro del horizonte modelado (jul-2026 a dic-2028): la inversión no se recupera en ese período (mismo cálculo que llega al VAN)."
     },
     periodsFromLaunch
   };
@@ -229,34 +222,40 @@ function computeRegulatory(inputs, initialInvestment) {
   };
 }
 
+function fmtTir(tir) {
+  return tir.pct === null || tir.pct === undefined || Number.isNaN(tir.pct) ? "N/D" : `${(tir.pct * 100).toFixed(0)}%`;
+}
+
 function computeVerdict(inputs, { van, tir, discountRate, regulatory, timeline, years }) {
   // VAN positivo es el criterio primario de viabilidad (regla estándar de evaluación de
   // proyectos). No se exige además TIR >= tasa de descuento: el modelo redondea la TIR a un
   // entero y puede quedar por debajo de la tasa de descuento aun con VAN positivo sin que
   // eso sea, en rigor, una contradicción — es una diferencia de precisión/redondeo, no una
-  // señal de inviabilidad.
+  // señal de inviabilidad. Cuando la TIR no converge (#NUM! en la planilla), tir.pct es null
+  // y se muestra "N/D" en vez de forzar un porcentaje inexistente.
   const financiallyViable = van.usd > 0;
   const lastYear = years[years.length - 1];
   const capitalFlag = regulatory.capitalGap.modelUnderstatesCapital;
+  const tirText = fmtTir(tir);
 
   if (financiallyViable && !capitalFlag) {
     return {
       status: "good",
       headline: "Viable",
-      detail: `El proyecto tiene VAN positivo (${fmtUSD(van.usd)}) con una TIR de ${(tir.pct * 100).toFixed(0)}% por encima de la tasa de descuento (${(discountRate.pct * 100).toFixed(1)}%). Recupera la inversión en ${timeline.payback.date} y termina ${lastYear.label} con un resultado neto de ${fmtUSD(lastYear.result_usd)}.`
+      detail: `El proyecto tiene VAN positivo (${fmtUSD(van.usd)}) con una TIR de ${tirText} por encima de la tasa de descuento (${(discountRate.pct * 100).toFixed(1)}%). Recupera la inversión en ${timeline.payback.date} y termina ${lastYear.label} con un resultado neto de ${fmtUSD(lastYear.result_usd)}.`
     };
   }
   if (financiallyViable && capitalFlag) {
     return {
       status: "warning",
       headline: "Viable, con una salvedad de capital",
-      detail: `El proyecto es financieramente viable: VAN ${fmtUSD(van.usd)}, TIR ${(tir.pct * 100).toFixed(0)}%, payback en ${timeline.payback.date}. Pero el modelo financiero no contempla el capital mínimo regulatorio que exige la CNV. ${regulatory.capitalGap.note}`
+      detail: `El proyecto es financieramente viable: VAN ${fmtUSD(van.usd)}, TIR ${tirText}, payback en ${timeline.payback.date}. Pero el modelo financiero no contempla el capital mínimo regulatorio que exige la CNV. ${regulatory.capitalGap.note}`
     };
   }
   return {
     status: "critical",
     headline: "No viable en este escenario",
-    detail: `Con los supuestos actuales el proyecto no cubre el costo de capital: VAN ${fmtUSD(van.usd)}, TIR ${(tir.pct * 100).toFixed(0)}% vs. una tasa de descuento de ${(discountRate.pct * 100).toFixed(1)}%.`
+    detail: `Con los supuestos actuales el proyecto no cubre el costo de capital: VAN ${fmtUSD(van.usd)}, TIR ${tirText}, y no recupera la inversión dentro del horizonte modelado (jul-2026 a dic-2028). A esto se suma que el modelo tampoco contempla el capital mínimo regulatorio que exige la CNV (ver Regulatorio).`
   };
 }
 
@@ -292,7 +291,9 @@ function computeModel(inputs) {
       payback: {
         label: timeline.payback.date,
         periodsFromLaunch: timeline.periodsFromLaunch,
-        note: `Calculado como el primer mes en que el flujo de caja neto descontado acumulado del modelo se vuelve positivo (la suma total de esa serie coincide con el VAN: ${fmtUSD(inputs.van.usd)}). ${inputs.payback.sheetNote}`
+        note: payback.monthKey
+          ? `Calculado como el primer mes en que el flujo de caja neto descontado acumulado del modelo se vuelve positivo (la suma total de esa serie coincide con el VAN: ${fmtUSD(inputs.van.usd)}). ${inputs.payback.sheetNote}`
+          : `El flujo de caja neto descontado acumulado nunca se vuelve positivo dentro del horizonte del modelo — termina en ${fmtUSD(payback.cumUsd)}, el mismo valor que el VAN. ${inputs.payback.sheetNote}`
       },
       van: inputs.van,
       tir: inputs.tir,
