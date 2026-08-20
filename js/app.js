@@ -78,7 +78,7 @@ function renderKpis() {
       icon: "calendar",
       label: "Costo promedio mensual",
       value: fmtUSD(m.kpis.avgMonthlyCost.usd),
-      sub: fmtARS(m.kpis.avgMonthlyCost.ars) + " · operación plena",
+      sub: fmtARS(m.kpis.avgMonthlyCost.ars) + ` · ${m.kpis.avgMonthlyCost.referenceYear.label} ${m.kpis.avgMonthlyCost.referenceYear.year}`,
       badge: m.kpis.avgMonthlyCost.calc
     },
     {
@@ -148,13 +148,12 @@ function renderCostTable() {
       <td class="pct">${(i.ars / m.costBreakdown.total_ars * 100).toFixed(1)}%</td>
     </tr>
   `).join("");
-  const avgMonthly_usd = m.costBreakdown.total_usd / 12;
-  const avgMonthly_ars = m.costBreakdown.total_ars / 12;
+  const avg = m.kpis.avgMonthlyCost;
   table.innerHTML = `
     <thead><tr><th>Concepto</th><th class="num">Anual</th><th class="pct">%</th></tr></thead>
     <tbody>${rows}
       <tr class="total-row"><td>Total</td><td class="num">${fmtUSD(m.costBreakdown.total_usd)}<span class="ars-sub">${fmtARS(m.costBreakdown.total_ars)}</span></td><td class="pct">100%</td></tr>
-      <tr class="total-row"><td>Promedio mensual (${m.costBreakdown.referenceYear.label} · ${m.costBreakdown.referenceYear.year})</td><td class="num">${fmtUSD(avgMonthly_usd)}<span class="ars-sub">${fmtARS(avgMonthly_ars)}</span></td><td class="pct"></td></tr>
+      <tr class="total-row"><td>Promedio mensual (${avg.referenceYear.label} · ${avg.referenceYear.year})</td><td class="num">${fmtUSD(avg.usd)}<span class="ars-sub">${fmtARS(avg.ars)}</span></td><td class="pct"></td></tr>
     </tbody>
   `;
 }

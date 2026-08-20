@@ -92,17 +92,17 @@ function computeCostBreakdown(inputs, years) {
   return { total_ars, total_usd, allItems: items, referenceYear: { label: referenceYear.label, year: referenceYear.year }, fx };
 }
 
-function computeAvgMonthlyCost(inputs) {
-  // Promedio sobre los meses de operación plena (excluye el año de arranque, sin
-  // facturación, para que el promedio refleje el "costo de régimen" del negocio).
-  const startupYear = Math.min(...inputs.months.map(m => yearOf(m.label)));
-  const entries = Object.entries(inputs.monthly.costos_ars).filter(([label]) => yearOf(label) !== startupYear);
-  const usdEntries = Object.entries(inputs.monthly.costos_usd).filter(([label]) => yearOf(label) !== startupYear);
-  const ars = entries.reduce((s, [, v]) => s + v, 0) / entries.length;
-  const usd = usdEntries.reduce((s, [, v]) => s + v, 0) / usdEntries.length;
+// Un único promedio mensual de costos para todo el dashboard: la misma estructura anual
+// de referencia de costBreakdown (ANEXO 1 de la hoja "Costos SG"), dividida en 12 meses.
+// Se reusa costBreakdown en vez de promediar la serie mensual completa para que este KPI
+// (Resumen) y la fila "Promedio mensual" de la tabla de Costos siempre coincidan.
+function computeAvgMonthlyCost(costBreakdown) {
+  const { label, year } = costBreakdown.referenceYear;
   return {
-    ars, usd,
-    calc: `Promedio de "Costos totales" mensuales excluyendo ${startupYear} (año de arranque, sin facturación) — ${entries.length} meses de operación plena.`
+    ars: costBreakdown.total_ars / 12,
+    usd: costBreakdown.total_usd / 12,
+    referenceYear: costBreakdown.referenceYear,
+    calc: `Estructura anual de referencia (${label} · ${year}, ANEXO 1 "Costos SG") dividida en 12 meses.`
   };
 }
 
@@ -281,7 +281,7 @@ function computeModel(inputs) {
   const aumSeries = computeAumSeries(inputs);
   const monthlyTable = computeMonthlyTable(inputs);
   const costBreakdown = computeCostBreakdown(inputs, years);
-  const avgMonthlyCost = computeAvgMonthlyCost(inputs);
+  const avgMonthlyCost = computeAvgMonthlyCost(costBreakdown);
   const initialInvestment = computeInitialInvestment(inputs);
   const employees = computeEmployees(inputs);
   const providers = computeProviders(inputs);
