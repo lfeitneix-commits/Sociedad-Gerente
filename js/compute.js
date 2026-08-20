@@ -46,6 +46,21 @@ function computeYears(inputs) {
   }));
 }
 
+// Detalle mensual completo (Financials tab): un renglón por cada mes que tenga al
+// menos un dato en el modelo, con AUM/Ingresos/Costos/Resultado en USD.
+function computeMonthlyTable(inputs) {
+  return inputs.months
+    .filter(m => inputs.monthly.costos_usd[m.label] !== undefined || inputs.monthly.ingresos_usd[m.label] !== undefined)
+    .map(m => ({
+      m: monthLabelToEs(m.label),
+      fx: m.fx,
+      aum_usd: inputs.monthly.aum_total_ars[m.label] !== undefined ? inputs.monthly.aum_total_ars[m.label] / m.fx : null,
+      ingresos_usd: inputs.monthly.ingresos_usd[m.label] ?? null,
+      costos_usd: inputs.monthly.costos_usd[m.label] ?? null,
+      resultado_usd: inputs.monthly.resultado_neto_usd[m.label] ?? null
+    }));
+}
+
 function computeAumSeries(inputs) {
   const points = inputs.months
     .filter(m => inputs.monthly.aum_total_ars[m.label] !== undefined)
@@ -248,6 +263,7 @@ function computeVerdict(inputs, { van, tir, discountRate, regulatory, timeline, 
 function computeModel(inputs) {
   const years = computeYears(inputs);
   const aumSeries = computeAumSeries(inputs);
+  const monthlyTable = computeMonthlyTable(inputs);
   const costBreakdown = computeCostBreakdown(inputs);
   const avgMonthlyCost = computeAvgMonthlyCost(inputs);
   const initialInvestment = computeInitialInvestment(inputs);
@@ -262,6 +278,7 @@ function computeModel(inputs) {
     meta: inputs.meta,
     years,
     aumSeries,
+    monthlyTable,
     costBreakdown,
     funds: inputs.funds,
     verdict,

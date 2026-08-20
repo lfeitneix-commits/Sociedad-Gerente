@@ -209,9 +209,18 @@ body {
   max-width: 1180px;
 }
 
-.panel-header { margin-bottom: 28px; }
-.panel-header h1 { font-size: 24px; font-weight: 650; margin: 0 0 4px; letter-spacing: -0.01em; }
-.panel-header p { margin: 0; color: var(--text-secondary); font-size: 14px; }
+.panel-header { margin-bottom: 36px; }
+.slide-eyebrow {
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.panel-header h1 { font-size: 38px; font-weight: 750; margin: 0 0 8px; letter-spacing: -0.02em; line-height: 1.08; }
+.panel-header p { margin: 0; color: var(--text-secondary); font-size: 15px; }
+#scenario-inline { color: var(--text-primary); font-weight: 600; }
 .panel-note { font-size: 12.5px; color: var(--text-muted); margin: -14px 0 20px; }
 
 .tab-panel { display: none; }
@@ -227,6 +236,43 @@ body {
   .sync-btn { width: auto; }
   .sidebar-source { display: none; }
   .content { padding: 24px 18px 60px; }
+}
+
+/* ---------- Hero stats (pitch-deck headline numbers) ---------- */
+.hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 8px 0 40px;
+}
+.hero-stat {
+  flex: 1 1 0;
+  min-width: 150px;
+  padding: 4px 28px;
+  border-left: 1px solid var(--border);
+}
+.hero-stat:first-child { border-left: none; padding-left: 0; }
+.hero-stat-label { font-size: 12.5px; color: var(--text-muted); margin: 0 0 8px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 650; }
+.hero-stat-value { font-size: clamp(26px, 3.2vw, 44px); font-weight: 750; letter-spacing: -0.03em; line-height: 1.05; overflow-wrap: break-word; }
+.hero-stat-sub { font-size: 12.5px; color: var(--text-muted); margin-top: 8px; }
+@media (max-width: 760px) {
+  .hero-stats { flex-direction: column; gap: 20px; }
+  .hero-stat { border-left: none; padding: 16px 0 0; border-top: 1px solid var(--border); }
+  .hero-stat:first-child { border-top: none; padding-top: 0; }
+}
+
+/* ---------- Resultado neto por año — open (no card box), pitch-deck row ---------- */
+.result-trio-open {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin-bottom: 8px;
+}
+.result-trio-open > div { padding: 0 28px; border-left: 1px solid var(--border); }
+.result-trio-open > div:first-child { border-left: none; padding-left: 0; }
+@media (max-width: 640px) {
+  .result-trio-open { grid-template-columns: 1fr; gap: 18px; }
+  .result-trio-open > div { border-left: none; padding-left: 0; border-top: 1px solid var(--border); padding-top: 14px; }
+  .result-trio-open > div:first-child { border-top: none; padding-top: 0; }
 }
 
 /* ---------- KPI grid ---------- */
@@ -297,6 +343,19 @@ body {
 }
 .kpi-card.wide { grid-column: span 2; }
 @media (max-width: 520px) { .kpi-card.wide { grid-column: span 1; } }
+
+/* Secondary indicators (below the hero-stats row) — same cards, quieter presence */
+.kpi-grid-secondary { grid-template-columns: repeat(5, 1fr); }
+@media (max-width: 1100px) { .kpi-grid-secondary { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 640px) { .kpi-grid-secondary { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 420px) { .kpi-grid-secondary { grid-template-columns: 1fr; } }
+.kpi-grid-secondary .kpi-card { padding: 16px 18px; }
+.kpi-grid-secondary .kpi-value { font-size: 20px; }
+.kpi-grid-secondary .kpi-icon { width: 26px; height: 26px; margin-bottom: 9px; }
+.kpi-grid-secondary .kpi-icon svg { width: 14px; height: 14px; }
+
+.pos-text { color: var(--good-text); }
+.neg-text { color: var(--critical); }
 
 .kpi-card .derived-badge {
   font-size: 10px;

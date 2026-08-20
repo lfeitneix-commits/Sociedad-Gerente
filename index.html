@@ -54,25 +54,32 @@
 
     <section class="tab-panel active" data-panel="resumen">
       <header class="panel-header">
-        <h1>Resumen ejecutivo</h1>
-        <p>Viabilidad del proyecto en un vistazo · horizonte jul-2026 a dic-2028</p>
+        <p class="slide-eyebrow">01 / 05 — Resumen</p>
+        <h1>¿Es viable la Sociedad Gerente?</h1>
+        <p>Horizonte jul-2026 a dic-2028 · escenario de captación <span id="scenario-inline"></span></p>
       </header>
 
       <div class="verdict-card" id="verdict-card"></div>
 
-      <h2 class="section-title">Indicadores clave</h2>
-      <div class="kpi-grid" id="kpi-grid"></div>
+      <div class="hero-stats" id="hero-stats"></div>
+
+      <h2 class="section-title">Resultado neto por año</h2>
+      <div class="result-trio-open" id="result-trio"></div>
 
       <h2 class="section-title">Del inicio a la rentabilidad</h2>
       <div class="timeline-card">
         <div class="timeline-track" id="timeline-track"></div>
       </div>
+
+      <h2 class="section-title">Otros indicadores</h2>
+      <div class="kpi-grid kpi-grid-secondary" id="kpi-grid"></div>
     </section>
 
     <section class="tab-panel" data-panel="financials">
       <header class="panel-header">
-        <h1>Financials</h1>
-        <p>Cómo evoluciona el negocio mes a mes y año a año.</p>
+        <p class="slide-eyebrow">02 / 05 — Financials</p>
+        <h1>Cómo evoluciona el negocio</h1>
+        <p>Mes a mes y año a año, en USD.</p>
       </header>
 
       <div class="chart-grid">
@@ -97,13 +104,20 @@
             <span class="swatch"><span class="dot" style="background:var(--critical)"></span>Resultado neto ▼ pérdida</span>
           </div>
         </div>
+
+        <div class="chart-card full">
+          <h3>Detalle mensual</h3>
+          <p class="chart-caption">Estado de resultados mes a mes, en USD, jul-2026 a dic-2028.</p>
+          <div class="table-wrap"><table class="data-table" id="monthly-table"></table></div>
+        </div>
       </div>
     </section>
 
     <section class="tab-panel" data-panel="costos">
       <header class="panel-header">
-        <h1>Costos</h1>
-        <p>Estructura de costos y qué compone la inversión inicial.</p>
+        <p class="slide-eyebrow">03 / 05 — Costos</p>
+        <h1>Estructura de costos</h1>
+        <p>Qué compone el gasto mensual y la inversión inicial.</p>
       </header>
 
       <div class="chart-grid">
@@ -129,6 +143,7 @@
 
     <section class="tab-panel" data-panel="regulatorio">
       <header class="panel-header">
+        <p class="slide-eyebrow">04 / 05 — Regulatorio</p>
         <h1>Marco regulatorio</h1>
         <p>Barreras de entrada y requisitos para constituir la Sociedad Gerente ante la CNV.</p>
       </header>
@@ -169,6 +184,7 @@
 
     <section class="tab-panel" data-panel="fondos">
       <header class="panel-header">
+        <p class="slide-eyebrow">05 / 05 — Fondos &amp; supuestos</p>
         <h1>Fondos &amp; supuestos</h1>
         <p>Los 4 fondos proyectados y las hipótesis clave del modelo.</p>
       </header>

@@ -33,19 +33,45 @@ function renderVerdict() {
   `;
 }
 
+// Los 4 números que abren la presentación — la "tapa" del business case.
+function renderHeroStats() {
+  const m = MODEL;
+  document.getElementById("scenario-tag-text").textContent = m.meta.scenario;
+  document.getElementById("scenario-inline").textContent = m.meta.scenario;
+
+  const stats = [
+    { label: "AUM break-even", value: fmtUSD(m.kpis.breakEven.usd), sub: fmtARS(m.kpis.breakEven.ars) },
+    { label: "VAN", value: fmtUSD(m.kpis.van.usd), sub: `tasa desc. ${(m.kpis.discountRate.pct * 100).toFixed(1)}%` },
+    { label: "TIR", value: `${(m.kpis.tir.pct * 100).toFixed(0)}%`, sub: "anual" },
+    { label: "Payback", value: m.kpis.payback.label, sub: m.kpis.payback.periodsFromLaunch.split(" / ")[0] }
+  ];
+
+  document.getElementById("hero-stats").innerHTML = stats.map(s => `
+    <div class="hero-stat">
+      <p class="hero-stat-label">${s.label}</p>
+      <div class="hero-stat-value">${s.value}</div>
+      <p class="hero-stat-sub">${s.sub}</p>
+    </div>
+  `).join("");
+}
+
+function renderResultTrio() {
+  const m = MODEL;
+  document.getElementById("result-trio").innerHTML = m.years.map(y => `
+    <div>
+      <div class="result-year-label">${y.label} · ${y.year}</div>
+      <div class="result-year-value ${y.result_usd >= 0 ? "pos" : "neg"}">${y.result_usd >= 0 ? "▲" : "▼"} ${fmtUSD(y.result_usd)}</div>
+      <div class="result-year-sub">${fmtARS(y.result_ars)}</div>
+    </div>
+  `).join("");
+}
+
+// Indicadores de apoyo — quedan en segundo plano detrás de los 4 números de arriba.
 function renderKpis() {
   const m = MODEL;
   const grid = document.getElementById("kpi-grid");
-  document.getElementById("scenario-tag-text").textContent = m.meta.scenario;
 
   const cards = [
-    {
-      icon: "target",
-      label: "AUM break-even",
-      value: fmtUSD(m.kpis.breakEven.usd),
-      sub: fmtARS(m.kpis.breakEven.ars),
-      badge: null
-    },
     {
       icon: "calendar",
       label: "Costo promedio mensual",
@@ -59,13 +85,6 @@ function renderKpis() {
       value: fmtUSD(m.kpis.initialInvestment.usd),
       sub: fmtARS(m.kpis.initialInvestment.ars),
       badge: m.kpis.initialInvestment.calc
-    },
-    {
-      icon: "clockCheck",
-      label: "Payback",
-      value: m.kpis.payback.label,
-      sub: m.kpis.payback.periodsFromLaunch,
-      badge: m.kpis.payback.note
     },
     {
       icon: "people",
@@ -87,13 +106,6 @@ function renderKpis() {
       value: "Productores + comercial propio",
       sub: "Distribución mixta (dato parcial en el modelo)",
       badge: m.kpis.salesChannel.calc
-    },
-    {
-      icon: "trendUp",
-      label: "VAN / TIR",
-      value: `${fmtUSD(m.kpis.van.usd)}`,
-      sub: `TIR ${(m.kpis.tir.pct * 100).toFixed(0)}% · tasa desc. ${(m.kpis.discountRate.pct * 100).toFixed(1)}%`,
-      badge: null
     }
   ];
 
@@ -105,24 +117,6 @@ function renderKpis() {
       <p class="kpi-sub">${c.sub}</p>
     </div>
   `).join("");
-
-  // Resultado por año — wide card with 3-way split
-  const resultCard = document.createElement("div");
-  resultCard.className = "kpi-card wide";
-  resultCard.innerHTML = `
-    ${kpiIcon("trophy")}
-    <p class="kpi-label">Resultado neto por año ${derivedBadge("Suma de Resultado Neto SG mensual del modelo por año calendario. Los años con menos de 12 meses de datos lo indican en el detalle del gráfico.")}</p>
-    <div class="result-trio">
-      ${m.years.map(y => `
-        <div>
-          <div class="result-year-label">${y.label} · ${y.year}</div>
-          <div class="result-year-value ${y.result_usd >= 0 ? "pos" : "neg"}">${y.result_usd >= 0 ? "▲" : "▼"} ${fmtUSD(y.result_usd)}</div>
-          <div class="result-year-sub">${fmtARS(y.result_ars)}</div>
-        </div>
-      `).join("")}
-    </div>
-  `;
-  grid.appendChild(resultCard);
 }
 
 function renderTimeline() {
@@ -175,6 +169,25 @@ function renderInvestmentTable() {
     <tbody>${rows}
       <tr class="total-row"><td>Total</td><td class="num">${fmtARS(total)}</td></tr>
     </tbody>
+  `;
+}
+
+function renderMonthlyTable() {
+  const m = MODEL;
+  const table = document.getElementById("monthly-table");
+  const fmtOrDash = (v, fmt) => (v === null ? "—" : fmt(v));
+  const rows = m.monthlyTable.map(r => `
+    <tr>
+      <td>${r.m}</td>
+      <td class="num">${fmtOrDash(r.aum_usd, fmtUSD)}</td>
+      <td class="num">${fmtOrDash(r.ingresos_usd, fmtUSD)}</td>
+      <td class="num">${fmtOrDash(r.costos_usd, fmtUSD)}</td>
+      <td class="num">${r.resultado_usd === null ? "—" : `<span class="${r.resultado_usd >= 0 ? "pos-text" : "neg-text"}">${fmtUSD(r.resultado_usd)}</span>`}</td>
+    </tr>
+  `).join("");
+  table.innerHTML = `
+    <thead><tr><th>Mes</th><th class="num">AUM total</th><th class="num">Ingresos</th><th class="num">Costos</th><th class="num">Resultado neto</th></tr></thead>
+    <tbody>${rows}</tbody>
   `;
 }
 
@@ -309,10 +322,13 @@ function initNav() {
 
 function renderAll() {
   renderVerdict();
+  renderHeroStats();
+  renderResultTrio();
   renderKpis();
   renderAumChart("chart-aum", MODEL);
   renderYearsChart("chart-years", MODEL);
   renderCostChart("chart-costs", MODEL);
+  renderMonthlyTable();
   renderCostTable();
   renderInvestmentTable();
   renderFunds();
