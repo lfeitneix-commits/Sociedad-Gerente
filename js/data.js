@@ -117,8 +117,8 @@ const INPUTS = {
   },
 
   breakEven: {
-    ars: 100580783248.00,
-    usd: 52351068.08,
+    ars: 100580783247.89,
+    usd: 49103472.37,
     note: "AUM promedio que la Sociedad Gerente necesita gestionar para cubrir sus costos fijos y variables. Los costos variables se estiman en 0.002% del AUM."
   },
 
