@@ -198,27 +198,48 @@ const INPUTS = {
     // el hito de break-even y el label de fecha se calculan en compute.js a partir de aum_total_ars vs. breakEven.usd
   },
 
-  // Marco regulatorio: fuente "Neix Asset Management · Proyección Interna · Agosto 2026"
-  // (deck interno, RG 1089/2025 de la CNV). Es información de contexto/riesgo, no forma
+  // Marco regulatorio: fuente "Neix Sociedad Gerente — Regulaciones Completas" (guía interna),
+  // basada en RG CNV N° 1089/2025 y N° 1080/2025 y en los Estados Contables Intermedios de
+  // Neix S.A. al 30/06/2026 (Nota 5 y Anexo II). Es información de contexto/riesgo, no forma
   // parte del modelo financiero del Sheet — por eso vive en su propio bloque.
   regulatory: {
-    referenceDate: "23/7/2026",
-    capitalMinimoPrimerFci: { uva: 150000, ars: 307203000.00, usd: 202191, note: "Patrimonio neto mínimo exigido para operar el primer fondo. Ajusta automáticamente con inflación vía UVA." },
-    capitalAdicionalPorFondo: { uva: 20000, ars: 40960400.00, usd: 26959, note: "El capital mínimo se incrementa en 20.000 UVA por cada fondo adicional que se administre." },
-    contrapartidaLiquida: { pct: 0.50, usd: 141534, note: "Al menos el 50% del capital mínimo debe estar invertido en activos elegibles según Anexo I, Cap. I, Tít. VI de las Normas CNV." },
+    referenceDate: "30/6/2026",
+    capitalMinimoPrimerFci: { uva: 150000, note: "Patrimonio neto mínimo exigido para operar el primer fondo. Ajusta automáticamente con inflación vía UVA." },
+    capitalAdicionalPorFondo: { uva: 20000, note: "El capital mínimo de la Sociedad Gerente se incrementa en 20.000 UVA por cada fondo adicional que se administre." },
     categoriaRegulatoria: "Agente de Administración de Productos de Inversión Colectiva de Fondos Comunes de Inversión (CNV)",
 
-    // Neix ya opera como ALyC, y al armar la Sociedad Gerente queda inscripta simultáneamente
-    // en 3 categorías ante la CNV: ALyC, ACyDI (distribución de FCI, habilitada por ser ALyC)
-    // y AG (la Sociedad Gerente nueva). El capital mínimo consolidado no es la suma de las 3:
-    // es el 100% de la categoría más exigente + el 50% de cada una de las otras dos
-    // (Art. 20°, RG 1089/2025). Como el capital de ALyC ya lo sostiene Neix hoy (no es plata
-    // nueva para este proyecto), lo relevante para el business case es el capital INCREMENTAL:
-    // consolidado total menos lo que ya se tiene puesto como ALyC.
+    // Valor de la UVA implícito en la Nota 5 de los Estados Contables de Neix (patrimonio
+    // mínimo declarado hoy: $1.120.057.648 para 555.350 UVA = 470.350 ALyC + 170.000×50%
+    // ACyDI). No es la cotización pública de la UVA — es el valor que la propia contabilidad
+    // de Neix ya aplica, y el que usa esta guía para pasar UVA a pesos de forma consistente.
+    uvaRate: 2016.85,
+
+    // Neix ya opera como ALyC Propio y ACyDI de FCI; al armar la Sociedad Gerente queda
+    // inscripta simultáneamente en las 3 categorías ante la CNV. El capital de ALyC y ACyDI
+    // no es plata nueva: ya está sostenido y acreditado hoy.
+    categorias: {
+      alyc: { uva: 470350, label: "ALyC Propio" },
+      acydi: { uva: 170000, label: "ACyDI de FCI" }
+    },
+
+    // Balance real de Neix al 30/06/2026 (Nota 5 y Anexo II de los Estados Contables
+    // Intermedios) — usado para medir si Neix ya cumple el capital consolidado de las 3
+    // categorías, en vez de estimarlo.
+    neixBalance: {
+      fecha: "30/06/2026",
+      patrimonioNetoMinimo_ars: 13735654270,
+      contrapartidaLiquida_ars: 731587158,
+      carteraInversionesFinancierasCorrientes_ars: 99938000000,
+      note: "Fuente: Estados Contables Intermedios Neix S.A. al 30/06/2026 (Nota 5 y Anexo II)."
+    },
+
+    // Acumulación de categorías ante la CNV (Art. 20°, RG 1089/2025, y RG 1080/2025 —norma
+    // general de acumulación). Aplican DOS reglas distintas sobre las 3 categorías (ALyC,
+    // ACyDI, AG/Sociedad Gerente): la Regla A (patrimonio neto mínimo total: el más alto de
+    // las 3 + 50% de cada una de las otras dos) y la Regla B (contrapartida líquida mínima:
+    // 50% de cada categoría, sumados entre sí, incluida la más alta).
     capitalConsolidation: {
-      alyc: { uva: 470350, ars: 963286207, usd: 634004, subcategoria: "ALyC general (no ALyC Integral Agro, que exige 1.175.000 UVA)" },
-      acydi: { ars: 250000, usd: 165, note: "Monto fijo en pesos (no UVA): patrimonio neto mínimo no inferior a $250.000, acreditado con estados contables de antigüedad no mayor a 5 meses." },
-      note: "Al constituir la Sociedad Gerente, Neix queda inscripta simultáneamente en 3 categorías ante la CNV (ALyC, ACyDI y AG/Sociedad Gerente). El capital mínimo consolidado es el 100% de la categoría más exigente más el 50% de cada una de las otras dos (Art. 20°, RG 1089/2025)."
+      note: "Al constituir la Sociedad Gerente, Neix queda inscripta simultáneamente en 3 categorías ante la CNV (ALyC, ACyDI y AG/Sociedad Gerente). La RG 1080/2025 exige cumplir dos reglas distintas: el patrimonio neto mínimo total (el más alto de las 3 categorías + 50% de cada una de las otras dos) y la contrapartida líquida mínima (50% de cada categoría, sumados entre sí)."
     },
 
     normasConstitucion: [
@@ -235,6 +256,7 @@ const INPUTS = {
     requisitosOperativos: [
       { titulo: "Inscripción en registro CNV — documentación", detalle: "Presentar vía TAD: estatuto inscripto, nómina de autoridades, declaraciones juradas, EECC con antigüedad máxima de 5 meses examinados por auditor independiente, informe de contador que acredite organización administrativa adecuada, Código de Protección al Inversor y declaración jurada de prevención de lavado de activos.", art: "Art. 1°, RG 1089/2025" },
       { titulo: "Registro de Idóneos CNV", detalle: "Previo al inicio de actividades, todo el personal que venda, promocione o asesore a inversores sobre cuotapartes debe inscribirse en el Registro de Idóneos de la CNV.", art: "Art. 4°, RG 1089/2025" },
+      { titulo: "Inscripción simultánea ALyC + Sociedad Gerente", detalle: "Como Neix ya es ALyC, al sumar el rol de Sociedad Gerente también hay que cumplir los lineamientos de los Capítulos II y VII del Título VII de las Normas CNV — el mismo título que define el patrimonio mínimo de ALyC (470.350 UVA) que ya se ve reflejado en el balance de Neix.", art: "Art. 10°, RG 1089/2025" },
       { titulo: "Manual de procedimientos de control interno", detalle: "Debe estar a disposición permanente de la CNV, incluyendo el acceso y salvaguarda de los sistemas informáticos utilizados.", art: "Art. 1°, Sección I, RG 1089/2025" },
       { titulo: "Régimen informativo — AIF", detalle: "Remitir información a través de la Autopista de la Información Financiera (Sistema CNV-CAFCI), con plazos de implementación transitorios.", art: "Art. 11°, RG 1089/2025" },
       { titulo: "Sociedad Depositaria", detalle: "La custodia de activos debe estar a cargo de una entidad financiera regida por la Ley de Entidades Financieras. Sin Sociedad Depositaria aprobada por la CNV no se pueden aceptar suscripciones.", art: "Arts. 12° y 6° inc. 5, RG 1089/2025" },
@@ -253,7 +275,8 @@ const INPUTS = {
       "Flexibilidad para innovar con estructuras de fondos propios",
       "Sin dependencia de terceros para aprobar o modificar fondos — time to market más ágil",
       "Aporte reputacional e institucional para Neix como ALyC",
-      "Eficiencia de costos al aprovechar recursos humanos, tecnológicos y físicos ya existentes en Neix"
+      "Eficiencia de costos al aprovechar recursos humanos, tecnológicos y físicos ya existentes en Neix",
+      "El patrimonio neto mínimo consolidado (ALyC + ACyDI + Sociedad Gerente) ya está cubierto de sobra con el balance actual de Neix — no requiere capital fresco"
     ],
     desventajas: [
       "Proceso de constitución más lento y más complejo",

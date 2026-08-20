@@ -182,42 +182,58 @@ function computeTimeline(inputs, aumSeries, paybackKey) {
   };
 }
 
-// Capital consolidado (Art. 20°, RG 1089/2025): 100% de la categoría más exigente de las 3
-// (ALyC, ACyDI, AG/Sociedad Gerente) + 50% de cada una de las otras dos. El capital de ALyC
-// ya lo sostiene Neix hoy (no es plata nueva para este proyecto) — lo que hay que conseguir de
-// nuevo es la diferencia entre el consolidado total y lo que ya se tiene puesto como ALyC.
+// Acumulación de categorías ante la CNV (Art. 20°, RG 1089/2025, y RG 1080/2025 — norma
+// general de acumulación) al operar simultáneamente como ALyC + ACyDI + Sociedad Gerente.
+// Aplican DOS reglas distintas sobre las 3 categorías:
+//   Regla A (patrimonio neto mínimo total) = 100% de la categoría más exigente + 50% de cada
+//   una de las otras dos.
+//   Regla B (contrapartida líquida mínima) = 50% de CADA categoría, sumados entre sí
+//   (incluida la más exigente).
+// El capital de ALyC y ACyDI ya lo sostiene Neix hoy — no es plata nueva para este proyecto.
 function computeCapitalConsolidation(inputs) {
-  const cc = inputs.regulatory.capitalConsolidation;
-  const ag = inputs.regulatory.capitalMinimoPrimerFci;
-  const amounts = [
-    { key: "alyc", ars: cc.alyc.ars },
-    { key: "acydi", ars: cc.acydi.ars },
-    { key: "ag", ars: ag.ars }
+  const reg = inputs.regulatory;
+  const uvaRate = reg.uvaRate;
+  const numFondos = inputs.funds.length;
+  const agUva = reg.capitalMinimoPrimerFci.uva + reg.capitalAdicionalPorFondo.uva * (numFondos - 1);
+
+  const categorias = [
+    { key: "alyc", uva: reg.categorias.alyc.uva },
+    { key: "acydi", uva: reg.categorias.acydi.uva },
+    { key: "ag", uva: agUva }
   ];
-  const largest = amounts.reduce((a, b) => (b.ars > a.ars ? b : a));
-  const consolidated_ars = amounts.reduce((sum, a) => sum + (a.key === largest.key ? a.ars : a.ars * 0.5), 0);
-  const incrementalNew_ars = consolidated_ars - cc.alyc.ars; // más allá de lo que ya se tiene como ALyC
-  const fx = ag.ars / ag.usd; // mismo tipo de cambio de referencia que el resto del bloque regulatorio
+  const largest = categorias.reduce((a, b) => (b.uva > a.uva ? b : a));
+
+  const patrimonioMinimo_uva = categorias.reduce((sum, c) => sum + (c.key === largest.key ? c.uva : c.uva * 0.5), 0);
+  const contrapartidaLiquida_uva = categorias.reduce((sum, c) => sum + c.uva * 0.5, 0);
+
   return {
-    consolidated: { ars: consolidated_ars, usd: consolidated_ars / fx },
-    incrementalNew: { ars: incrementalNew_ars, usd: incrementalNew_ars / fx },
-    largestCategory: largest.key
+    agUva,
+    largestCategory: largest.key,
+    patrimonioMinimo: { uva: patrimonioMinimo_uva, ars: patrimonioMinimo_uva * uvaRate },
+    contrapartidaLiquida: { uva: contrapartidaLiquida_uva, ars: contrapartidaLiquida_uva * uvaRate }
   };
 }
 
-function computeRegulatory(inputs, initialInvestment) {
+function computeRegulatory(inputs) {
   const reg = inputs.regulatory;
   const consolidation = computeCapitalConsolidation(inputs);
-  const capitalGapUsd = consolidation.incrementalNew.usd - initialInvestment.usd;
+  const balance = reg.neixBalance;
+  const patrimonioSurplus_ars = balance.patrimonioNetoMinimo_ars - consolidation.patrimonioMinimo.ars;
+  const contrapartidaGap_ars = consolidation.contrapartidaLiquida.ars - balance.contrapartidaLiquida_ars;
+  const needsReclass = contrapartidaGap_ars > 0;
+
   return {
     ...reg,
     capitalConsolidation: { ...reg.capitalConsolidation, ...consolidation },
     capitalGap: {
-      usd: capitalGapUsd,
-      // true si el capital incremental que exige la CNV (ya neteado de lo que Neix sostiene como ALyC)
-      // supera la inversión inicial estimada en el modelo financiero
-      modelUnderstatesCapital: capitalGapUsd > 0,
-      note: `Al ser ALyC, Neix ya sostiene ${fmtUSD(reg.capitalConsolidation.alyc.usd)} de capital mínimo — eso no es plata nueva para este proyecto. Lo incremental es la diferencia hasta el consolidado de las 3 categorías (ALyC + ACyDI + Sociedad Gerente, Art. 20° RG 1089/2025): ${fmtUSD(consolidation.incrementalNew.usd)}. Eso es ${capitalGapUsd > 0 ? `${fmtUSD(capitalGapUsd)} más` : `${fmtUSD(-capitalGapUsd)} menos`} que la inversión inicial estimada en el modelo financiero (${fmtUSD(initialInvestment.usd)}), que solo cubre costos de puesta en marcha (inscripciones, legal, software) y no patrimonio neto regulatorio.`
+      ars: contrapartidaGap_ars,
+      patrimonioSurplus_ars,
+      // true si a Neix le falta contrapartida líquida elegible para cubrir el consolidado de
+      // las 3 categorías (esto es un tema de composición de cartera, no de capital nuevo)
+      modelUnderstatesCapital: needsReclass,
+      note: needsReclass
+        ? `El patrimonio neto mínimo consolidado no es un problema: Neix ya sostiene ${fmtARS(balance.patrimonioNetoMinimo_ars)}, muy por encima de los ${fmtARS(consolidation.patrimonioMinimo.ars)} exigidos entre las 3 categorías (ALyC + ACyDI + Sociedad Gerente). El único ajuste real es de contrapartida líquida: se exigen ${fmtARS(consolidation.contrapartidaLiquida.ars)} y Neix tiene ${fmtARS(balance.contrapartidaLiquida_ars)} — faltan ${fmtARS(contrapartidaGap_ars)}, que se cubren reclasificando cartera de inversiones ya existente (Neix tiene ${fmtARS(balance.carteraInversionesFinancierasCorrientes_ars)} en inversiones financieras corrientes) hacia activos elegibles (títulos públicos, ON, acciones líderes). No hace falta capital fresco.`
+        : `Neix ya cumple tanto el patrimonio neto mínimo consolidado (${fmtARS(balance.patrimonioNetoMinimo_ars)} vs. ${fmtARS(consolidation.patrimonioMinimo.ars)} exigidos) como la contrapartida líquida (${fmtARS(balance.contrapartidaLiquida_ars)} vs. ${fmtARS(consolidation.contrapartidaLiquida.ars)} exigidos) para operar simultáneamente como ALyC, ACyDI y Sociedad Gerente. No requiere capital nuevo ni reclasificar cartera.`
     }
   };
 }
@@ -239,14 +255,14 @@ function computeVerdict(inputs, { van, regulatory, timeline, years }) {
   if (financiallyViable && capitalFlag) {
     return {
       status: "warning",
-      headline: "Viable, con una salvedad de capital",
-      detail: `El proyecto es financieramente viable y recupera la inversión en ${timeline.payback.date}. Pero el modelo financiero no contempla el capital mínimo regulatorio que exige la CNV. ${regulatory.capitalGap.note}`
+      headline: "Viable, con un ajuste de cartera pendiente",
+      detail: `El proyecto es financieramente viable y recupera la inversión en ${timeline.payback.date}. El patrimonio regulatorio no es un obstáculo: el único pendiente es de contrapartida líquida ante la CNV, que se resuelve reclasificando cartera existente (ver Regulatorio) y no requiere capital nuevo.`
     };
   }
   return {
     status: "critical",
     headline: "No viable en este escenario",
-    detail: `Con los supuestos actuales el proyecto no recupera la inversión dentro del horizonte modelado (jul-2026 a dic-2028) y no genera valor económico neto suficiente para cubrir el costo de capital. A esto se suma que el modelo tampoco contempla el capital mínimo regulatorio que exige la CNV (ver Regulatorio).`
+    detail: `Con los supuestos actuales el proyecto no recupera la inversión dentro del horizonte modelado (jul-2026 a dic-2028) y no genera valor económico neto suficiente para cubrir el costo de capital.`
   };
 }
 
@@ -261,7 +277,7 @@ function computeModel(inputs) {
   const providers = computeProviders(inputs);
   const payback = computePayback(inputs);
   const timeline = computeTimeline(inputs, aumSeries, payback.monthKey);
-  const regulatory = computeRegulatory(inputs, initialInvestment);
+  const regulatory = computeRegulatory(inputs);
   const verdict = computeVerdict(inputs, { van: inputs.van, regulatory, timeline, years });
 
   return {

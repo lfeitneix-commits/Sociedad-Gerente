@@ -602,6 +602,10 @@ body {
   box-shadow: var(--shadow-card);
 }
 .alert-card strong { color: var(--accent); }
+.alert-card.status-warning { background: linear-gradient(135deg, rgba(201,138,47,0.14), rgba(201,138,47,0.02) 65%), var(--surface-1); border-color: rgba(201,138,47,0.5); }
+.alert-card.status-warning strong { color: #c98a2f; }
+.alert-card.status-good { background: linear-gradient(135deg, rgba(34,181,134,0.14), rgba(34,181,134,0.02) 65%), var(--surface-1); border-color: rgba(34,181,134,0.45); }
+.alert-card.status-good strong { color: var(--good-text); }
 
 /* ---------- Pros / cons ---------- */
 .pro-con-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }

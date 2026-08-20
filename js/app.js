@@ -232,35 +232,35 @@ function renderRegulatory() {
   document.getElementById("reg-ref-date").textContent = r.referenceDate;
 
   const cc = r.capitalConsolidation;
+  const gap = r.capitalGap;
   document.getElementById("reg-capital-grid").innerHTML = `
     <div class="kpi-card">
       <p class="kpi-label">Capital mínimo · primer FCI</p>
       <div class="kpi-value">${r.capitalMinimoPrimerFci.uva.toLocaleString("es-AR")} UVA</div>
-      <p class="kpi-sub">${fmtARS(r.capitalMinimoPrimerFci.ars)} · ≈ ${fmtUSD(r.capitalMinimoPrimerFci.usd)}</p>
+      <p class="kpi-sub">≈ ${fmtARS(r.capitalMinimoPrimerFci.uva * r.uvaRate)}</p>
     </div>
     <div class="kpi-card">
       <p class="kpi-label">Por cada FCI adicional</p>
       <div class="kpi-value">+${r.capitalAdicionalPorFondo.uva.toLocaleString("es-AR")} UVA</div>
-      <p class="kpi-sub">+${fmtARS(r.capitalAdicionalPorFondo.ars)} · ≈ ${fmtUSD(r.capitalAdicionalPorFondo.usd)}</p>
+      <p class="kpi-sub">≈ +${fmtARS(r.capitalAdicionalPorFondo.uva * r.uvaRate)}</p>
     </div>
     <div class="kpi-card">
-      <p class="kpi-label">Contrapartida líquida</p>
-      <div class="kpi-value">${(r.contrapartidaLiquida.pct * 100).toFixed(0)}%</div>
-      <p class="kpi-sub">del patrimonio neto mínimo · ≈ ${fmtUSD(r.contrapartidaLiquida.usd)}</p>
+      <p class="kpi-label">Patrimonio neto mínimo (3 categorías) ${derivedBadge(cc.note)}</p>
+      <div class="kpi-value">${fmtARS(cc.patrimonioMinimo.ars)}</div>
+      <p class="kpi-sub">${cc.patrimonioMinimo.uva.toLocaleString("es-AR")} UVA · Neix tiene ${fmtARS(r.neixBalance.patrimonioNetoMinimo_ars)} <span class="pos-text">(sobra ${fmtARS(gap.patrimonioSurplus_ars)})</span></p>
     </div>
     <div class="kpi-card">
-      <p class="kpi-label">Capital consolidado (3 categorías) ${derivedBadge(cc.note)}</p>
-      <div class="kpi-value">${fmtUSD(cc.consolidated.usd)}</div>
-      <p class="kpi-sub">${fmtARS(cc.consolidated.ars)} · ALyC + ACyDI + Sociedad Gerente</p>
-    </div>
-    <div class="kpi-card wide">
-      <p class="kpi-label">Capital NUEVO real a conseguir ${derivedBadge("Consolidado total menos el capital de ALyC (" + fmtUSD(cc.alyc.usd) + ") que Neix ya sostiene hoy — no es plata nueva para este proyecto.")}</p>
-      <div class="kpi-value">${fmtUSD(cc.incrementalNew.usd)}</div>
-      <p class="kpi-sub">${fmtARS(cc.incrementalNew.ars)} · ya neteado de lo que Neix sostiene como ALyC (${fmtUSD(cc.alyc.usd)})</p>
+      <p class="kpi-label">Contrapartida líquida (3 categorías) ${derivedBadge(cc.note)}</p>
+      <div class="kpi-value">${fmtARS(cc.contrapartidaLiquida.ars)}</div>
+      <p class="kpi-sub">${cc.contrapartidaLiquida.uva.toLocaleString("es-AR")} UVA · Neix tiene ${fmtARS(r.neixBalance.contrapartidaLiquida_ars)} <span class="${gap.ars > 0 ? "neg-text" : "pos-text"}">(${gap.ars > 0 ? "falta" : "sobra"} ${fmtARS(Math.abs(gap.ars))})</span></p>
     </div>
   `;
 
-  document.getElementById("reg-alert-card").innerHTML = `⚠ <strong>Brecha de capital regulatorio:</strong> ${r.capitalGap.note}`;
+  const alertCard = document.getElementById("reg-alert-card");
+  alertCard.className = `alert-card ${gap.modelUnderstatesCapital ? "status-warning" : "status-good"}`;
+  alertCard.innerHTML = gap.modelUnderstatesCapital
+    ? `⚠ <strong>Ajuste de cartera pendiente:</strong> ${gap.note}`
+    : `✓ <strong>Capital regulatorio cubierto:</strong> ${gap.note}`;
 
   document.getElementById("reg-ventajas").innerHTML = r.ventajas.map(v => `<li>${v}</li>`).join("");
   document.getElementById("reg-desventajas").innerHTML = r.desventajas.map(v => `<li>${v}</li>`).join("");
