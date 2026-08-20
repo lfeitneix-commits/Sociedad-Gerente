@@ -281,8 +281,8 @@ function renderRegulatory() {
   document.getElementById("reg-funciones-adicionales").textContent = r.funciones.adicionales;
 }
 
-const TAB_ORDER = ["resumen", "financials", "costos", "regulatorio", "fondos"];
-const TAB_TITLES = { resumen: "Resumen", financials: "Financials", costos: "Costos", regulatorio: "Regulatorio", fondos: "Fondos & supuestos" };
+const TAB_ORDER = ["resumen", "financials", "costos", "regulatorio", "fondos", "simulador"];
+const TAB_TITLES = { resumen: "Resumen", financials: "Financials", costos: "Costos", regulatorio: "Regulatorio", fondos: "Fondos & supuestos", simulador: "Simulador" };
 
 function goToTab(tab) {
   const items = document.querySelectorAll(".nav-item");

@@ -170,10 +170,21 @@ const INPUTS = {
     note: "Al 08/26 los productores manejan el 81% del AUM en FCI de Neix. Se asume que la Sociedad Gerente se llevará el 53% de ese fee (el resto queda del lado de los productores) — de ahí sale la línea \"Comisiones Productores\" de la estructura de costos. Además hay un puesto de \"Sueldo Comercial\" en la dotación para el equipo propio. Modelo mixto: red externa de productores + comercial propio."
   },
 
+  // Split productores/SG del fee, usado también por el Simulador (js/simulator.js) para
+  // recalcular la comisión a productores cuando se ajustan los fees. pctAumEnProductores: qué
+  // fracción del AUM total está en manos de la red de productores (vs. comercial propio).
+  // pctComisionSobreFee: qué fracción del fee generado por ese AUM se queda el productor.
+  productoresSplit: {
+    pctAumEnProductores: 0.81,
+    pctComisionSobreFee: 0.53
+  },
+
   // Distribución de costos: estructura anual de referencia (ANEXO 1 de la hoja "Costos SG"),
-  // en pesos. Editá cualquier "ars" y el total y los porcentajes se recalculan solos.
+  // en pesos. Editá cualquier "ars" y el total y los porcentajes se recalculan solos. El ítem
+  // marcado "variable: true" es el único que escala con los ingresos (comisión a productores) —
+  // el Simulador lo recalcula en vez de tratarlo como costo fijo.
   costBreakdownItems: [
-    { label: "Comisiones a productores (81% del AUM, 53% del fee)", ars: 524068716.10 },
+    { label: "Comisiones a productores (81% del AUM, 53% del fee)", ars: 524068716.10, variable: true },
     { label: "Sueldo Portfolio Manager (2)", ars: 235982581.10 },
     { label: "Cargas sociales", ars: 145359684.50 },
     { label: "Sueldo Comercial", ars: 139634663.30 },

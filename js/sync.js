@@ -136,6 +136,7 @@ async function syncFromGoogleSheets() {
     INPUTS.meta.lastSynced = new Date().toISOString();
     MODEL = computeModel(INPUTS);
     if (typeof renderAll === "function") renderAll();
+    if (typeof initSimulator === "function") initSimulator();
     setStatus(`Sincronizado con Google Sheets (${updated} valores actualizados) — ${new Date().toLocaleString("es-AR")}`, "ok");
   } catch (err) {
     console.error("Sync error:", err);
