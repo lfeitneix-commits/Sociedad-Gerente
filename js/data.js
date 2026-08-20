@@ -156,13 +156,10 @@ const INPUTS = {
   employeesCaveat: "El modelo no aclara la cantidad de personas del rol Comercial; se asume 1.",
 
   providers: [
-    "CAFCI (Cámara Argentina de Fondos Comunes de Inversión)",
-    "Estudio legal (honorarios legales de constitución)",
-    "Proveedor de software de gestión",
-    "Auditoría y sindicatura",
-    "Calificadora de riesgo",
-    "Escribanía",
-    "CNV / IGJ (organismos de contralor)"
+    "Tanoira",
+    "Esco",
+    "ARV",
+    "Fix"
   ],
 
   salesChannel: {

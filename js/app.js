@@ -97,7 +97,7 @@ function renderKpis() {
       icon: "building",
       label: "Proveedores",
       value: `${m.kpis.providers.total}`,
-      sub: m.kpis.providers.list.slice(0, 3).map(p => p.split(" (")[0]).join(", ") + "...",
+      sub: m.kpis.providers.list.join(", "),
       badge: m.kpis.providers.calc
     },
     {
@@ -327,7 +327,6 @@ function renderAll() {
   renderKpis();
   renderAumChart("chart-aum", MODEL);
   renderYearsChart("chart-years", MODEL);
-  renderCostChart("chart-costs", MODEL);
   renderMonthlyTable();
   renderCostTable();
   renderInvestmentTable();
