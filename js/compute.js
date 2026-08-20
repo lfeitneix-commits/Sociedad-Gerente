@@ -94,23 +94,19 @@ function computeCostBreakdown(inputs, years) {
 
 // Base para el Simulador (tab "Simulador"): separa la estructura de costos entre el único
 // concepto variable (comisión a productores, que escala con los ingresos) y el resto, que se
-// trata como fijo. Usa el AUM y fee proyectados de cada fondo (pestaña "Fondos & supuestos")
-// como punto de partida — el simulador solo mueve fee% y el split de productores, no el AUM.
+// trata como fijo. Usa el AUM y fee proyectados de cada fondo EXACTAMENTE como figuran en
+// "Fondos & supuestos" (inputs.funds, sin reescalar) — el simulador solo mueve fee% y el split
+// de productores, no el AUM, y el AUM que muestra tiene que coincidir con esa pestaña.
 //
-// La proyección de AUM por fondo es una foto fija (no reconstruye la rampa mensual real del
-// año de referencia), así que Σ(aum_fondo × fee_fondo) subestima el ingreso anual real de ese
-// año. Se reescala el AUM de cada fondo (manteniendo la mezcla relativa entre fondos) para que
-// el escenario "sin cambios" del Simulador reproduzca exactamente el ingreso anual real —
-// así cualquier movimiento de slider parte de un punto de partida consistente con el resto
-// del dashboard en vez de uno subestimado.
-function computeSimulatorBase(inputs, costBreakdown, years) {
+// Nota: aum_projected_ars es una foto fija (no reconstruye la rampa mensual real del año de
+// referencia), así que Σ(aum_fondo × fee_fondo) da un ingreso anual algo menor al ingreso real
+// de ese año (ver nota en la propia pestaña Simulador) — se prioriza que el AUM mostrado sea
+// consistente con el resto del dashboard antes que "cuadrar" el ingreso total.
+function computeSimulatorBase(inputs, costBreakdown) {
   const variableItem = costBreakdown.allItems.find(i => i.variable);
   const fixedCosts_ars = costBreakdown.total_ars - (variableItem ? variableItem.ars : 0);
-  const refYear = years.find(y => y.year === costBreakdown.referenceYear.year);
-  const rawIngresos_ars = inputs.funds.reduce((sum, f) => sum + f.aum_projected_ars * f.fee_annual_pct, 0);
-  const scale = refYear && rawIngresos_ars > 0 ? refYear.revenue_ars / rawIngresos_ars : 1;
   return {
-    funds: inputs.funds.map(f => ({ name: f.name, aum_ars: f.aum_projected_ars * scale, fee_pct: f.fee_annual_pct })),
+    funds: inputs.funds.map(f => ({ name: f.name, aum_ars: f.aum_projected_ars, fee_pct: f.fee_annual_pct })),
     productoresSplit: inputs.productoresSplit,
     fixedCosts_ars,
     fixedCosts_usd: fixedCosts_ars / costBreakdown.fx,
@@ -309,7 +305,7 @@ function computeModel(inputs) {
   const monthlyTable = computeMonthlyTable(inputs);
   const costBreakdown = computeCostBreakdown(inputs, years);
   const avgMonthlyCost = computeAvgMonthlyCost(costBreakdown);
-  const simulatorBase = computeSimulatorBase(inputs, costBreakdown, years);
+  const simulatorBase = computeSimulatorBase(inputs, costBreakdown);
   const initialInvestment = computeInitialInvestment(inputs);
   const employees = computeEmployees(inputs);
   const providers = computeProviders(inputs);

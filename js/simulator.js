@@ -131,7 +131,7 @@ function simRenderResults() {
     ? `vs. AUM break-even del modelo (${fmtUSD(baseBreakEven_usd)}): ${diffPct >= 0 ? "+" : ""}${diffPct.toFixed(1)}% con estos supuestos.`
     : `Con estos supuestos el fee neto no cubre costos fijos: no existe un AUM de equilibrio.`;
   document.getElementById("sim-vs-base").innerHTML =
-    `${breakEvenNote}<br>El resultado neto de este simulador es <em>antes</em> de Impuesto a las Ganancias — el modelo (pestaña Financials) lo muestra neto de IIGG, por eso suele ser algo menor en valor absoluto.`;
+    `${breakEvenNote}<br>El AUM de cada fondo es el mismo de "Fondos &amp; supuestos" (foto fija, no la rampa mensual real) y el resultado es <em>antes</em> de Impuesto a las Ganancias — por eso los ingresos y el resultado neto de este simulador no coinciden exactamente con Financials, aunque el AUM y el break-even sí son comparables.`;
 
   const table = document.getElementById("sim-fund-table");
   const rows = r.fundsResult.map(f => `
