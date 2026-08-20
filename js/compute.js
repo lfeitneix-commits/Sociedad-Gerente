@@ -76,10 +76,20 @@ function computeAumSeries(inputs) {
   };
 }
 
-function computeCostBreakdown(inputs) {
+// costBreakdownItems es una fotografía anual (ANEXO 1 de la hoja "Costos SG") sin FX propio.
+// Para pasarla a USD de forma consistente con el resto del modelo, se identifica a qué año
+// del horizonte corresponde (comparando su total contra el costo anual de cada año) y se usa
+// el FX implícito de ese año (cost_ars / cost_usd) para convertir cada concepto.
+function computeCostBreakdown(inputs, years) {
   const allItems = [...inputs.costBreakdownItems].sort((a, b) => b.ars - a.ars);
   const total_ars = allItems.reduce((sum, i) => sum + i.ars, 0);
-  return { total_ars, allItems };
+  const referenceYear = years.reduce((best, y) =>
+    Math.abs(y.cost_ars - total_ars) < Math.abs(best.cost_ars - total_ars) ? y : best
+  );
+  const fx = referenceYear.cost_ars / referenceYear.cost_usd;
+  const items = allItems.map(i => ({ ...i, usd: i.ars / fx }));
+  const total_usd = total_ars / fx;
+  return { total_ars, total_usd, allItems: items, referenceYear: { label: referenceYear.label, year: referenceYear.year }, fx };
 }
 
 function computeAvgMonthlyCost(inputs) {
@@ -270,7 +280,7 @@ function computeModel(inputs) {
   const years = computeYears(inputs);
   const aumSeries = computeAumSeries(inputs);
   const monthlyTable = computeMonthlyTable(inputs);
-  const costBreakdown = computeCostBreakdown(inputs);
+  const costBreakdown = computeCostBreakdown(inputs, years);
   const avgMonthlyCost = computeAvgMonthlyCost(inputs);
   const initialInvestment = computeInitialInvestment(inputs);
   const employees = computeEmployees(inputs);

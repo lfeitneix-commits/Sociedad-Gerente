@@ -144,14 +144,17 @@ function renderCostTable() {
   const rows = m.costBreakdown.allItems.map(i => `
     <tr>
       <td>${i.label}</td>
-      <td class="num">${fmtARS(i.ars)}</td>
+      <td class="num">${fmtUSD(i.usd)}<span class="ars-sub">${fmtARS(i.ars)}</span></td>
       <td class="pct">${(i.ars / m.costBreakdown.total_ars * 100).toFixed(1)}%</td>
     </tr>
   `).join("");
+  const avgMonthly_usd = m.costBreakdown.total_usd / 12;
+  const avgMonthly_ars = m.costBreakdown.total_ars / 12;
   table.innerHTML = `
     <thead><tr><th>Concepto</th><th class="num">Anual</th><th class="pct">%</th></tr></thead>
     <tbody>${rows}
-      <tr class="total-row"><td>Total</td><td class="num">${fmtARS(m.costBreakdown.total_ars)}</td><td class="pct">100%</td></tr>
+      <tr class="total-row"><td>Total</td><td class="num">${fmtUSD(m.costBreakdown.total_usd)}<span class="ars-sub">${fmtARS(m.costBreakdown.total_ars)}</span></td><td class="pct">100%</td></tr>
+      <tr class="total-row"><td>Promedio mensual (${m.costBreakdown.referenceYear.label} · ${m.costBreakdown.referenceYear.year})</td><td class="num">${fmtUSD(avgMonthly_usd)}<span class="ars-sub">${fmtARS(avgMonthly_ars)}</span></td><td class="pct"></td></tr>
     </tbody>
   `;
 }

@@ -485,6 +485,7 @@ body {
 .data-table td, .data-table th { padding: 11px 6px; text-align: left; border-bottom: 1px solid var(--border); }
 .data-table th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); font-weight: 650; }
 .data-table td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.data-table td .ars-sub { display: block; font-size: 11px; color: var(--text-muted); font-weight: 400; margin-top: 2px; }
 .data-table td.pct { text-align: right; color: var(--text-muted); font-variant-numeric: tabular-nums; width: 52px; }
 .data-table tr:last-child td { border-bottom: none; }
 .data-table tr.total-row td { font-weight: 650; border-top: 1px solid var(--border); border-bottom: none; }
