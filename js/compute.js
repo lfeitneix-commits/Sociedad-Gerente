@@ -156,7 +156,7 @@ function computeTimeline(inputs, aumSeries, paybackKey) {
   const crossLabel = aumSeries.breakEvenCrossMonth; // ya en español, ej. "Nov-27"
   const paybackLabel = paybackKey ? monthLabelToEs(paybackKey) : null;
   const launchKey = "Jan-27";
-  const startKey = "Jul-26";
+  const startKey = "Sep-26";
 
   function monthsBetween(aLabel, bLabel) {
     const idxA = inputs.months.findIndex(m => m.label === aLabel);
@@ -170,7 +170,7 @@ function computeTimeline(inputs, aumSeries, paybackKey) {
     const sinceLaunch = monthsBetween(launchKey, paybackKey);
     const sinceStart = monthsBetween(startKey, paybackKey);
     if (sinceLaunch !== null && sinceStart !== null) {
-      periodsFromLaunch = `~${sinceLaunch} meses desde el inicio de facturación (ene-2027) / ~${sinceStart} meses desde la constitución (jul-2026)`;
+      periodsFromLaunch = `~${sinceLaunch} meses desde el inicio de facturación (ene-2027) / ~${sinceStart} meses desde la constitución (sep-2026)`;
     }
   }
 
@@ -186,7 +186,7 @@ function computeTimeline(inputs, aumSeries, paybackKey) {
       date: paybackLabel ? `${paybackLabel.split("-")[0]}-20${paybackLabel.split("-")[1]}` : "> Dic-2028",
       detail: paybackLabel
         ? "Mes en que el flujo de caja neto descontado, acumulado desde el inicio, se vuelve positivo."
-        : "El flujo de caja neto descontado, acumulado desde el inicio, no llega a cruzar cero dentro del horizonte modelado (jul-2026 a dic-2028): la inversión no se recupera en ese período."
+        : "El flujo de caja neto descontado, acumulado desde el inicio, no llega a cruzar cero dentro del horizonte modelado (sep-2026 a dic-2028): la inversión no se recupera en ese período."
     },
     periodsFromLaunch
   };
@@ -272,7 +272,7 @@ function computeVerdict(inputs, { van, regulatory, timeline, years }) {
   return {
     status: "critical",
     headline: "No viable en este escenario",
-    detail: `Con los supuestos actuales el proyecto no recupera la inversión dentro del horizonte modelado (jul-2026 a dic-2028) y no genera valor económico neto suficiente para cubrir el costo de capital.`
+    detail: `Con los supuestos actuales el proyecto no recupera la inversión dentro del horizonte modelado (sep-2026 a dic-2028) y no genera valor económico neto suficiente para cubrir el costo de capital.`
   };
 }
 

@@ -18,8 +18,8 @@
 const INPUTS = {
   meta: {
     scenario: "Captación 50% del AUM (Money Market) / 80% del resto (RF $, RF USD, RV $)",
-    horizon: "Julio 2026 – Diciembre 2028",
-    launchNote: "El armado societario comienza en jul-2026; la Sociedad Gerente empieza a operar y facturar en enero de 2027.",
+    horizon: "Septiembre 2026 – Diciembre 2028",
+    launchNote: "El armado societario comienza en sep-2026; la Sociedad Gerente empieza a operar y facturar en enero de 2027.",
     sourceUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vR6-xExBC5V1-yZCi5VoyfkfmGTIOmyt169aoxnH6Gk3ifXKscTsi5rQROyxnY8dt1vg0zLx4YU8_MH/pubhtml",
     lastSynced: null // lo completa js/sync.js cuando la sincronización con el Sheet funciona
   },
@@ -77,7 +77,7 @@ const INPUTS = {
     },
     // "Rdo Neto SG USD descontado": flujo mensual ya descontado a la tasa de VAN (fila del modelo).
     // Se usa para derivar el mes de payback: el primer mes en que la suma acumulada de esta serie
-    // se vuelve positiva. Su suma total (Jul-26 a Dic-28) coincide con el VAN del modelo — es la
+    // se vuelve positiva. Su suma total (Sep-26 a Dic-28) coincide con el VAN del modelo — es la
     // forma en que el propio Sheet calcula el VAN, así que reusarla para el payback es consistente
     // con el resto del modelo. Bajo este escenario la suma nunca cruza cero: el modelo no recupera
     // la inversión dentro del horizonte modelado (ver compute.js → computePayback).
@@ -123,7 +123,7 @@ const INPUTS = {
   },
 
   // Payback: bajo este escenario el flujo de caja neto descontado acumulado (resultado_neto_usd_descontado)
-  // NUNCA cruza cero dentro del horizonte del modelo (jul-2026 a dic-2028) — termina en -US$92K, el
+  // NUNCA cruza cero dentro del horizonte del modelo (sep-2026 a dic-2028) — termina en -US$92K, el
   // mismo valor que el VAN. El propio Sheet trae de todos modos una celda de texto fijo ("se recuperaría
   // en noviembre del 2028") que quedó de un escenario anterior y ya no es consistente con sus propios
   // números — por eso el payback se CALCULA en compute.js a partir del flujo real en vez de repetir ese
@@ -194,7 +194,7 @@ const INPUTS = {
   ],
 
   timeline: {
-    start: { label: "Inicio", date: "Jul-2026", detail: "Constitución de la Sociedad Gerente e inicio de costos de puesta en marcha." }
+    start: { label: "Inicio", date: "Sep-2026", detail: "Constitución de la Sociedad Gerente e inicio de costos de puesta en marcha." }
     // el hito de break-even y el label de fecha se calculan en compute.js a partir de aum_total_ars vs. breakEven.usd
   },
 
