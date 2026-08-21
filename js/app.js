@@ -137,20 +137,32 @@ function renderKpis(targetId = "kpi-grid") {
   `).join("");
 }
 
-// Dato de contexto (no forma parte del modelo financiero de la SG): cómo se distribuye HOY
-// el AUM que ya gestiona Neix. El total en pesos queda pendiente de confirmación.
+// Datos de contexto (no forman parte del modelo financiero de la SG): tamaño de la industria de
+// FCI y cómo se distribuye HOY el AUM que ya gestiona Neix.
 function renderNeixAumHoy() {
   const n = MODEL.neixAumHoy;
+  const ic = MODEL.industryContext;
   const el = document.getElementById("neix-aum-hoy");
-  if (!n || !el) return;
-  const totalText = n.totalArs != null
-    ? `<strong>${fmtARS(n.totalArs)}</strong> en FCI`
-    : `<strong>AUM total: pendiente de confirmación</strong>`;
-  const f = n.porTipoFondo;
-  const porFondo = f
-    ? ` Por tipo de fondo: <strong>${(f.moneyMarketPct * 100).toFixed(0)}%</strong> Money Market, <strong>${(f.rentaFijaPesosPct * 100).toFixed(0)}%</strong> Renta Fija $, <strong>${(f.rentaFijaUsdPct * 100).toFixed(0)}%</strong> Renta Fija USD y <strong>${(f.rentaVariablePct * 100).toFixed(0)}%</strong> Renta Variable $.`
-    : "";
-  el.innerHTML = `Hoy Neix gestiona ${totalText}, del cual el <strong>${(n.productoresPct * 100).toFixed(0)}%</strong> corresponde a productores y el <strong>${(n.fuerzaPropiaPct * 100).toFixed(0)}%</strong> a fuerza de venta propia.${porFondo}`;
+  if (!el) return;
+
+  let industryHtml = "";
+  if (ic) {
+    industryHtml = `<p>Del patrimonio total de la industria de FCI (<strong>${fmtARS(ic.totalIndustriaArs)}</strong> a ${ic.fechaReferencia}), las sociedades gerentes bancarias concentran el <strong>${(ic.bancariasPct * 100).toFixed(1)}%</strong> (${fmtARS(ic.bancariasArs)}) y las independientes el <strong>${(ic.independientesPct * 100).toFixed(1)}%</strong> (${fmtARS(ic.independientesArs)}). En los últimos 12 meses (${ic.periodoFlujos}), el flujo neto de las independientes representó un <strong>${(ic.flujoNetoIndependientesPct * 100).toFixed(2)}%</strong> de su patrimonio, frente a <strong>${(ic.flujoNetoBancariasPct * 100).toFixed(2)}%</strong> de las bancarias. El AUM de Neix (${fmtARS(ic.neixAumArs)}) representa una participación del <strong>${(ic.neixMarketSharePct * 100).toFixed(2)}%</strong> de la industria.</p>`;
+  }
+
+  let neixHtml = "";
+  if (n) {
+    const totalText = n.totalArs != null
+      ? `<strong>${fmtARS(n.totalArs)}</strong> en FCI`
+      : `<strong>AUM total: pendiente de confirmación</strong>`;
+    const f = n.porTipoFondo;
+    const porFondo = f
+      ? ` Por tipo de fondo: <strong>${(f.moneyMarketPct * 100).toFixed(0)}%</strong> Money Market, <strong>${(f.rentaFijaPesosPct * 100).toFixed(0)}%</strong> Renta Fija $, <strong>${(f.rentaFijaUsdPct * 100).toFixed(0)}%</strong> Renta Fija USD y <strong>${(f.rentaVariablePct * 100).toFixed(0)}%</strong> Renta Variable $.`
+      : "";
+    neixHtml = `<p>Hoy Neix gestiona ${totalText}, del cual el <strong>${(n.productoresPct * 100).toFixed(0)}%</strong> corresponde a productores y el <strong>${(n.fuerzaPropiaPct * 100).toFixed(0)}%</strong> a fuerza de venta propia.${porFondo}</p>`;
+  }
+
+  el.innerHTML = industryHtml + neixHtml;
 }
 
 function renderTimeline() {

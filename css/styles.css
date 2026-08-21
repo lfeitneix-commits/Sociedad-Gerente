@@ -531,7 +531,9 @@ body {
 .fund-card .fund-row-detail span:last-child { font-weight: 500; font-size: 12px; color: var(--text-secondary); }
 
 /* ---------- Context note (Resumen) ---------- */
-.context-note { font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin: 0; }
+.context-note { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+.context-note p { margin: 0 0 12px; }
+.context-note p:last-child { margin-bottom: 0; }
 .context-note strong { color: var(--text-primary); font-weight: 650; }
 
 /* ---------- Verdict hero (Resumen) ---------- */

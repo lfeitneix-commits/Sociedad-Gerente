@@ -115,9 +115,14 @@ const INPUTS = {
     }
   },
 
+  // Break-even (mes 12): cifra final del deck "Neix Asset Management — Proyección Interna,
+  // Agosto 2026" (tabla "Indicadores y resultados del modelo"), reemplaza la del Sheet en vivo
+  // por pedido explícito. El deck solo da el monto en pesos; el USD se deriva acá con el FX
+  // oficial del mes 12 del modelo (Aug-27, 1895.74 — ver months en este archivo) ya que el deck
+  // no trae un equivalente en dólares para este número puntual.
   breakEven: {
-    ars: 100580783247.89,
-    usd: 49103472.37,
+    ars: 98596658570,
+    usd: 52009589.17,
     note: "AUM promedio que la Sociedad Gerente necesita gestionar para cubrir sus costos fijos y variables. Los costos variables se estiman en 0.002% del AUM."
   },
 
@@ -174,8 +179,25 @@ const INPUTS = {
     pctComisionSobreFee: 0.53
   },
 
-  // Contexto (Resumen): AUM en FCI que Neix gestiona HOY, y cómo se distribuye por canal y por
-  // tipo de fondo. Fuente: deck interno "Neix Asset Management — Proyección Interna, Agosto 2026".
+  // Contexto (Resumen): tamaño de la industria de FCI y AUM que Neix gestiona HOY, y cómo se
+  // distribuye por canal y por tipo de fondo. Fuente: deck interno "Neix Asset Management —
+  // Proyección Interna, Agosto 2026".
+  industryContext: {
+    fechaReferencia: "jul-26",
+    totalIndustriaArs: 108585000000,
+    bancariasArs: 64721000000,
+    bancariasPct: 0.598,
+    independientesArs: 43577000000,
+    independientesPct: 0.402,
+    periodoFlujos: "ago-25 a jul-26",
+    flujoNetoIndependientesPct: 0.2005,
+    flujoNetoBancariasPct: 0.1287,
+    // AUM de Neix "dentro del universo" de la industria de FCI relevado (jul-26) — un corte
+    // ligeramente distinto al de neixAumHoy.totalArs (AUM en FCI que Neix gestiona hoy);
+    // ambos números vienen del mismo deck, con esa pequeña diferencia de alcance/fecha.
+    neixAumArs: 50671000000,
+    neixMarketSharePct: 0.0012
+  },
   neixAumHoy: {
     totalArs: 47160000000,
     productoresPct: 0.81,
