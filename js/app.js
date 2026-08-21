@@ -144,9 +144,13 @@ function renderNeixAumHoy() {
   const el = document.getElementById("neix-aum-hoy");
   if (!n || !el) return;
   const totalText = n.totalArs != null
-    ? `<strong>${fmtARS(n.totalArs)}</strong>`
+    ? `<strong>${fmtARS(n.totalArs)}</strong> en FCI`
     : `<strong>AUM total: pendiente de confirmación</strong>`;
-  el.innerHTML = `Hoy Neix gestiona ${totalText}, del cual el <strong>${(n.productoresPct * 100).toFixed(0)}%</strong> corresponde a productores y el <strong>${(n.fuerzaPropiaPct * 100).toFixed(0)}%</strong> a fuerza de venta propia.`;
+  const f = n.porTipoFondo;
+  const porFondo = f
+    ? ` Por tipo de fondo: <strong>${(f.moneyMarketPct * 100).toFixed(0)}%</strong> Money Market, <strong>${(f.rentaFijaPesosPct * 100).toFixed(0)}%</strong> Renta Fija $, <strong>${(f.rentaFijaUsdPct * 100).toFixed(0)}%</strong> Renta Fija USD y <strong>${(f.rentaVariablePct * 100).toFixed(0)}%</strong> Renta Variable $.`
+    : "";
+  el.innerHTML = `Hoy Neix gestiona ${totalText}, del cual el <strong>${(n.productoresPct * 100).toFixed(0)}%</strong> corresponde a productores y el <strong>${(n.fuerzaPropiaPct * 100).toFixed(0)}%</strong> a fuerza de venta propia.${porFondo}`;
 }
 
 function renderTimeline() {

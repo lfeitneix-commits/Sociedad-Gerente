@@ -174,13 +174,18 @@ const INPUTS = {
     pctComisionSobreFee: 0.53
   },
 
-  // Contexto (Resumen): AUM total que Neix gestiona HOY (todos los productos, no solo lo
-  // proyectado para la Sociedad Gerente), y cómo se distribuye por canal. totalArs queda en
-  // null hasta que se confirme la cifra exacta — el dashboard muestra "pendiente" mientras tanto.
+  // Contexto (Resumen): AUM en FCI que Neix gestiona HOY, y cómo se distribuye por canal y por
+  // tipo de fondo. Fuente: deck interno "Neix Asset Management — Proyección Interna, Agosto 2026".
   neixAumHoy: {
-    totalArs: null,
+    totalArs: 47160000000,
     productoresPct: 0.81,
-    fuerzaPropiaPct: 0.19
+    fuerzaPropiaPct: 0.19,
+    porTipoFondo: {
+      moneyMarketPct: 0.74,
+      rentaFijaPesosPct: 0.09,
+      rentaFijaUsdPct: 0.14,
+      rentaVariablePct: 0.02
+    }
   },
 
   // Distribución de costos: estructura anual de referencia (ANEXO 1 de la hoja "Costos SG"),
