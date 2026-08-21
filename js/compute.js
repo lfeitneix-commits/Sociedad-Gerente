@@ -37,13 +37,23 @@ function computeYears(inputs) {
   });
 
   const sortedYears = Object.values(years).sort((a, b) => a.year - b.year);
-  return sortedYears.map((y, i) => ({
-    ...y,
-    label: `Año ${i + 1}`,
-    months: y.monthsWithCost < y.monthsInYear
-      ? `${y.monthsWithCost} de ${y.monthsInYear} meses con datos en el modelo`
-      : "año calendario completo"
-  }));
+  let cumArs = 0, cumUsd = 0;
+  return sortedYears.map((y, i) => {
+    cumArs += y.result_ars;
+    cumUsd += y.result_usd;
+    return {
+      ...y,
+      label: `Año ${i + 1}`,
+      // Resultado acumulado desde el inicio del modelo hasta fin de este año (no solo el
+      // resultado de este año) — es la cifra que usa "Resultado neto por año" en el dashboard,
+      // consistente con la tabla "Indicadores y resultados del modelo" del deck de Neix.
+      result_ars_cum: cumArs,
+      result_usd_cum: cumUsd,
+      months: y.monthsWithCost < y.monthsInYear
+        ? `${y.monthsWithCost} de ${y.monthsInYear} meses con datos en el modelo`
+        : "año calendario completo"
+    };
+  });
 }
 
 // Detalle mensual completo (Financials tab): un renglón por cada mes que tenga al
@@ -282,7 +292,7 @@ function computeVerdict(inputs, { van, regulatory, timeline, years }) {
     return {
       status: "good",
       headline: "Viable",
-      detail: `El proyecto genera resultados netos positivos y recupera la inversión en ${timeline.payback.date}, terminando ${lastYear.label} con un resultado neto de ${fmtUSD(lastYear.result_usd)}.`
+      detail: `El proyecto genera resultados netos positivos y recupera la inversión en ${timeline.payback.date}, terminando ${lastYear.label} con un resultado acumulado de ${fmtUSD(lastYear.result_usd_cum)}.`
     };
   }
   if (financiallyViable && capitalFlag) {

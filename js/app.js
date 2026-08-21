@@ -67,15 +67,17 @@ function renderHeroStats() {
 }
 
 // Resultado neto por año: pesos y dólares con el mismo peso visual (ninguno queda de "letra chica").
+// Muestra el resultado ACUMULADO desde el inicio hasta fin de cada año (no el resultado de
+// ese año solo), igual que "Resultado acumulado Año X" en el deck de Neix.
 function resultTrioHtml(m) {
   return m.years.map(y => {
-    const cls = y.result_usd >= 0 ? "pos" : "neg";
-    const arrow = y.result_usd >= 0 ? "▲" : "▼";
+    const cls = y.result_usd_cum >= 0 ? "pos" : "neg";
+    const arrow = y.result_usd_cum >= 0 ? "▲" : "▼";
     return `
     <div>
       <div class="result-year-label">${y.label} · ${y.year}</div>
-      <div class="result-year-value ${cls}">${arrow} ${fmtUSD(y.result_usd)}</div>
-      <div class="result-year-value-secondary ${cls === "pos" ? "pos-text" : "neg-text"}">${fmtARS(y.result_ars)}</div>
+      <div class="result-year-value ${cls}">${arrow} ${fmtUSD(y.result_usd_cum)}</div>
+      <div class="result-year-value-secondary ${cls === "pos" ? "pos-text" : "neg-text"}">${fmtARS(y.result_ars_cum)}</div>
     </div>
   `;
   }).join("");
