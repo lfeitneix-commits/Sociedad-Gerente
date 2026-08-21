@@ -205,7 +205,7 @@ function computeTimeline(inputs, aumSeries, paybackKey) {
       detail: `El AUM gestionado supera por primera vez el umbral de equilibrio (${fmtUSD(aumSeries.breakEvenUsd)}).`
     },
     payback: {
-      label: "Payback",
+      label: "Recupero de la inversión",
       date: paybackLabel ? `${paybackLabel.split("-")[0]}-20${paybackLabel.split("-")[1]}` : "> Dic-2028",
       detail: paybackLabel
         ? "Mes en que el flujo de caja neto descontado, acumulado desde el inicio, se vuelve positivo."
@@ -324,6 +324,7 @@ function computeModel(inputs) {
     simulatorBase,
     verdict,
     regulatory,
+    neixAumHoy: inputs.neixAumHoy,
     initialInvestmentItems: inputs.initialInvestmentItems,
     timeline,
     kpis: {
@@ -334,8 +335,8 @@ function computeModel(inputs) {
         label: timeline.payback.date,
         periodsFromLaunch: timeline.periodsFromLaunch,
         note: payback.monthKey
-          ? `Calculado como el primer mes en que el flujo de caja neto descontado acumulado del modelo se vuelve positivo. ${inputs.payback.sheetNote}`
-          : `El flujo de caja neto descontado acumulado nunca se vuelve positivo dentro del horizonte del modelo — termina en ${fmtUSD(payback.cumUsd)}. ${inputs.payback.sheetNote}`
+          ? "Calculado como el primer mes en que el flujo de caja neto descontado acumulado del modelo se vuelve positivo (la suma total de esa serie coincide con el VAN)."
+          : `El flujo de caja neto descontado acumulado nunca se vuelve positivo dentro del horizonte del modelo — termina en ${fmtUSD(payback.cumUsd)}.`
       },
       van: inputs.van,
       tir: inputs.tir,

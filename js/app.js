@@ -33,45 +33,61 @@ function renderVerdict() {
   `;
 }
 
-// Los 4 números que abren la presentación — la "tapa" del business case.
+// AUM break-even: en pesos (primario) con el USD como referencia — se reusa en Resumen y en
+// el recap de Fondos & supuestos.
+function breakEvenStatHtml(m) {
+  return `
+    <div class="hero-stat">
+      <p class="hero-stat-label">AUM break-even</p>
+      <div class="hero-stat-value">${fmtARS(m.kpis.breakEven.ars)}</div>
+      <p class="hero-stat-sub">${fmtUSD(m.kpis.breakEven.usd)}</p>
+    </div>
+  `;
+}
+
+function recuperoStatHtml(m) {
+  const sub = m.kpis.payback.periodsFromLaunch
+    ? m.kpis.payback.periodsFromLaunch.split(" / ")[0]
+    : "No se recupera en el horizonte modelado";
+  return `
+    <div class="hero-stat">
+      <p class="hero-stat-label">Recupero de la inversión</p>
+      <div class="hero-stat-value">${m.kpis.payback.label}</div>
+      <p class="hero-stat-sub">${sub}</p>
+    </div>
+  `;
+}
+
+// Los 2 números que abren la presentación — la "tapa" del business case.
 function renderHeroStats() {
   const m = MODEL;
   document.getElementById("scenario-tag-text").textContent = m.meta.scenario;
   document.getElementById("scenario-inline").textContent = m.meta.scenario;
-
-  const paybackSub = m.kpis.payback.periodsFromLaunch
-    ? m.kpis.payback.periodsFromLaunch.split(" / ")[0]
-    : "No se recupera en el horizonte modelado";
-
-  const stats = [
-    { label: "AUM break-even", value: fmtUSD(m.kpis.breakEven.usd), sub: fmtARS(m.kpis.breakEven.ars) },
-    { label: "Payback", value: m.kpis.payback.label, sub: paybackSub }
-  ];
-
-  document.getElementById("hero-stats").innerHTML = stats.map(s => `
-    <div class="hero-stat">
-      <p class="hero-stat-label">${s.label}</p>
-      <div class="hero-stat-value">${s.value}</div>
-      <p class="hero-stat-sub">${s.sub}</p>
-    </div>
-  `).join("");
+  document.getElementById("hero-stats").innerHTML = breakEvenStatHtml(m) + recuperoStatHtml(m);
 }
 
-function renderResultTrio() {
-  const m = MODEL;
-  document.getElementById("result-trio").innerHTML = m.years.map(y => `
+// Resultado neto por año: pesos y dólares con el mismo peso visual (ninguno queda de "letra chica").
+function resultTrioHtml(m) {
+  return m.years.map(y => {
+    const cls = y.result_usd >= 0 ? "pos" : "neg";
+    const arrow = y.result_usd >= 0 ? "▲" : "▼";
+    return `
     <div>
       <div class="result-year-label">${y.label} · ${y.year}</div>
-      <div class="result-year-value ${y.result_usd >= 0 ? "pos" : "neg"}">${y.result_usd >= 0 ? "▲" : "▼"} ${fmtUSD(y.result_usd)}</div>
-      <div class="result-year-sub">${fmtARS(y.result_ars)}</div>
+      <div class="result-year-value ${cls}">${arrow} ${fmtUSD(y.result_usd)}</div>
+      <div class="result-year-value-secondary ${cls === "pos" ? "pos-text" : "neg-text"}">${fmtARS(y.result_ars)}</div>
     </div>
-  `).join("");
+  `;
+  }).join("");
+}
+function renderResultTrio(targetId = "result-trio") {
+  document.getElementById(targetId).innerHTML = resultTrioHtml(MODEL);
 }
 
-// Indicadores de apoyo — quedan en segundo plano detrás de los 4 números de arriba.
-function renderKpis() {
+// Indicadores de apoyo — quedan en segundo plano detrás de los números de arriba.
+function renderKpis(targetId = "kpi-grid") {
   const m = MODEL;
-  const grid = document.getElementById("kpi-grid");
+  const grid = document.getElementById(targetId);
 
   const cards = [
     {
@@ -119,6 +135,18 @@ function renderKpis() {
       <p class="kpi-sub">${c.sub}</p>
     </div>
   `).join("");
+}
+
+// Dato de contexto (no forma parte del modelo financiero de la SG): cómo se distribuye HOY
+// el AUM que ya gestiona Neix. El total en pesos queda pendiente de confirmación.
+function renderNeixAumHoy() {
+  const n = MODEL.neixAumHoy;
+  const el = document.getElementById("neix-aum-hoy");
+  if (!n || !el) return;
+  const totalText = n.totalArs != null
+    ? `<strong>${fmtARS(n.totalArs)}</strong>`
+    : `<strong>AUM total: pendiente de confirmación</strong>`;
+  el.innerHTML = `Hoy Neix gestiona ${totalText}, del cual el <strong>${(n.productoresPct * 100).toFixed(0)}%</strong> corresponde a productores y el <strong>${(n.fuerzaPropiaPct * 100).toFixed(0)}%</strong> a fuerza de venta propia.`;
 }
 
 function renderTimeline() {
@@ -204,6 +232,9 @@ function renderFunds() {
       <div class="fund-row"><span>AUM proyectado</span><span>${fmtARS(f.aum_projected_ars)}</span></div>
       <div class="fund-row"><span>Fee anual</span><span>${(f.fee_annual_pct * 100).toFixed(2)}%</span></div>
       <div class="fund-row"><span>Rendimiento anual</span><span>${(f.return_annual_pct * 100).toFixed(1)}%</span></div>
+      <div class="fund-row fund-row-divider"><span>Crecimiento mensual del AUM</span><span>${((f.return_monthly_pct + f.newMoney_monthly_pct) * 100).toFixed(2)}%</span></div>
+      <div class="fund-row fund-row-detail"><span>· devengamiento de cartera</span><span>${(f.return_monthly_pct * 100).toFixed(2)}%</span></div>
+      <div class="fund-row fund-row-detail"><span>· new money</span><span>${(f.newMoney_monthly_pct * 100).toFixed(2)}%</span></div>
     </div>
   `).join("");
 
@@ -225,6 +256,11 @@ function renderFunds() {
       <p class="kpi-sub">Horizonte del modelo: ${m.meta.horizon}. ${m.meta.launchNote}</p>
     </div>
   `;
+
+  // Recap de KPIs del Resumen, para tener el respaldo numérico completo a mano en esta pestaña.
+  document.getElementById("supuestos-breakeven").innerHTML = breakEvenStatHtml(m);
+  renderResultTrio("supuestos-result-trio");
+  renderKpis("supuestos-kpi-grid");
 }
 
 function renderRegulatory() {
@@ -329,6 +365,7 @@ function renderAll() {
   renderHeroStats();
   renderResultTrio();
   renderKpis();
+  renderNeixAumHoy();
   renderAumChart("chart-aum", MODEL);
   renderYearsChart("chart-years", MODEL);
   renderMonthlyTable();
