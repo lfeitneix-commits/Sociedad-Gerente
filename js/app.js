@@ -258,6 +258,10 @@ function renderFunds() {
       <div class="fund-row fund-row-divider"><span>Crecimiento mensual del AUM</span><span>${((f.return_monthly_pct + f.newMoney_monthly_pct) * 100).toFixed(2)}%</span></div>
       <div class="fund-row fund-row-detail"><span>· devengamiento de cartera</span><span>${(f.return_monthly_pct * 100).toFixed(2)}%</span></div>
       <div class="fund-row fund-row-detail"><span>· new money</span><span>${(f.newMoney_monthly_pct * 100).toFixed(2)}%</span></div>
+      <div class="fund-row fund-row-divider"><span>AUM a fin de Año 2 (2027)</span><span>${fmtUSD(f.aumEndOfYear_usd["2027"])}</span></div>
+      <div class="fund-row fund-row-detail"><span>· en pesos</span><span>${fmtARS(f.aumEndOfYear_ars["2027"])}</span></div>
+      <div class="fund-row fund-row-divider"><span>AUM a fin de Año 3 (2028)</span><span>${fmtUSD(f.aumEndOfYear_usd["2028"])}</span></div>
+      <div class="fund-row fund-row-detail"><span>· en pesos</span><span>${fmtARS(f.aumEndOfYear_ars["2028"])}</span></div>
     </div>
   `).join("");
 

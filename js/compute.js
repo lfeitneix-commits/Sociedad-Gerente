@@ -335,13 +335,21 @@ function computeModel(inputs) {
   const regulatory = computeRegulatory(inputs);
   const verdict = computeVerdict(inputs, { van: inputs.van, regulatory, timeline, years });
 
+  const fundsWithAumProjection = inputs.funds.map(f => ({
+    ...f,
+    aumEndOfYear_usd: {
+      "2027": f.aumEndOfYear_ars["2027"] / fxForMonth(inputs, "Dec-27"),
+      "2028": f.aumEndOfYear_ars["2028"] / fxForMonth(inputs, "Dec-28")
+    }
+  }));
+
   return {
     meta: inputs.meta,
     years,
     aumSeries,
     monthlyTable,
     costBreakdown,
-    funds: inputs.funds,
+    funds: fundsWithAumProjection,
     simulatorBase,
     verdict,
     regulatory,

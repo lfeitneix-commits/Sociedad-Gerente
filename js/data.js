@@ -230,11 +230,14 @@ const INPUTS = {
   // newMoney_monthly_pct = crecimiento por captación de dinero nuevo por mes (mismo supuesto,
   // 5.00%, para los 4 fondos). La suma de ambos es la "Tasa de crecimiento mensual" del AUM
   // proyectado (hoja "Supuestos").
+  // aumEndOfYear_ars = AUM de este fondo a Dic-27 (Año 2) y Dic-28 (Año 3), tomado de la serie
+  // mensual de AUM por fondo de la hoja "Resultado económico" (misma fuente que aum_total_ars).
+  // La suma de los 4 fondos en cada año coincide exactamente con aum_total_ars de ese mes.
   funds: [
-    { name: "Money Market $", aum_projected_ars: 37605451141.76, fee_annual_pct: 0.0181, return_annual_pct: 0.3004, return_monthly_pct: 0.0250, newMoney_monthly_pct: 0.0500 },
-    { name: "Renta Fija $", aum_projected_ars: 4780009363.52, fee_annual_pct: 0.0210, return_annual_pct: 0.4280, return_monthly_pct: 0.0357, newMoney_monthly_pct: 0.0500 },
-    { name: "Renta Fija USD", aum_projected_ars: 7321523514.97, fee_annual_pct: 0.0140, return_annual_pct: 0.3423, return_monthly_pct: 0.0285, newMoney_monthly_pct: 0.0500 },
-    { name: "Renta Variable $", aum_projected_ars: 959285181.66, fee_annual_pct: 0.0290, return_annual_pct: 0.5283, return_monthly_pct: 0.0440, newMoney_monthly_pct: 0.0500 }
+    { name: "Money Market $", aum_projected_ars: 37605451141.76, fee_annual_pct: 0.0181, return_annual_pct: 0.3004, return_monthly_pct: 0.0250, newMoney_monthly_pct: 0.0500, aumEndOfYear_ars: { "2027": 90057868189.23, "2028": 214577820004.66 } },
+    { name: "Renta Fija $", aum_projected_ars: 4780009363.52, fee_annual_pct: 0.0210, return_annual_pct: 0.4280, return_monthly_pct: 0.0357, newMoney_monthly_pct: 0.0500, aumEndOfYear_ars: { "2027": 17398500587.60, "2028": 46651957176.46 } },
+    { name: "Renta Fija USD", aum_projected_ars: 7321523514.97, fee_annual_pct: 0.0140, return_annual_pct: 0.3423, return_monthly_pct: 0.0285, newMoney_monthly_pct: 0.0500, aumEndOfYear_ars: { "2027": 23820871705.46, "2028": 59009270686.56 } },
+    { name: "Renta Variable $", aum_projected_ars: 959285181.66, fee_annual_pct: 0.0290, return_annual_pct: 0.5283, return_monthly_pct: 0.0440, newMoney_monthly_pct: 0.0500, aumEndOfYear_ars: { "2027": 3977896079.25, "2028": 11694465832.36 } }
   ],
 
   timeline: {
