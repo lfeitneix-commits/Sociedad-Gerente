@@ -121,6 +121,19 @@ function renderAumChart(containerId, model) {
     svg.appendChild(lbl);
   }
 
+  // recupero de la inversión (payback): línea vertical + marcador, mes en que el flujo de
+  // caja neto descontado acumulado del modelo se vuelve positivo (distinto del cruce de
+  // AUM de arriba, que mide el umbral de equilibrio de AUM, no el repago de la inversión).
+  const paybackIdx = pts.findIndex(p => p.m === model.aumSeries.paybackMonth);
+  if (paybackIdx >= 0) {
+    const px = x(paybackIdx), py = y(pts[paybackIdx].usd);
+    svg.appendChild(el("line", { x1: px, x2: px, y1: padT, y2: padT + plotH, stroke: "var(--accent)", "stroke-width": 1.5, "stroke-dasharray": "3 3" }));
+    svg.appendChild(el("circle", { cx: px, cy: py, r: 5, fill: "var(--accent)", stroke: "var(--surface-1)", "stroke-width": 2 }));
+    const plbl = el("text", { x: px, y: padT + 12, "text-anchor": paybackIdx > pts.length * 0.8 ? "end" : "middle", "font-size": 10.5, "font-weight": 650, fill: "var(--accent)" });
+    plbl.textContent = `Recupero de la inversión: ${pts[paybackIdx].m}`;
+    svg.appendChild(plbl);
+  }
+
   // end dot
   const last = pts[pts.length - 1];
   svg.appendChild(el("circle", { cx: x(pts.length - 1), cy: y(last.usd), r: 4, fill: "var(--series-1)", stroke: "var(--surface-1)", "stroke-width": 2 }));

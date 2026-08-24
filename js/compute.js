@@ -331,6 +331,8 @@ function computeModel(inputs) {
   const employees = computeEmployees(inputs);
   const providers = computeProviders(inputs);
   const payback = computePayback(inputs);
+  // Se agrega acá (no en computeAumSeries) porque el payback recién se calcula en este punto.
+  aumSeries.paybackMonth = payback.monthKey ? monthLabelToEs(payback.monthKey) : null;
   const timeline = computeTimeline(inputs, aumSeries, payback.monthKey);
   const regulatory = computeRegulatory(inputs);
   const verdict = computeVerdict(inputs, { van: inputs.van, regulatory, timeline, years });
