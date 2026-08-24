@@ -252,7 +252,6 @@ function renderFunds() {
   grid.innerHTML = m.funds.map(f => `
     <div class="fund-card">
       <h4>${f.name}</h4>
-      <div class="fund-row"><span>AUM proyectado</span><span>${fmtARS(f.aum_projected_ars)}</span></div>
       <div class="fund-row"><span>Fee anual</span><span>${(f.fee_annual_pct * 100).toFixed(2)}%</span></div>
       <div class="fund-row"><span>Rendimiento anual</span><span>${(f.return_annual_pct * 100).toFixed(1)}%</span></div>
       <div class="fund-row fund-row-divider"><span>Crecimiento mensual del AUM</span><span>${((f.return_monthly_pct + f.newMoney_monthly_pct) * 100).toFixed(2)}%</span></div>
