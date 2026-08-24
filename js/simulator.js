@@ -138,13 +138,25 @@ function simRenderResults() {
     </div>
   `;
 
-  const baseBreakEven_usd = MODEL.kpis.breakEven.usd;
-  const diffPct = r.breakEven_usd !== null ? ((r.breakEven_usd - baseBreakEven_usd) / baseBreakEven_usd * 100) : null;
-  const breakEvenNote = diffPct !== null
-    ? `vs. AUM break-even del modelo (${fmtUSD(baseBreakEven_usd)}): ${diffPct >= 0 ? "+" : ""}${diffPct.toFixed(1)}% con estos supuestos.`
-    : `Con estos supuestos el fee neto no cubre costos fijos: no existe un AUM de equilibrio.`;
+  // El break-even es el AUM al que el resultado neto pasa de negativo a positivo: por
+  // construcción (resultado = feeNetoEfectivo · (aumTotal − breakEven)), el signo del
+  // resultado SIEMPRE coincide con si el AUM captado está arriba o abajo de este número. Por
+  // eso la comparación relevante es AUM captado vs. break-even (no break-even vs. break-even
+  // del modelo base) — el break-even en sí varía poco entre escenarios porque depende de la
+  // mezcla de fees entre fondos, no del nivel de AUM: subir o bajar la captación mueve el AUM
+  // captado, no el umbral.
+  let gapNote;
+  if (r.breakEven_usd === null) {
+    gapNote = `Con estos supuestos el fee neto no cubre costos fijos: no existe un AUM de equilibrio.`;
+  } else {
+    const gap_usd = r.aumTotal_usd - r.breakEven_usd;
+    const gapPct = Math.abs(gap_usd / r.breakEven_usd * 100);
+    gapNote = gap_usd >= 0
+      ? `El AUM captado (${fmtUSD(r.aumTotal_usd)}) está <strong class="pos-text">${gapPct.toFixed(1)}% por encima</strong> del AUM de equilibrio (${fmtUSD(r.breakEven_usd)}) → resultado neto positivo.`
+      : `El AUM captado (${fmtUSD(r.aumTotal_usd)}) está <strong class="neg-text">${gapPct.toFixed(1)}% por debajo</strong> del AUM de equilibrio (${fmtUSD(r.breakEven_usd)}) → resultado neto negativo.`;
+  }
   document.getElementById("sim-vs-base").innerHTML =
-    `${breakEvenNote}<br>El fee de cada fondo queda fijo (el de "Fondos &amp; supuestos"); lo que cambia acá es cuánto capta la Sociedad Gerente del AUM potencial de cada grupo de fondos, y el resultado es <em>antes</em> de Impuesto a las Ganancias — por eso los ingresos y el resultado neto de este simulador no coinciden exactamente con Financials, aunque el AUM y el break-even sí son comparables.`;
+    `${gapNote}<br>El fee de cada fondo queda fijo (el de "Fondos &amp; supuestos"); lo que cambia acá es cuánto capta la Sociedad Gerente del AUM potencial de cada grupo de fondos, y el resultado es <em>antes</em> de Impuesto a las Ganancias — por eso los ingresos y el resultado neto de este simulador no coinciden exactamente con Financials, aunque el AUM y el break-even sí son comparables.`;
 
   const table = document.getElementById("sim-fund-table");
   const rows = r.fundsResult.map(f => `
