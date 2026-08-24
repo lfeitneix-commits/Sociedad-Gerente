@@ -319,8 +319,20 @@ function renderRegulatory() {
   document.getElementById("reg-funciones-adicionales").textContent = r.funciones.adicionales;
 }
 
-const TAB_ORDER = ["resumen", "financials", "costos", "regulatorio", "fondos"];
-const TAB_TITLES = { resumen: "Resumen", financials: "Financials", costos: "Costos", regulatorio: "Regulatorio", fondos: "Fondos & supuestos" };
+function renderPasos() {
+  document.getElementById("pasos-list").innerHTML = MODEL.pasosASeguir.map((p, i) => `
+    <div class="req-item">
+      <span class="req-num">${String(i + 1).padStart(2, "0")}</span>
+      <div class="req-body">
+        <h4>${p.titulo}</h4>
+        <p>${p.detalle}</p>
+      </div>
+    </div>
+  `).join("");
+}
+
+const TAB_ORDER = ["resumen", "financials", "costos", "regulatorio", "fondos", "pasos"];
+const TAB_TITLES = { resumen: "Resumen", financials: "Financials", costos: "Costos", regulatorio: "Regulatorio", fondos: "Fondos & supuestos", pasos: "Pasos a seguir" };
 
 function goToTab(tab) {
   const items = document.querySelectorAll(".nav-item");
@@ -375,6 +387,7 @@ function renderAll() {
   renderInvestmentTable();
   renderFunds();
   renderRegulatory();
+  renderPasos();
   renderTimeline();
 }
 

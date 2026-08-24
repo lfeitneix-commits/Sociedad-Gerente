@@ -324,6 +324,8 @@ const INPUTS = {
       adicionales: "Asesoramiento en inversiones, gestión de órdenes, administración de carteras con mandato expreso, colocación y distribución de cuotapartes propias y de otras gerentes. Puede inscribirse simultáneamente como Agente de Negociación y/o ALyC."
     },
 
+    // Fuente: deck "Neix Asset Management — Proyección Interna, Agosto 2026", slides "Ventajas"/
+    // "Desventajas de crear Neix Asset Management".
     ventajas: [
       "Mayor control sobre los fondos: gestión operativa y comercial totalmente propia",
       "Participación plena en los ingresos generados por el management fee",
@@ -332,14 +334,31 @@ const INPUTS = {
       "Sin dependencia de terceros para aprobar o modificar fondos — time to market más ágil",
       "Aporte reputacional e institucional para Neix como ALyC",
       "Eficiencia de costos al aprovechar recursos humanos, tecnológicos y físicos ya existentes en Neix",
-      "El patrimonio neto mínimo consolidado (ALyC + ACyDI + Sociedad Gerente) ya está cubierto de sobra con el balance actual de Neix — no requiere capital fresco"
+      "Incentivo a los FAs a vender y estabilizar sus ingresos"
     ],
     desventajas: [
       "Proceso de constitución más lento y más complejo",
       "Mayor exposición al riesgo — costos iniciales significativos",
       "Carga regulatoria y administrativa elevada",
       "Necesidad de desarrollar una estructura operativa y física específica",
-      "Restricción para operar los FCI propios con la mesa de Neix"
+      "Restricción para operar los FCI propios con la mesa de Neix",
+      "Inflación de costos en USD",
+      "Contexto macro de empresas con menor caja y apertura de los controles de capitales",
+      "Mercado con alto número de fondos comunes competidores (ALyCs, bancos y SGRs)"
     ]
-  }
+  },
+
+  // Fuente: deck "Neix Asset Management — Proyección Interna, Agosto 2026", slide final "Pasos
+  // a seguir". Son los próximos hitos de decisión del proyecto, no forman parte del modelo
+  // financiero — por eso viven en su propio bloque, no dentro de "regulatory".
+  pasosASeguir: [
+    {
+      titulo: "Validación comercial con referentes",
+      detalle: "Reunión con referentes comerciales (Facu, Nica, Sole, Petra, Germán y Nico) para relevar feedback real del frente de venta antes de tomar una decisión."
+    },
+    {
+      titulo: "Definición de equipo y liderazgo, si se avanza",
+      detalle: "En caso de decidir avanzar con el proyecto, conformar el equipo de trabajo y designar un líder que conduzca su implementación."
+    }
+  ]
 };

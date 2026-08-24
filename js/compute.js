@@ -364,6 +364,7 @@ function computeModel(inputs) {
     verdict,
     regulatory,
     neixAumHoy: inputs.neixAumHoy,
+    pasosASeguir: inputs.pasosASeguir,
     industryContext: inputs.industryContext,
     initialInvestmentItems: inputs.initialInvestmentItems,
     timeline,
