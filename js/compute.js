@@ -121,8 +121,16 @@ function computeCostBreakdown(inputs, years) {
 function computeSimulatorBase(inputs, costBreakdown) {
   const variableItem = costBreakdown.allItems.find(i => i.variable);
   const fixedCosts_ars = costBreakdown.total_ars - (variableItem ? variableItem.ars : 0);
+  const cap = inputs.captureScenario;
   return {
-    funds: inputs.funds.map(f => ({ name: f.name, aum_ars: f.aum_projected_ars, fee_pct: f.fee_annual_pct })),
+    // fullAum_ars = AUM "100% captado" de referencia (antes de aplicar el % de captación del
+    // escenario), para que el Simulador pueda mover la captación de cada grupo de fondos.
+    funds: inputs.funds.map(f => {
+      const group = f.name === "Money Market $" ? "moneyMarket" : "resto";
+      const capturePct = group === "moneyMarket" ? cap.moneyMarketPct : cap.restoPct;
+      return { name: f.name, group, fee_pct: f.fee_annual_pct, fullAum_ars: f.aum_projected_ars / capturePct };
+    }),
+    captureScenario: cap,
     productoresSplit: inputs.productoresSplit,
     fixedCosts_ars,
     fixedCosts_usd: fixedCosts_ars / costBreakdown.fx,

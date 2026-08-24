@@ -1,18 +1,20 @@
 /*
  * Simulador (tab "Simulador"): sensibilidad de AUM break-even / resultado neto ante cambios
- * en el fee de cada fondo y en el split de comisión a productores. Es una vista aparte del
- * modelo principal: parte de MODEL.simulatorBase (AUM y fee proyectados por fondo, costos fijos
- * ex-comisión productores) y recalcula todo en el cliente a medida que se mueven los sliders,
+ * en cuánto capta la Sociedad Gerente de cada tipo de fondo (hoy 70% Money Market / 90% el
+ * resto) y en el split de comisión a productores. Es una vista aparte del modelo principal:
+ * parte de MODEL.simulatorBase (AUM "100% captado" y fee fijo por fondo, costos fijos ex-
+ * comisión productores) y recalcula todo en el cliente a medida que se mueven los sliders,
  * sin tocar INPUTS/MODEL. Es una aproximación anual (estructura de referencia de costBreakdown,
  * mismo año que "Costo promedio mensual"), no una réplica del detalle mensual del Sheet.
  */
 
-let simState = null; // { fees: [..por fondo..], pctAumEnProductores, pctComisionSobreFee }
+let simState = null; // { captureMM, captureResto, pctAumEnProductores, pctComisionSobreFee }
 
 function simDefaultState() {
   const base = MODEL.simulatorBase;
   return {
-    fees: base.funds.map(f => f.fee_pct),
+    captureMM: base.captureScenario.moneyMarketPct,
+    captureResto: base.captureScenario.restoPct,
     pctAumEnProductores: base.productoresSplit.pctAumEnProductores,
     pctComisionSobreFee: base.productoresSplit.pctComisionSobreFee
   };
@@ -20,10 +22,11 @@ function simDefaultState() {
 
 function simCompute(state) {
   const base = MODEL.simulatorBase;
-  const fundsResult = base.funds.map((f, i) => {
-    const fee_pct = state.fees[i];
-    const ingresos_ars = f.aum_ars * fee_pct;
-    return { name: f.name, aum_ars: f.aum_ars, fee_pct, ingresos_ars };
+  const fundsResult = base.funds.map(f => {
+    const capturePct = f.group === "moneyMarket" ? state.captureMM : state.captureResto;
+    const aum_ars = f.fullAum_ars * capturePct;
+    const ingresos_ars = aum_ars * f.fee_pct;
+    return { name: f.name, aum_ars, fee_pct: f.fee_pct, capturePct, ingresos_ars };
   });
   const ingresosTotal_ars = fundsResult.reduce((s, f) => s + f.ingresos_ars, 0);
   const aumTotal_ars = fundsResult.reduce((s, f) => s + f.aum_ars, 0);
@@ -37,6 +40,7 @@ function simCompute(state) {
 
   return {
     fundsResult,
+    aumTotal_ars, aumTotal_usd: aumTotal_ars / base.fx,
     ingresosTotal_ars, ingresosTotal_usd: ingresosTotal_ars / base.fx,
     comisionProductores_ars, comisionProductores_usd: comisionProductores_ars / base.fx,
     costosFijos_ars, costosFijos_usd: costosFijos_ars / base.fx,
@@ -49,17 +53,23 @@ function simCompute(state) {
 function simRenderSliders() {
   const base = MODEL.simulatorBase;
 
-  const fundSliders = document.getElementById("sim-fund-sliders");
-  fundSliders.innerHTML = base.funds.map((f, i) => `
+  const captureSliders = document.getElementById("sim-capture-sliders");
+  captureSliders.innerHTML = `
     <div class="sim-row">
       <div class="sim-row-label">
-        <span>${f.name}</span>
-        <span class="sim-row-value" id="sim-fee-value-${i}">${(simState.fees[i] * 100).toFixed(2)}%</span>
+        <span>Money Market $</span>
+        <span class="sim-row-value" id="sim-capture-mm-value">${(simState.captureMM * 100).toFixed(0)}%</span>
       </div>
-      <input type="range" class="sim-slider" id="sim-fee-${i}" min="0" max="5" step="0.01" value="${(simState.fees[i] * 100).toFixed(2)}">
-      <p class="sim-row-sub">AUM proyectado: ${fmtUSD(f.aum_ars / base.fx)}</p>
+      <input type="range" class="sim-slider" id="sim-capture-mm" min="0" max="100" step="1" value="${(simState.captureMM * 100).toFixed(0)}">
     </div>
-  `).join("");
+    <div class="sim-row">
+      <div class="sim-row-label">
+        <span>Resto de los fondos (RF $, RF USD, RV $)</span>
+        <span class="sim-row-value" id="sim-capture-resto-value">${(simState.captureResto * 100).toFixed(0)}%</span>
+      </div>
+      <input type="range" class="sim-slider" id="sim-capture-resto" min="0" max="100" step="1" value="${(simState.captureResto * 100).toFixed(0)}">
+    </div>
+  `;
 
   const prodSliders = document.getElementById("sim-productores-sliders");
   prodSliders.innerHTML = `
@@ -79,12 +89,15 @@ function simRenderSliders() {
     </div>
   `;
 
-  base.funds.forEach((f, i) => {
-    document.getElementById(`sim-fee-${i}`).addEventListener("input", (e) => {
-      simState.fees[i] = parseFloat(e.target.value) / 100;
-      document.getElementById(`sim-fee-value-${i}`).textContent = `${parseFloat(e.target.value).toFixed(2)}%`;
-      simRenderResults();
-    });
+  document.getElementById("sim-capture-mm").addEventListener("input", (e) => {
+    simState.captureMM = parseFloat(e.target.value) / 100;
+    document.getElementById("sim-capture-mm-value").textContent = `${e.target.value}%`;
+    simRenderResults();
+  });
+  document.getElementById("sim-capture-resto").addEventListener("input", (e) => {
+    simState.captureResto = parseFloat(e.target.value) / 100;
+    document.getElementById("sim-capture-resto-value").textContent = `${e.target.value}%`;
+    simRenderResults();
   });
   document.getElementById("sim-pctaum").addEventListener("input", (e) => {
     simState.pctAumEnProductores = parseFloat(e.target.value) / 100;
@@ -109,9 +122,9 @@ function simRenderResults() {
       <p class="hero-stat-sub">fee neto ponderado: ${(r.feePromedioPonderado * (1 - simState.pctAumEnProductores * simState.pctComisionSobreFee) * 100).toFixed(2)}%</p>
     </div>
     <div class="hero-stat">
-      <p class="hero-stat-label">Fee promedio ponderado</p>
-      <div class="hero-stat-value">${(r.feePromedioPonderado * 100).toFixed(2)}%</div>
-      <p class="hero-stat-sub">ponderado por AUM de cada fondo</p>
+      <p class="hero-stat-label">AUM total captado</p>
+      <div class="hero-stat-value">${fmtUSD(r.aumTotal_usd)}</div>
+      <p class="hero-stat-sub">${fmtARS(r.aumTotal_ars)}</p>
     </div>
     <div class="hero-stat">
       <p class="hero-stat-label">Comisión a productores</p>
@@ -131,21 +144,22 @@ function simRenderResults() {
     ? `vs. AUM break-even del modelo (${fmtUSD(baseBreakEven_usd)}): ${diffPct >= 0 ? "+" : ""}${diffPct.toFixed(1)}% con estos supuestos.`
     : `Con estos supuestos el fee neto no cubre costos fijos: no existe un AUM de equilibrio.`;
   document.getElementById("sim-vs-base").innerHTML =
-    `${breakEvenNote}<br>El AUM de cada fondo es el mismo de "Fondos &amp; supuestos" (foto fija, no la rampa mensual real) y el resultado es <em>antes</em> de Impuesto a las Ganancias — por eso los ingresos y el resultado neto de este simulador no coinciden exactamente con Financials, aunque el AUM y el break-even sí son comparables.`;
+    `${breakEvenNote}<br>El fee de cada fondo queda fijo (el de "Fondos &amp; supuestos"); lo que cambia acá es cuánto capta la Sociedad Gerente del AUM potencial de cada grupo de fondos, y el resultado es <em>antes</em> de Impuesto a las Ganancias — por eso los ingresos y el resultado neto de este simulador no coinciden exactamente con Financials, aunque el AUM y el break-even sí son comparables.`;
 
   const table = document.getElementById("sim-fund-table");
   const rows = r.fundsResult.map(f => `
     <tr>
       <td>${f.name}</td>
+      <td class="num">${(f.capturePct * 100).toFixed(0)}%</td>
       <td class="num">${fmtUSD(f.aum_ars / base.fx)}</td>
       <td class="num">${(f.fee_pct * 100).toFixed(2)}%</td>
       <td class="num">${fmtUSD(f.ingresos_ars / base.fx)}</td>
     </tr>
   `).join("");
   table.innerHTML = `
-    <thead><tr><th>Fondo</th><th class="num">AUM proyectado</th><th class="num">Fee</th><th class="num">Ingresos anuales</th></tr></thead>
+    <thead><tr><th>Fondo</th><th class="num">Captación</th><th class="num">AUM captado</th><th class="num">Fee</th><th class="num">Ingresos anuales</th></tr></thead>
     <tbody>${rows}
-      <tr class="total-row"><td>Total</td><td class="num">${fmtUSD(r.fundsResult.reduce((s, f) => s + f.aum_ars, 0) / base.fx)}</td><td></td><td class="num">${fmtUSD(r.ingresosTotal_usd)}</td></tr>
+      <tr class="total-row"><td>Total</td><td></td><td class="num">${fmtUSD(r.aumTotal_usd)}</td><td></td><td class="num">${fmtUSD(r.ingresosTotal_usd)}</td></tr>
     </tbody>
   `;
 }

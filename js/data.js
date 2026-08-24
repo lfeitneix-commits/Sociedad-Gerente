@@ -180,6 +180,15 @@ const INPUTS = {
     pctComisionSobreFee: 0.53
   },
 
+  // % del AUM potencial de cada tipo de fondo que la Sociedad Gerente efectivamente capta
+  // (ver meta.scenario). Los aum_projected_ars de "funds" ya están calculados con estos
+  // porcentajes aplicados — el Simulador (js/simulator.js) los usa para volver a un AUM
+  // "100% captado" de referencia y así poder mover la captación de cada grupo de fondos.
+  captureScenario: {
+    moneyMarketPct: 0.70,
+    restoPct: 0.90
+  },
+
   // Contexto (Resumen): tamaño de la industria de FCI y AUM que Neix gestiona HOY, y cómo se
   // distribuye por canal y por tipo de fondo. Fuente: deck interno "Neix Asset Management —
   // Proyección Interna, Agosto 2026".

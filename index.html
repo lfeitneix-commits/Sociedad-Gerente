@@ -193,36 +193,24 @@
       <header class="panel-header">
         <p class="slide-eyebrow">05 / 06 — Fondos &amp; supuestos</p>
         <h1>Fondos &amp; <em>supuestos</em></h1>
-        <p>Los 4 fondos proyectados y las hipótesis clave del modelo.</p>
+        <p>Los 4 fondos proyectados.</p>
       </header>
 
       <div class="fund-grid" id="fund-grid"></div>
-
-      <h2 class="section-title">Supuestos clave</h2>
-      <div class="kpi-grid" id="assumptions-grid"></div>
-
-      <h2 class="section-title">AUM break-even</h2>
-      <div class="hero-stats" id="supuestos-breakeven"></div>
-
-      <h2 class="section-title">Resultado acumulado por año</h2>
-      <div class="result-trio-open" id="supuestos-result-trio"></div>
-
-      <h2 class="section-title">Otros indicadores</h2>
-      <div class="kpi-grid kpi-grid-secondary" id="supuestos-kpi-grid"></div>
     </section>
 
     <section class="tab-panel" data-panel="simulador">
       <header class="panel-header">
         <p class="slide-eyebrow">06 / 06 — Simulador</p>
-        <h1>¿Qué pasa si <em>cambian los fees</em>?</h1>
-        <p>Ajustá el fee de cada fondo y la comisión a productores para ver el impacto en ingresos, resultado neto y AUM de equilibrio. El AUM por fondo se mantiene fijo (proyección de "Fondos &amp; supuestos"); solo cambian fees y split de productores.</p>
+        <h1>¿Qué pasa si <em>cambia la captación</em>?</h1>
+        <p>Ajustá cuánto capta la Sociedad Gerente de cada tipo de fondo (hoy 70% Money Market / 90% el resto) y la comisión a productores, para ver el impacto en ingresos, resultado neto y AUM de equilibrio. El fee de cada fondo queda fijo (proyección de "Fondos &amp; supuestos"); solo cambian la captación y el split de productores.</p>
       </header>
 
       <div class="chart-grid">
         <div class="chart-card full">
-          <h3>Fees por fondo</h3>
-          <p class="chart-caption">Fee anual sobre el AUM proyectado de cada fondo.</p>
-          <div class="sim-sliders" id="sim-fund-sliders"></div>
+          <h3>Captación por tipo de fondo</h3>
+          <p class="chart-caption">% del AUM potencial de cada grupo de fondos que efectivamente capta la Sociedad Gerente.</p>
+          <div class="sim-sliders" id="sim-capture-sliders"></div>
         </div>
 
         <div class="chart-card full">
@@ -239,7 +227,7 @@
       <div class="chart-grid">
         <div class="chart-card full">
           <h3>Detalle por fondo</h3>
-          <p class="chart-caption">Ingresos anuales estimados con el fee ajustado, en USD.</p>
+          <p class="chart-caption">Ingresos anuales estimados con la captación ajustada, en USD.</p>
           <div class="table-wrap"><table class="data-table" id="sim-fund-table"></table></div>
         </div>
       </div>

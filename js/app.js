@@ -263,30 +263,6 @@ function renderFunds() {
       <div class="fund-row fund-row-detail"><span>· en pesos</span><span>${fmtARS(f.aumEndOfYear_ars["2028"])}</span></div>
     </div>
   `).join("");
-
-  const assumptions = document.getElementById("assumptions-grid");
-  assumptions.innerHTML = `
-    <div class="kpi-card">
-      <p class="kpi-label">Fee anual promedio</p>
-      <div class="kpi-value">${(m.kpis.feeAnnualAvg.pct * 100).toFixed(2)}%</div>
-      <p class="kpi-sub">Promedio ponderado de los 4 fondos</p>
-    </div>
-    <div class="kpi-card">
-      <p class="kpi-label">Tasa de descuento</p>
-      <div class="kpi-value">${(m.kpis.discountRate.pct * 100).toFixed(1)}%</div>
-      <p class="kpi-sub">${m.kpis.discountRate.note}</p>
-    </div>
-    <div class="kpi-card wide">
-      <p class="kpi-label">Escenario de captación</p>
-      <div class="kpi-value" style="font-size:16px">${m.meta.scenario}</div>
-      <p class="kpi-sub">Horizonte del modelo: ${m.meta.horizon}. ${m.meta.launchNote}</p>
-    </div>
-  `;
-
-  // Recap de KPIs del Resumen, para tener el respaldo numérico completo a mano en esta pestaña.
-  document.getElementById("supuestos-breakeven").innerHTML = breakEvenStatHtml(m);
-  renderResultTrio("supuestos-result-trio");
-  renderKpis("supuestos-kpi-grid");
 }
 
 function renderRegulatory() {
