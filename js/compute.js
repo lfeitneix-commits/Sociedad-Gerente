@@ -18,9 +18,9 @@ function fxForMonth(inputs, label) {
 
 function computeYears(inputs) {
   const years = {};
-  inputs.months.forEach(({ label }) => {
+  inputs.months.forEach(({ label, fx }) => {
     const y = yearOf(label);
-    years[y] = years[y] || { year: y, revenue_ars: 0, revenue_usd: 0, cost_ars: 0, cost_usd: 0, result_ars: 0, result_usd: 0, monthsWithCost: 0, monthsWithRevenue: 0, monthsInYear: 0 };
+    years[y] = years[y] || { year: y, revenue_ars: 0, revenue_usd: 0, cost_ars: 0, cost_usd: 0, result_ars: 0, result_usd: 0, monthsWithCost: 0, monthsWithRevenue: 0, monthsInYear: 0, aum_end_ars: null, aum_end_usd: null };
     years[y].monthsInYear += 1;
     if (inputs.monthly.costos_ars[label] !== undefined) {
       years[y].cost_ars += inputs.monthly.costos_ars[label];
@@ -33,6 +33,12 @@ function computeYears(inputs) {
       years[y].revenue_ars += inputs.monthly.ingresos_ars[label];
       years[y].revenue_usd += inputs.monthly.ingresos_usd[label] || 0;
       years[y].monthsWithRevenue += 1;
+    }
+    // AUM proyectado al último mes con dato del año (el modelo recién tiene AUM propio
+    // desde el lanzamiento de los fondos en ene-2027 — Año 1/2026 queda en null).
+    if (inputs.monthly.aum_total_ars[label] !== undefined) {
+      years[y].aum_end_ars = inputs.monthly.aum_total_ars[label];
+      years[y].aum_end_usd = inputs.monthly.aum_total_ars[label] / fx;
     }
   });
 

@@ -73,11 +73,15 @@ function resultTrioHtml(m) {
   return m.years.map(y => {
     const cls = y.result_usd_cum >= 0 ? "pos" : "neg";
     const arrow = y.result_usd_cum >= 0 ? "▲" : "▼";
+    const aumLine = y.aum_end_usd != null
+      ? `<div class="result-year-sub">AUM a fin de año: ${fmtUSD(y.aum_end_usd)} · ${fmtARS(y.aum_end_ars)}</div>`
+      : `<div class="result-year-sub">AUM: sin fondos lanzados todavía</div>`;
     return `
     <div>
       <div class="result-year-label">${y.label} · ${y.year}</div>
       <div class="result-year-value ${cls}">${arrow} ${fmtUSD(y.result_usd_cum)}</div>
       <div class="result-year-value-secondary ${cls === "pos" ? "pos-text" : "neg-text"}">${fmtARS(y.result_ars_cum)}</div>
+      ${aumLine}
     </div>
   `;
   }).join("");
