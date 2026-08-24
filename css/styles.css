@@ -461,8 +461,12 @@ body {
 .timeline-track {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 8px;
+}
+@media (max-width: 700px) {
+  .timeline-track { grid-template-columns: repeat(2, 1fr); gap: 28px 8px; }
+  .timeline-line { display: none; }
 }
 .timeline-line {
   position: absolute;
@@ -470,7 +474,7 @@ body {
   left: 5%;
   right: 5%;
   height: 2px;
-  background: linear-gradient(to right, var(--accent), var(--series-ref), var(--good));
+  background: linear-gradient(to right, var(--accent), var(--series-1), var(--series-ref), var(--good));
   border-radius: 2px;
 }
 .timeline-node { position: relative; text-align: center; padding-top: 28px; }
@@ -484,8 +488,9 @@ body {
   background: var(--surface-1);
   border: 3px solid var(--accent);
 }
-.timeline-node.node-2::before { border-color: var(--series-ref); }
-.timeline-node.node-3::before { border-color: var(--good); }
+.timeline-node.node-2::before { border-color: var(--series-1); }
+.timeline-node.node-3::before { border-color: var(--series-ref); }
+.timeline-node.node-4::before { border-color: var(--good); }
 .timeline-node .t-date { font-size: 13px; font-weight: 650; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
 .timeline-node .t-label { font-size: 19px; font-weight: 650; margin: 4px 0 6px; }
 .timeline-node .t-detail { font-size: 13px; color: var(--text-secondary); max-width: 260px; margin: 0 auto; }

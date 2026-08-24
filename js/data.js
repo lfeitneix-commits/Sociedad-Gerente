@@ -40,40 +40,40 @@ const INPUTS = {
   // Todas las series están tomadas directo de filas del modelo (source: sheet).
   monthly: {
     costos_ars: {
-      "Sep-26": 75500602.14, "Oct-26": 49882401.43, "Nov-26": 58761444.01, "Dec-26": 105423697.30,
-      "Jan-27": 148831492.19, "Feb-27": 84651998.78, "Mar-27": 109204821.74, "Apr-27": 113315412.80,
-      "May-27": 117703508.42, "Jun-27": 142465355.04, "Jul-27": 193699192.63, "Aug-27": 132754595.71,
-      "Sep-27": 138483408.62, "Oct-27": 144614504.56, "Nov-27": 161112610.61, "Dec-27": 207539916.64,
-      "Jan-28": 232045450.39, "Feb-28": 173822713.80, "Mar-28": 182484591.99, "Apr-28": 191776626.08,
-      "May-28": 201747957.44, "Jun-28": 235113718.13, "Jul-28": 290244821.29, "Aug-28": 236289333.97,
-      "Sep-28": 249551799.95, "Oct-28": 263804149.16, "Nov-28": 293502469.57, "Dec-28": 347673358.39
+      "Sep-26": 40136045.64, "Oct-26": 13916647.47, "Nov-26": 22220237.99, "Dec-26": 58732468.59,
+      "Jan-27": 92648068.87, "Feb-27": 82067599.54, "Mar-27": 106594182.85, "Apr-27": 110678267.85,
+      "May-27": 115039588.28, "Jun-27": 138739400.50, "Jul-27": 150030903.82, "Aug-27": 130008707.85,
+      "Sep-27": 135709641.50, "Oct-27": 141812575.12, "Nov-27": 158282232.92, "Dec-27": 203581142.33,
+      "Jan-28": 188207306.74, "Feb-28": 170905246.55, "Mar-28": 179537503.42, "Apr-28": 188799615.45,
+      "May-28": 198740720.94, "Jun-28": 230907576.07, "Jul-28": 246226209.27, "Aug-28": 233189566.04,
+      "Sep-28": 246420559.78, "Oct-28": 260641117.21, "Nov-28": 290307323.06, "Dec-28": 343204391.59
     },
     costos_usd: {
-      "Sep-26": 48773.00, "Oct-26": 31392.32, "Nov-26": 36250.12, "Dec-26": 63014.76,
-      "Jan-27": 87581.72, "Feb-27": 49042.25, "Mar-27": 62285.87, "Apr-27": 63628.44,
-      "May-27": 65067.83, "Jun-27": 77535.52, "Jul-27": 103784.82, "Aug-27": 70027.75,
-      "Sep-27": 71917.22, "Oct-27": 73936.96, "Nov-27": 81094.95, "Dec-27": 102844.36,
-      "Jan-28": 113205.22, "Feb-28": 83486.16, "Mar-28": 86287.67, "Apr-28": 89275.60,
-      "May-28": 92461.47, "Jun-28": 106082.61, "Jul-28": 128927.41, "Aug-28": 103333.10,
-      "Sep-28": 107441.15, "Oct-28": 111816.56, "Nov-28": 122475.95, "Dec-28": 142831.84
+      "Sep-26": 25927.68, "Oct-26": 8758.12, "Nov-26": 13707.73, "Dec-26": 35106.08,
+      "Jan-27": 54519.89, "Feb-27": 47545.01, "Mar-27": 60796.88, "Apr-27": 62147.64,
+      "May-27": 63595.18, "Jun-27": 75507.70, "Jul-27": 80387.17, "Aug-27": 68579.30,
+      "Sep-27": 70476.75, "Oct-27": 72504.41, "Nov-27": 79670.30, "Dec-27": 100882.63,
+      "Jan-28": 91818.43, "Feb-28": 82084.92, "Mar-28": 84894.14, "Apr-28": 87889.74,
+      "May-28": 91083.25, "Jun-28": 104184.81, "Jul-28": 109374.25, "Aug-28": 101977.53,
+      "Sep-28": 106093.03, "Oct-28": 110475.87, "Nov-28": 121142.64, "Dec-28": 140995.89
     },
     resultado_neto_ars: {
-      "Sep-26": -56625451.61, "Oct-26": -37411801.07, "Nov-26": -44071083.01, "Dec-26": -79067772.98,
-      "Jan-27": -78068390.12, "Feb-27": -27325539.06, "Mar-27": -3953125.93, "Apr-27": -973476.72,
-      "May-27": 2271494.26, "Jun-27": -9253256.62, "Jul-27": -40081339.93, "Aug-27": 12897073.64,
-      "Sep-27": 17129840.14, "Oct-27": 21725805.10, "Nov-27": 19760335.91, "Dec-27": -2577236.35,
-      "Jan-28": -9017981.40, "Feb-28": 41186288.51, "Mar-28": 47587431.74, "Apr-28": 54522086.99,
-      "May-28": 62032605.25, "Jun-28": 55434327.49, "Jul-28": 35872689.65, "Aug-28": 88494836.61,
-      "Sep-28": 98803609.28, "Oct-28": 109956044.31, "Nov-28": 112673110.58, "Dec-28": 101214270.50
+      "Sep-26": -30102034.23, "Oct-26": -10437485.60, "Nov-26": -16665178.49, "Dec-26": -44049351.44,
+      "Jan-27": -35930822.62, "Feb-27": -25387239.63, "Mar-27": -1995146.77, "Apr-27": 1004382.00,
+      "May-27": 3984805.41, "Jun-27": -6458790.71, "Jul-27": -7330123.32, "Aug-27": 14819195.14,
+      "Sep-27": 19071477.12, "Oct-27": 23687155.71, "Nov-27": 21741600.30, "Dec-27": 391844.39,
+      "Jan-28": 22269917.91, "Feb-28": 43082642.22, "Mar-28": 49503039.31, "Apr-28": 56457143.90,
+      "May-28": 63987308.97, "Jun-28": 58168319.83, "Jul-28": 64484787.46, "Aug-28": 90509685.76,
+      "Sep-28": 100838915.39, "Oct-28": 112012015.07, "Nov-28": 114749955.82, "Dec-28": 104119098.92
     },
     resultado_neto_usd: {
-      "Sep-26": -36579.75, "Oct-26": -23544.24, "Nov-26": -27187.59, "Dec-26": -47261.07,
-      "Jan-27": -45940.30, "Feb-27": -15830.77, "Mar-27": -2254.70, "Apr-27": -546.62,
-      "May-27": 1255.71, "Jun-27": -5036.00, "Jul-27": -21475.75, "Aug-27": 6803.18,
-      "Sep-27": 8895.87, "Oct-27": 11107.74, "Nov-27": 9946.23, "Dec-27": -1277.12,
-      "Jan-28": -4399.49, "Feb-28": 19781.56, "Mar-28": 22501.67, "Apr-28": 25381.05,
-      "May-28": 28429.66, "Jun-28": 25011.80, "Jul-28": 15934.73, "Aug-28": 38700.21,
-      "Sep-28": 42538.55, "Oct-28": 46606.19, "Nov-28": 47017.48, "Dec-28": 41581.04
+      "Sep-26": -19445.76, "Oct-26": -6568.59, "Nov-26": -10280.80, "Dec-26": -26329.56,
+      "Jan-27": -21143.93, "Feb-27": -14707.83, "Mar-27": -1137.95, "Apr-27": 563.98,
+      "May-27": 2202.85, "Jun-27": -3515.14, "Jul-27": -3927.51, "Aug-27": 7817.09,
+      "Sep-27": 9904.20, "Oct-27": 12110.52, "Nov-27": 10943.49, "Dec-27": 194.17,
+      "Jan-28": 10864.56, "Feb-28": 20692.37, "Mar-28": 23407.47, "Apr-28": 26281.85,
+      "May-28": 29325.51, "Jun-28": 26245.37, "Jul-28": 28644.29, "Aug-28": 39581.33,
+      "Sep-28": 43414.83, "Oct-28": 47477.64, "Nov-28": 47884.13, "Dec-28": 42774.41
     },
     // "Rdo Neto SG USD descontado": flujo mensual ya descontado a la tasa de VAN (fila del modelo).
     // Se usa para derivar el mes de recupero de la inversión: el primer mes en que la suma acumulada
@@ -81,13 +81,13 @@ const INPUTS = {
     // modelo — es la forma en que el propio Sheet calcula el VAN, así que reusarla para el recupero
     // es consistente con el resto del modelo (ver compute.js → computePayback).
     resultado_neto_usd_descontado: {
-      "Sep-26": -36316.45, "Oct-26": -23206.53, "Nov-26": -26604.73, "Dec-26": -45914.99,
-      "Jan-27": -44310.58, "Feb-27": -15159.27, "Mar-27": -2143.52, "Apr-27": -515.93,
-      "May-27": 1176.67, "Jun-27": -4685.04, "Jul-27": -19835.27, "Aug-27": 6238.27,
-      "Sep-27": 8098.49, "Oct-27": 10039.31, "Nov-27": 8924.82, "Dec-27": -1137.72,
-      "Jan-28": -3891.07, "Feb-28": 17369.59, "Mar-28": 19615.82, "Apr-28": 21966.66,
-      "May-28": 24428.05, "Jun-28": 21336.59, "Jul-28": 13495.45, "Aug-28": 32540.08,
-      "Sep-28": 35510.01, "Oct-28": 38625.53, "Nov-28": 38685.92, "Dec-28": 33966.57
+      "Sep-26": -19305.79, "Oct-26": -6474.37, "Nov-26": -10060.40, "Dec-26": -25579.64,
+      "Jan-27": -20393.86, "Feb-27": -14083.97, "Mar-27": -1081.84, "Apr-27": 532.31,
+      "May-27": 2064.18, "Jun-27": -3270.17, "Jul-27": -3627.50, "Aug-27": 7168.00,
+      "Sep-27": 9016.44, "Oct-27": 10945.63, "Nov-27": 9819.66, "Dec-27": 172.98,
+      "Jan-28": 9609.00, "Feb-28": 18169.35, "Mar-28": 20405.45, "Apr-28": 22746.29,
+      "May-28": 25197.81, "Jun-28": 22388.90, "Jul-28": 24259.44, "Aug-28": 33280.96,
+      "Sep-28": 36241.50, "Oct-28": 39347.75, "Nov-28": 39398.99, "Dec-28": 34941.40
     },
     ingresos_ars: {
       "Jan-27": 44740305.37, "Feb-27": 48217946.71, "Mar-27": 103933987.16, "Apr-27": 112017443.84,
@@ -115,14 +115,15 @@ const INPUTS = {
     }
   },
 
-  // Break-even (mes 12): cifra final del deck "Neix Asset Management — Proyección Interna,
+  // Break-even (mes 8): cifra final del deck "Neix Asset Management — Proyección Interna,
   // Agosto 2026" (tabla "Indicadores y resultados del modelo"), reemplaza la del Sheet en vivo
   // por pedido explícito. El deck solo da el monto en pesos; el USD se deriva acá con el FX
-  // oficial del mes 12 del modelo (Aug-27, 1895.74 — ver months en este archivo) ya que el deck
-  // no trae un equivalente en dólares para este número puntual.
+  // oficial del mes 8 del modelo (Apr-27, 1780.89 — ver months en este archivo) ya que el deck
+  // no trae un equivalente en dólares para este número puntual. Es consistente con la propia
+  // timeline del deck: el AUM total cruza este umbral por primera vez en abr-2027 (mes 8).
   breakEven: {
-    ars: 98596658570,
-    usd: 52009589.17,
+    ars: 72656098425,
+    usd: 40797634.01,
     note: "AUM promedio que la Sociedad Gerente necesita gestionar para cubrir sus costos fijos y variables. Los costos variables se estiman en 0.002% del AUM."
   },
 
@@ -135,8 +136,8 @@ const INPUTS = {
     sheetNote: ""
   },
 
-  van: { usd: 108296.72 },
-  tir: { pct: 0.03 },
+  van: { usd: 261828.50 },
+  tir: { pct: 0.08 },
   discountRate: { pct: 0.087, note: "Tasa T-Bond 10 años (4.5%) + prima de riesgo (4.2%)." },
   feeAnnualAvg: { pct: 0.0180274 },
 
@@ -190,16 +191,13 @@ const INPUTS = {
     independientesArs: 43577000000,
     independientesPct: 0.402,
     periodoFlujos: "ago-25 a jul-26",
-    flujoNetoIndependientesPct: 0.2005,
-    flujoNetoBancariasPct: 0.1287,
-    // AUM de Neix "dentro del universo" de la industria de FCI relevado (jul-26) — un corte
-    // ligeramente distinto al de neixAumHoy.totalArs (AUM en FCI que Neix gestiona hoy);
-    // ambos números vienen del mismo deck, con esa pequeña diferencia de alcance/fecha.
-    neixAumArs: 50671000000,
+    flujoNetoIndependientesPct: 0.20,
+    flujoNetoBancariasPct: 0.13,
+    neixAumArs: 50666000000,
     neixMarketSharePct: 0.0012
   },
   neixAumHoy: {
-    totalArs: 47160000000,
+    totalArs: 50666000000,
     productoresPct: 0.81,
     fuerzaPropiaPct: 0.19,
     porTipoFondo: {
@@ -216,14 +214,14 @@ const INPUTS = {
   // el Simulador lo recalcula en vez de tratarlo como costo fijo.
   costBreakdownItems: [
     { label: "Comisiones a productores (81% del AUM, 53% del fee)", ars: 679692300.51, variable: true },
-    { label: "Sueldo Portfolio Manager (2)", ars: 235982581.10 },
-    { label: "Cargas sociales", ars: 145359684.50 },
-    { label: "Sueldo Comercial", ars: 139634663.30 },
-    { label: "Mantenimiento software de gestión (ESCO)", ars: 139434861.70 },
-    { label: "Bonos", ars: 132600000.00 },
-    { label: "Sueldo Back Office (2)", ars: 108915037.40 },
+    { label: "Sueldo Portfolio Manager (2)", ars: 233610709.40 },
+    { label: "Cargas sociales", ars: 137865486.22 },
+    { label: "Sueldo Comercial", ars: 126933096.25 },
+    { label: "Mantenimiento software de gestión (ESCO)", ars: 139434861.65 },
+    { label: "Sueldo Back Office (2)", ars: 99007815.07 },
     { label: "Auditoría, sindicatura e impuestos anuales", ars: 56961984.08 },
-    { label: "Aguinaldo", ars: 41404241.96 },
+    { label: "Bonos", ars: 38025000.00 },
+    { label: "Aguinaldo", ars: 39269595.05 },
     { label: "Calificación de riesgo (revisión anual)", ars: 9933578.57 },
     { label: "CAFCI (mensual)", ars: 4457884.64 }
   ],

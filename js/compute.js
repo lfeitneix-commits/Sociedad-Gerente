@@ -209,6 +209,11 @@ function computeTimeline(inputs, aumSeries, paybackKey) {
 
   return {
     start: inputs.timeline.start,
+    launch: {
+      label: "Lanzamiento",
+      date: "Ene-2027",
+      detail: "Lanzamiento de Neix Asset Management e inicio de ingresos."
+    },
     breakEven: {
       label: "Break-even de AUM",
       date: crossLabel ? `${crossLabel.split("-")[0]}-20${crossLabel.split("-")[1]}` : "—",
