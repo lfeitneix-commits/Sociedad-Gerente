@@ -631,33 +631,3 @@ html, body {
 .req-item .req-body p { margin: 0; font-size: 12.5px; color: var(--text-secondary); line-height: 1.55; }
 .req-item .req-body .req-art { display: block; margin-top: 5px; font-size: 11px; color: var(--text-muted); }
 
-/* ---------- Simulador: sliders de fee / comisión a productores ---------- */
-.sim-sliders { display: flex; flex-direction: column; gap: 20px; }
-.sim-row { display: flex; flex-direction: column; gap: 8px; }
-.sim-row-label { display: flex; align-items: baseline; justify-content: space-between; font-size: 13px; color: var(--text-secondary); }
-.sim-row-value { font-size: 14px; font-weight: 650; color: var(--text-primary); font-variant-numeric: tabular-nums; }
-.sim-row-sub { margin: 0; font-size: 11.5px; color: var(--text-muted); }
-
-.sim-slider {
-  -webkit-appearance: none; appearance: none;
-  width: 100%; height: 4px; border-radius: 2px;
-  background: var(--gridline);
-  outline: none;
-  cursor: pointer;
-}
-.sim-slider::-webkit-slider-thumb {
-  -webkit-appearance: none; appearance: none;
-  width: 16px; height: 16px; border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 2px 6px -1px var(--accent-glow);
-  cursor: pointer;
-  border: 2px solid var(--surface-1);
-}
-.sim-slider::-moz-range-thumb {
-  width: 16px; height: 16px; border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 2px 6px -1px var(--accent-glow);
-  cursor: pointer;
-  border: 2px solid var(--surface-1);
-}
-.sim-slider::-moz-range-track { background: var(--gridline); height: 4px; border-radius: 2px; }
