@@ -370,7 +370,7 @@ function renderPasos() {
   `).join("");
 }
 
-const TAB_ORDER = ["resumen", "fondos", "financials", "costos", "regulatorio", "pasos"];
+const TAB_ORDER = ["resumen", "financials", "fondos", "costos", "regulatorio", "pasos"];
 const TAB_TITLES = { resumen: "Resumen", financials: "Financials", costos: "Costos", regulatorio: "Regulatorio", fondos: "Fondos & supuestos", pasos: "Pasos a seguir" };
 
 function goToTab(tab) {
