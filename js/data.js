@@ -380,5 +380,36 @@ const INPUTS = {
       titulo: "Definición de equipo y liderazgo, si se avanza",
       detalle: "En caso de decidir avanzar con el proyecto, conformar el equipo de trabajo y designar un líder que conduzca su implementación."
     }
+  ],
+
+  // Fuente: deck "Neix Asset Management — Proyección Interna, Agosto 2026", slide "Supuestos
+  // para este modelo" (páginas 4-5), sin el punto 01 (AUM/escenario de captación, que se
+  // muestra aparte en Resumen). Son supuestos descriptivos del modelo, no datos que alimenten
+  // un cálculo — por eso viven como texto plano, no como números en compute.js.
+  otrosSupuestos: [
+    {
+      titulo: "Crecimiento del AUM",
+      detalle: "El AUM de cada fondo varía en función del devengamiento de cartera (rendimiento propio de los activos, estimado a partir de datos reales de CAFCI de los últimos 12 meses) y de la evolución esperada de las suscripciones netas (New Money), que escalona en 4 semestres — ver el detalle en cada tarjeta de fondo."
+    },
+    {
+      titulo: "Período de proyección",
+      detalle: "El modelo financiero realiza proyecciones mensuales desde septiembre de 2026 hasta diciembre de 2028."
+    },
+    {
+      titulo: "Inicio de actividades",
+      detalle: "Se estima que el inicio de actividades operativas será el 1° de septiembre de 2026. Los ingresos comienzan a generarse recién a partir del 1° de enero de 2027."
+    },
+    {
+      titulo: "Cantidad de fondos",
+      detalle: "Neix Asset Management iniciará sus operaciones administrando cuatro fondos: Money Market, Renta Fija en pesos, Renta Fija en dólares y Renta Variable en pesos."
+    },
+    {
+      titulo: "Fee de la Sociedad Gerente",
+      detalle: "El fee por tipo de fondo se calculó como el que hoy cobran las Sociedades Gerentes que administran los fondos donde ya están invertidos los clientes de Neix. El 1.80% de la proyección es el promedio ponderado por el AUM de cada fondo, dando mayor peso a los segmentos con más volumen."
+    },
+    {
+      titulo: "Tasa de descuento (VAN)",
+      detalle: "8.7% anual: tasa de un T-Bond a 10 años (4.5%) más una prima de riesgo (4.2%)."
+    }
   ]
 };

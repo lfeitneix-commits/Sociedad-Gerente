@@ -76,6 +76,27 @@ function renderHeroStats() {
   document.getElementById("hero-stats").innerHTML = breakEvenStatHtml(m) + recuperoStatHtml(m) + feeStatHtml(m);
 }
 
+// Escenario de captación (Resumen): cuánto del AUM potencial de cada grupo de fondos asume el
+// modelo que Neix Asset Management capta al arrancar (ver captureScenario en data.js).
+function renderCaptureScenario() {
+  const m = MODEL;
+  const cap = m.captureScenario;
+  document.getElementById("capture-scenario-stats").innerHTML = `
+    <div class="hero-stat">
+      <p class="hero-stat-label">Money Market $</p>
+      <div class="hero-stat-value">${(cap.moneyMarketPct * 100).toFixed(0)}%</div>
+      <p class="hero-stat-sub">del AUM de Money Market de los clientes de Neix ALyC</p>
+    </div>
+    <div class="hero-stat">
+      <p class="hero-stat-label">Resto de los fondos</p>
+      <div class="hero-stat-value">${(cap.restoPct * 100).toFixed(0)}%</div>
+      <p class="hero-stat-sub">Renta Fija $, Renta Fija USD y Renta Variable $ de los clientes de Neix ALyC</p>
+    </div>
+  `;
+  document.getElementById("capture-scenario-note").textContent =
+    `Horizonte del modelo: ${m.meta.horizon}. ${m.meta.launchNote}`;
+}
+
 // Resumen por año (Resumen): AUM a fin de año, resultado neto DE ese año y resultado
 // acumulado desde el inicio, los tres en USD. Numeración 0-indexada (Año 0 = 2026, año de
 // puesta en marcha sin AUM propio) — ver computeYears en compute.js.
@@ -271,6 +292,16 @@ function renderFunds() {
       <div class="fund-row fund-row-detail"><span>· en pesos</span><span>${fmtARS(f.aumEndOfYear_ars["2028"])}</span></div>
     </div>
   `).join("");
+
+  document.getElementById("otros-supuestos-list").innerHTML = m.otrosSupuestos.map((s, i) => `
+    <div class="req-item">
+      <span class="req-num">${String(i + 1).padStart(2, "0")}</span>
+      <div class="req-body">
+        <h4>${s.titulo}</h4>
+        <p>${s.detalle}</p>
+      </div>
+    </div>
+  `).join("");
 }
 
 function renderRegulatory() {
@@ -339,7 +370,7 @@ function renderPasos() {
   `).join("");
 }
 
-const TAB_ORDER = ["resumen", "financials", "costos", "regulatorio", "fondos", "pasos"];
+const TAB_ORDER = ["resumen", "fondos", "financials", "costos", "regulatorio", "pasos"];
 const TAB_TITLES = { resumen: "Resumen", financials: "Financials", costos: "Costos", regulatorio: "Regulatorio", fondos: "Fondos & supuestos", pasos: "Pasos a seguir" };
 
 function goToTab(tab) {
@@ -385,6 +416,7 @@ function initNav() {
 function renderAll() {
   renderVerdict();
   renderHeroStats();
+  renderCaptureScenario();
   renderYearSummary();
   renderKpis();
   renderNeixAumHoy();
