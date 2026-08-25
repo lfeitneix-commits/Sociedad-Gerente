@@ -74,7 +74,7 @@ function renderYearSummary() {
   const rows = MODEL.years.map(y => `
     <tr>
       <td>${y.label} · ${y.year}</td>
-      <td class="num">${y.aum_end_usd != null ? fmtUSD(y.aum_end_usd) : "—"}</td>
+      <td class="num">${y.aum_end_ars != null ? `${fmtARS(y.aum_end_ars)}<span class="ars-sub">${fmtUSD(y.aum_end_usd)}</span>` : "—"}</td>
       <td class="num"><span class="${y.result_usd >= 0 ? "pos-text" : "neg-text"}">${fmtUSD(y.result_usd)}</span></td>
       <td class="num"><span class="${y.result_usd_cum >= 0 ? "pos-text" : "neg-text"}">${fmtUSD(y.result_usd_cum)}</span></td>
     </tr>
