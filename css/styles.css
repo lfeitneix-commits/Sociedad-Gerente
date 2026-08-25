@@ -231,21 +231,6 @@ html, body {
   .hero-stat:first-child { border-top: none; padding-top: 0; }
 }
 
-/* ---------- Resultado neto por año — open (no card box), pitch-deck row ---------- */
-.result-trio-open {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0;
-  margin-bottom: 12px;
-}
-.result-trio-open > div { padding: 4px 32px; border-left: 1px solid var(--border); }
-.result-trio-open > div:first-child { border-left: none; padding-left: 0; }
-@media (max-width: 640px) {
-  .result-trio-open { grid-template-columns: 1fr; gap: 18px; }
-  .result-trio-open > div { border-left: none; padding-left: 0; border-top: 1px solid var(--border); padding-top: 14px; }
-  .result-trio-open > div:first-child { border-top: none; padding-top: 0; }
-}
-
 /* ---------- KPI grid ---------- */
 .section-title {
   font-size: 13px;
@@ -335,28 +320,6 @@ html, body {
   padding: 1px 6px;
   cursor: help;
 }
-
-.result-trio {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0;
-}
-.result-trio > div {
-  padding: 0 14px;
-  border-left: 1px solid var(--border);
-}
-.result-trio > div:first-child { border-left: none; padding-left: 0; }
-@media (max-width: 640px) {
-  .result-trio { grid-template-columns: 1fr; gap: 14px; }
-  .result-trio > div { border-left: none; padding-left: 0; border-top: 1px solid var(--border); padding-top: 12px; }
-  .result-trio > div:first-child { border-top: none; padding-top: 0; }
-}
-.result-year-label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
-.result-year-value { font-family: var(--font-serif); font-size: 23px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
-.result-year-value.neg { color: var(--critical); }
-.result-year-value.pos { color: var(--good-text); }
-.result-year-value-secondary { font-size: 15px; font-weight: 600; margin-top: 3px; font-variant-numeric: tabular-nums; }
-.result-year-sub { font-size: 11.5px; color: var(--text-muted); margin-top: 3px; }
 
 /* ---------- Chart cards ---------- */
 .chart-grid {

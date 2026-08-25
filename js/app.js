@@ -66,28 +66,23 @@ function renderHeroStats() {
   document.getElementById("hero-stats").innerHTML = breakEvenStatHtml(m) + recuperoStatHtml(m);
 }
 
-// Resultado neto por año: pesos y dólares con el mismo peso visual (ninguno queda de "letra chica").
-// Muestra el resultado ACUMULADO desde el inicio hasta fin de cada año (no el resultado de
-// ese año solo), igual que "Resultado acumulado Año X" en el deck de Neix.
-function resultTrioHtml(m) {
-  return m.years.map(y => {
-    const cls = y.result_usd_cum >= 0 ? "pos" : "neg";
-    const arrow = y.result_usd_cum >= 0 ? "▲" : "▼";
-    const aumLine = y.aum_end_usd != null
-      ? `<div class="result-year-sub">AUM a fin de año: ${fmtUSD(y.aum_end_usd)} · ${fmtARS(y.aum_end_ars)}</div>`
-      : `<div class="result-year-sub">AUM: sin fondos lanzados todavía</div>`;
-    return `
-    <div>
-      <div class="result-year-label">${y.label} · ${y.year}</div>
-      <div class="result-year-value ${cls}">${arrow} ${fmtUSD(y.result_usd_cum)}</div>
-      <div class="result-year-value-secondary ${cls === "pos" ? "pos-text" : "neg-text"}">${fmtARS(y.result_ars_cum)}</div>
-      ${aumLine}
-    </div>
+// Resumen por año (Resumen): AUM a fin de año, resultado neto DE ese año y resultado
+// acumulado desde el inicio, los tres en USD. Numeración 0-indexada (Año 0 = 2026, año de
+// puesta en marcha sin AUM propio) — ver computeYears en compute.js.
+function renderYearSummary() {
+  const table = document.getElementById("year-summary-table");
+  const rows = MODEL.years.map(y => `
+    <tr>
+      <td>${y.label} · ${y.year}</td>
+      <td class="num">${y.aum_end_usd != null ? fmtUSD(y.aum_end_usd) : "—"}</td>
+      <td class="num"><span class="${y.result_usd >= 0 ? "pos-text" : "neg-text"}">${fmtUSD(y.result_usd)}</span></td>
+      <td class="num"><span class="${y.result_usd_cum >= 0 ? "pos-text" : "neg-text"}">${fmtUSD(y.result_usd_cum)}</span></td>
+    </tr>
+  `).join("");
+  table.innerHTML = `
+    <thead><tr><th>Año</th><th class="num">AUM</th><th class="num">Resultado neto</th><th class="num">Resultado acumulado</th></tr></thead>
+    <tbody>${rows}</tbody>
   `;
-  }).join("");
-}
-function renderResultTrio(targetId = "result-trio") {
-  document.getElementById(targetId).innerHTML = resultTrioHtml(MODEL);
 }
 
 // Indicadores de apoyo — quedan en segundo plano detrás de los números de arriba.
@@ -257,9 +252,9 @@ function renderFunds() {
       <div class="fund-row fund-row-divider"><span>Crecimiento mensual del AUM</span><span>${((f.return_monthly_pct + f.newMoney_monthly_pct) * 100).toFixed(2)}%</span></div>
       <div class="fund-row fund-row-detail"><span>· devengamiento de cartera</span><span>${(f.return_monthly_pct * 100).toFixed(2)}%</span></div>
       <div class="fund-row fund-row-detail"><span>· new money</span><span>${(f.newMoney_monthly_pct * 100).toFixed(2)}%</span></div>
-      <div class="fund-row fund-row-divider"><span>AUM a fin de Año 2 (2027)</span><span>${fmtUSD(f.aumEndOfYear_usd["2027"])}</span></div>
+      <div class="fund-row fund-row-divider"><span>AUM a fin de Año 1 (2027)</span><span>${fmtUSD(f.aumEndOfYear_usd["2027"])}</span></div>
       <div class="fund-row fund-row-detail"><span>· en pesos</span><span>${fmtARS(f.aumEndOfYear_ars["2027"])}</span></div>
-      <div class="fund-row fund-row-divider"><span>AUM a fin de Año 3 (2028)</span><span>${fmtUSD(f.aumEndOfYear_usd["2028"])}</span></div>
+      <div class="fund-row fund-row-divider"><span>AUM a fin de Año 2 (2028)</span><span>${fmtUSD(f.aumEndOfYear_usd["2028"])}</span></div>
       <div class="fund-row fund-row-detail"><span>· en pesos</span><span>${fmtARS(f.aumEndOfYear_ars["2028"])}</span></div>
     </div>
   `).join("");
@@ -377,7 +372,7 @@ function initNav() {
 function renderAll() {
   renderVerdict();
   renderHeroStats();
-  renderResultTrio();
+  renderYearSummary();
   renderKpis();
   renderNeixAumHoy();
   renderAumChart("chart-aum", MODEL);

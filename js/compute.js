@@ -35,7 +35,7 @@ function computeYears(inputs) {
       years[y].monthsWithRevenue += 1;
     }
     // AUM proyectado al último mes con dato del año (el modelo recién tiene AUM propio
-    // desde el lanzamiento de los fondos en ene-2027 — Año 1/2026 queda en null).
+    // desde el lanzamiento de los fondos en ene-2027 — Año 0/2026 queda en null).
     if (inputs.monthly.aum_total_ars[label] !== undefined) {
       years[y].aum_end_ars = inputs.monthly.aum_total_ars[label];
       years[y].aum_end_usd = inputs.monthly.aum_total_ars[label] / fx;
@@ -49,7 +49,9 @@ function computeYears(inputs) {
     cumUsd += y.result_usd;
     return {
       ...y,
-      label: `Año ${i + 1}`,
+      // Numeración 0-indexada (Año 0 = 2026, Año 1 = 2027, Año 2 = 2028), igual que el deck
+      // de Neix desde la versión 3: Año 0 es el año de puesta en marcha, sin ingresos propios.
+      label: `Año ${i}`,
       // Resultado acumulado desde el inicio del modelo hasta fin de este año (no solo el
       // resultado de este año) — es la cifra que usa "Resultado neto por año" en el dashboard,
       // consistente con la tabla "Indicadores y resultados del modelo" del deck de Neix.
