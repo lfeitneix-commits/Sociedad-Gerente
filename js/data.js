@@ -108,26 +108,27 @@ const INPUTS = {
     aum_total_ars: {
       "Jan-27": 51707050519.00, "Feb-27": 54415193269.00, "Mar-27": 57266158019.00, "Apr-27": 60267537082.00,
       "May-27": 63427330054.00, "Jun-27": 66753965891.00, "Jul-27": 70923865849.00, "Aug-27": 75355571674.00,
-      "Sep-27": 80065615239.00, "Oct-27": 85071579068.00, "Nov-27": 90392163583.00, "Dec-27": 96047258702.00,
+      "Sep-27": 80065615239.00, "Oct-27": 85071579068.00, "Nov-27": 90392163583.00, "Dec-27": 96047258702.22,
       "Jan-28": 103018492632.00, "Feb-28": 110497715199.00, "Mar-28": 118522106414.00, "Apr-28": 127131580800.00,
       "May-28": 136368989589.00, "Jun-28": 146280337959.00, "Jul-28": 158377821814.00, "Aug-28": 171478990066.00,
-      "Sep-28": 185667408510.00, "Oct-28": 201033627397.00, "Nov-28": 217675767656.00, "Dec-28": 235700156531.00
+      "Sep-28": 185667408510.00, "Oct-28": 201033627397.00, "Nov-28": 217675767656.00, "Dec-28": 235700156530.77
     }
   },
 
-  // Break-even (mes 8): cifra final del deck "Neix Asset Management — Proyección Interna,
-  // Agosto 2026" (3ra versión, tabla "Indicadores y resultados del modelo"), reemplaza la del
-  // Sheet en vivo ($87.775B ARS / $46.87M USD, celda no recalculada tras el último cambio de
-  // supuestos) por el mismo criterio de versiones anteriores. El deck solo da el monto en
-  // pesos; el USD se deriva acá con el FX oficial del mes 8 del modelo (Apr-27, 1780.89 — ver
-  // months en este archivo) ya que el deck no trae un equivalente en dólares para este número
-  // puntual. OJO: con este AUM más alto, el propio timeline del dashboard (calculado en vivo
-  // contra la serie de AUM real) ya no cruza el umbral en abr-2027 sino en oct-2027 — el
-  // gráfico "Del inicio a la rentabilidad" del deck no se actualizó y sigue mostrando abr-2027,
-  // igual que con el recupero de la inversión (ver nota debajo).
+  // Break-even: cifra final del deck "Neix Asset Management — Proyección Interna, Agosto 2026"
+  // (3ra versión, tabla "Indicadores y resultados del modelo"), reemplaza la del Sheet en vivo
+  // ($87.775B ARS / $46.87M USD, celda no recalculada tras el último cambio de supuestos) por
+  // el mismo criterio de versiones anteriores. El deck solo da el monto en pesos.
+  //
+  // El cruce con la curva de AUM se calcula en compute.js (computeAumSeries) comparando en
+  // PESOS mes a mes contra este umbral — no convirtiendo a USD con el FX de un solo mes de
+  // referencia, que da un mes de cruce distinto porque el FX cambia mes a mes. En pesos el AUM
+  // supera el umbral por primera vez en sep-2027 (ago-27: $75.36MM ARS, todavía por debajo;
+  // sep-27: $80.07MM ARS, ya por encima). El USD de acá (usd) es solo de referencia, derivado
+  // con el FX oficial de ese mismo mes de cruce (sep-27, 1925.59).
   breakEven: {
     ars: 75774750000,
-    usd: 42548752.45,
+    usd: 39351351.77,
     note: "AUM promedio que la Sociedad Gerente necesita gestionar para cubrir sus costos fijos y variables. Los costos variables se estiman en 0.002% del AUM."
   },
 

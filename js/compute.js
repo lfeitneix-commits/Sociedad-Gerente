@@ -79,16 +79,22 @@ function computeMonthlyTable(inputs) {
     }));
 }
 
+// El cruce de break-even se determina en PESOS (igual que el umbral, que viene del deck en
+// ARS) y no en USD: el FX cambia mes a mes, así que comparar la curva de AUM en USD (con el FX
+// de cada mes) contra un umbral en USD derivado de un solo mes de referencia da un mes de cruce
+// distinto al que sale de comparar directamente en pesos. En pesos no hay ninguna distorsión de
+// tipo de cambio de por medio.
 function computeAumSeries(inputs) {
   const points = inputs.months
     .filter(m => inputs.monthly.aum_total_ars[m.label] !== undefined)
-    .map(m => ({ m: monthLabelToEs(m.label), usd: inputs.monthly.aum_total_ars[m.label] / m.fx }));
+    .map(m => ({ m: monthLabelToEs(m.label), ars: inputs.monthly.aum_total_ars[m.label], usd: inputs.monthly.aum_total_ars[m.label] / m.fx }));
 
-  const breakEvenUsd = inputs.breakEven.usd;
-  const crossPoint = points.find(p => p.usd >= breakEvenUsd);
+  const breakEvenArs = inputs.breakEven.ars;
+  const crossPoint = points.find(p => p.ars >= breakEvenArs);
 
   return {
-    breakEvenUsd,
+    breakEvenArs,
+    breakEvenUsd: inputs.breakEven.usd,
     breakEvenCrossMonth: crossPoint ? crossPoint.m : null,
     points
   };
@@ -233,7 +239,7 @@ function computeTimeline(inputs, aumSeries, paybackKey) {
     breakEven: {
       label: "Break-even de AUM",
       date: crossLabel ? `${crossLabel.split("-")[0]}-20${crossLabel.split("-")[1]}` : "—",
-      detail: `El AUM gestionado supera por primera vez el umbral de equilibrio (${fmtUSD(aumSeries.breakEvenUsd)}).`
+      detail: `El AUM gestionado supera por primera vez el umbral de equilibrio (${fmtARS(aumSeries.breakEvenArs)}).`
     },
     payback: {
       label: "Recupero de la inversión",

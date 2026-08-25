@@ -64,22 +64,22 @@ function renderAumChart(containerId, model) {
   const plotW = W - padL - padR, plotH = H - padT - padB;
 
   const pts = model.aumSeries.points;
-  const breakEven = model.aumSeries.breakEvenUsd;
-  const rawMax = Math.max(breakEven, ...pts.map(p => p.usd));
+  const breakEven = model.aumSeries.breakEvenArs;
+  const rawMax = Math.max(breakEven, ...pts.map(p => p.ars));
   const { ticks, niceMax } = niceTicks(0, rawMax, 5);
   const maxY = niceMax;
 
   const x = i => padL + (i / (pts.length - 1)) * plotW;
   const y = v => padT + plotH - (v / maxY) * plotH;
 
-  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Evolución del AUM total en USD frente al AUM de equilibrio" });
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Evolución del AUM total en pesos frente al AUM de equilibrio" });
 
   // gridlines (clean round values)
   ticks.forEach(val => {
     const gy = y(val);
     svg.appendChild(el("line", { x1: padL, x2: W - padR, y1: gy, y2: gy, stroke: "var(--gridline)", "stroke-width": 1 }));
     const label = el("text", { x: padL - 8, y: gy + 4, "text-anchor": "end", "font-size": 10.5, fill: "var(--text-muted)" });
-    label.textContent = fmtUSD(val, { decimals: 0 });
+    label.textContent = fmtARS(val, { decimals: 0 });
     svg.appendChild(label);
   });
 
@@ -88,7 +88,7 @@ function renderAumChart(containerId, model) {
   const beLine = el("line", { x1: padL, x2: W - padR, y1: beY, y2: beY, stroke: "var(--series-ref)", "stroke-width": 2, "stroke-dasharray": "5 4" });
   svg.appendChild(beLine);
   const beLabel = el("text", { x: W - padR, y: beY - 6, "text-anchor": "end", "font-size": 11, "font-weight": 650, fill: "var(--series-ref)" });
-  beLabel.textContent = `Break-even: ${fmtUSD(breakEven)}`;
+  beLabel.textContent = `Break-even: ${fmtARS(breakEven)}`;
   svg.appendChild(beLabel);
 
   // x-axis month labels (every 3rd month)
@@ -101,20 +101,20 @@ function renderAumChart(containerId, model) {
   });
 
   // area fill
-  let areaPath = `M ${x(0)} ${y(pts[0].usd)}`;
-  pts.forEach((p, i) => { if (i > 0) areaPath += ` L ${x(i)} ${y(p.usd)}`; });
+  let areaPath = `M ${x(0)} ${y(pts[0].ars)}`;
+  pts.forEach((p, i) => { if (i > 0) areaPath += ` L ${x(i)} ${y(p.ars)}`; });
   areaPath += ` L ${x(pts.length - 1)} ${padT + plotH} L ${x(0)} ${padT + plotH} Z`;
   svg.appendChild(el("path", { d: areaPath, fill: "var(--series-1-wash)", stroke: "none" }));
 
   // line
-  let linePath = `M ${x(0)} ${y(pts[0].usd)}`;
-  pts.forEach((p, i) => { if (i > 0) linePath += ` L ${x(i)} ${y(p.usd)}`; });
+  let linePath = `M ${x(0)} ${y(pts[0].ars)}`;
+  pts.forEach((p, i) => { if (i > 0) linePath += ` L ${x(i)} ${y(p.ars)}`; });
   svg.appendChild(el("path", { d: linePath, fill: "none", stroke: "var(--series-1)", "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" }));
 
   // crossing marker
   const crossIdx = pts.findIndex(p => p.m === model.aumSeries.breakEvenCrossMonth);
   if (crossIdx >= 0) {
-    const cx = x(crossIdx), cy = y(pts[crossIdx].usd);
+    const cx = x(crossIdx), cy = y(pts[crossIdx].ars);
     svg.appendChild(el("circle", { cx, cy, r: 5, fill: "var(--good)", stroke: "var(--surface-1)", "stroke-width": 2 }));
     const lbl = el("text", { x: cx, y: cy - 12, "text-anchor": "middle", "font-size": 10.5, "font-weight": 650, fill: "var(--good-text)" });
     lbl.textContent = `Break-even ${pts[crossIdx].m}`;
@@ -126,7 +126,7 @@ function renderAumChart(containerId, model) {
   // AUM de arriba, que mide el umbral de equilibrio de AUM, no el repago de la inversión).
   const paybackIdx = pts.findIndex(p => p.m === model.aumSeries.paybackMonth);
   if (paybackIdx >= 0) {
-    const px = x(paybackIdx), py = y(pts[paybackIdx].usd);
+    const px = x(paybackIdx), py = y(pts[paybackIdx].ars);
     svg.appendChild(el("line", { x1: px, x2: px, y1: padT, y2: padT + plotH, stroke: "var(--accent)", "stroke-width": 1.5, "stroke-dasharray": "3 3" }));
     svg.appendChild(el("circle", { cx: px, cy: py, r: 5, fill: "var(--accent)", stroke: "var(--surface-1)", "stroke-width": 2 }));
     const plbl = el("text", { x: px, y: padT + 12, "text-anchor": paybackIdx > pts.length * 0.8 ? "end" : "middle", "font-size": 10.5, "font-weight": 650, fill: "var(--accent)" });
@@ -136,7 +136,7 @@ function renderAumChart(containerId, model) {
 
   // end dot
   const last = pts[pts.length - 1];
-  svg.appendChild(el("circle", { cx: x(pts.length - 1), cy: y(last.usd), r: 4, fill: "var(--series-1)", stroke: "var(--surface-1)", "stroke-width": 2 }));
+  svg.appendChild(el("circle", { cx: x(pts.length - 1), cy: y(last.ars), r: 4, fill: "var(--series-1)", stroke: "var(--surface-1)", "stroke-width": 2 }));
 
   // hover overlay + crosshair
   const crosshair = el("line", { x1: 0, x2: 0, y1: padT, y2: padT + plotH, stroke: "var(--baseline)", "stroke-width": 1, opacity: 0 });
@@ -152,9 +152,9 @@ function renderAumChart(containerId, model) {
     idx = Math.max(0, Math.min(pts.length - 1, idx));
     const p = pts[idx];
     crosshair.setAttribute("x1", x(idx)); crosshair.setAttribute("x2", x(idx)); crosshair.setAttribute("opacity", 1);
-    hoverDot.setAttribute("cx", x(idx)); hoverDot.setAttribute("cy", y(p.usd)); hoverDot.setAttribute("opacity", 1);
-    const aboveBE = p.usd >= breakEven;
-    showTooltip(e.clientX, e.clientY, `<div class="tt-row"><span>${p.m}</span></div><div class="tt-row"><span>AUM total</span><span class="tt-value">${fmtUSD(p.usd)}</span></div><div class="tt-row"><span>${aboveBE ? "Sobre" : "Bajo"} break-even</span></div>`);
+    hoverDot.setAttribute("cx", x(idx)); hoverDot.setAttribute("cy", y(p.ars)); hoverDot.setAttribute("opacity", 1);
+    const aboveBE = p.ars >= breakEven;
+    showTooltip(e.clientX, e.clientY, `<div class="tt-row"><span>${p.m}</span></div><div class="tt-row"><span>AUM total</span><span class="tt-value">${fmtARS(p.ars)}</span></div><div class="tt-row"><span>${fmtUSD(p.usd)}</span></div><div class="tt-row"><span>${aboveBE ? "Sobre" : "Bajo"} break-even</span></div>`);
   });
   overlay.addEventListener("pointerleave", () => { crosshair.setAttribute("opacity", 0); hoverDot.setAttribute("opacity", 0); hideTooltip(); });
   svg.appendChild(overlay);
