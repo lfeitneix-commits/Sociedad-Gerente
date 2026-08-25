@@ -406,10 +406,6 @@ const INPUTS = {
     {
       titulo: "Fee de la Sociedad Gerente",
       detalle: "El fee por tipo de fondo se calculó como el que hoy cobran las Sociedades Gerentes que administran los fondos donde ya están invertidos los clientes de Neix. El 1.80% de la proyección es el promedio ponderado por el AUM de cada fondo, dando mayor peso a los segmentos con más volumen."
-    },
-    {
-      titulo: "Tasa de descuento (VAN)",
-      detalle: "8.7% anual: tasa de un T-Bond a 10 años (4.5%) más una prima de riesgo (4.2%)."
     }
   ]
 };
