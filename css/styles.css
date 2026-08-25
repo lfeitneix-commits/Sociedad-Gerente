@@ -299,7 +299,8 @@ html, body {
 @media (max-width: 520px) { .kpi-card.wide { grid-column: span 1; } }
 
 /* Secondary indicators (below the hero-stats row) — same cards, quieter presence */
-.kpi-grid-secondary { grid-template-columns: repeat(3, 1fr); }
+.kpi-grid-secondary { grid-template-columns: repeat(5, 1fr); }
+@media (max-width: 1100px) { .kpi-grid-secondary { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 640px) { .kpi-grid-secondary { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 420px) { .kpi-grid-secondary { grid-template-columns: 1fr; } }
 .kpi-grid-secondary .kpi-card { padding: 16px 18px; }

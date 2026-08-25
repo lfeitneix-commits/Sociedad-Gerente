@@ -58,12 +58,22 @@ function recuperoStatHtml(m) {
   `;
 }
 
+function feeStatHtml(m) {
+  return `
+    <div class="hero-stat">
+      <p class="hero-stat-label">Fee promedio de SG</p>
+      <div class="hero-stat-value">${(m.kpis.feeAnnualAvg.pct * 100).toFixed(2)}%</div>
+      <p class="hero-stat-sub">Promedio ponderado por el AUM de cada fondo</p>
+    </div>
+  `;
+}
+
 // Los 2 números que abren la presentación — la "tapa" del business case.
 function renderHeroStats() {
   const m = MODEL;
   document.getElementById("scenario-tag-text").textContent = m.meta.scenario;
   document.getElementById("scenario-inline").textContent = m.meta.scenario;
-  document.getElementById("hero-stats").innerHTML = breakEvenStatHtml(m) + recuperoStatHtml(m);
+  document.getElementById("hero-stats").innerHTML = breakEvenStatHtml(m) + recuperoStatHtml(m) + feeStatHtml(m);
 }
 
 // Resumen por año (Resumen): AUM a fin de año, resultado neto DE ese año y resultado
@@ -125,12 +135,6 @@ function renderKpis(targetId = "kpi-grid") {
       value: "Productores + comercial propio",
       sub: "Distribución mixta (dato parcial en el modelo)",
       badge: m.kpis.salesChannel.calc
-    },
-    {
-      icon: "target",
-      label: "Fee promedio de SG",
-      value: `${(m.kpis.feeAnnualAvg.pct * 100).toFixed(2)}%`,
-      sub: "Promedio ponderado por el AUM de cada fondo"
     }
   ];
 
