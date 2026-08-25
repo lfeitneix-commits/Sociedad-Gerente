@@ -125,6 +125,12 @@ function renderKpis(targetId = "kpi-grid") {
       value: "Productores + comercial propio",
       sub: "Distribución mixta (dato parcial en el modelo)",
       badge: m.kpis.salesChannel.calc
+    },
+    {
+      icon: "target",
+      label: "Fee promedio de SG",
+      value: `${(m.kpis.feeAnnualAvg.pct * 100).toFixed(2)}%`,
+      sub: "Promedio ponderado por el AUM de cada fondo"
     }
   ];
 
