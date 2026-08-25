@@ -244,14 +244,17 @@ function renderMonthlyTable() {
 function renderFunds() {
   const m = MODEL;
   const grid = document.getElementById("fund-grid");
+  const newMoneyRows = m.newMoneySemesters.map(s => `
+    <div class="fund-row fund-row-detail"><span>· new money ${s.label}</span><span>${(s.pct * 100).toFixed(2)}%</span></div>
+  `).join("");
   grid.innerHTML = m.funds.map(f => `
     <div class="fund-card">
       <h4>${f.name}</h4>
       <div class="fund-row"><span>Fee anual</span><span>${(f.fee_annual_pct * 100).toFixed(2)}%</span></div>
       <div class="fund-row"><span>Rendimiento anual</span><span>${(f.return_annual_pct * 100).toFixed(1)}%</span></div>
-      <div class="fund-row fund-row-divider"><span>Crecimiento mensual del AUM</span><span>${((f.return_monthly_pct + f.newMoney_monthly_pct) * 100).toFixed(2)}%</span></div>
-      <div class="fund-row fund-row-detail"><span>· devengamiento de cartera</span><span>${(f.return_monthly_pct * 100).toFixed(2)}%</span></div>
-      <div class="fund-row fund-row-detail"><span>· new money</span><span>${(f.newMoney_monthly_pct * 100).toFixed(2)}%</span></div>
+      <div class="fund-row fund-row-divider"><span>Devengamiento de cartera (mensual)</span><span>${(f.return_monthly_pct * 100).toFixed(2)}%</span></div>
+      <div class="fund-row fund-row-divider"><span>Captación de dinero nuevo (mensual, por semestre)</span><span></span></div>
+      ${newMoneyRows}
       <div class="fund-row fund-row-divider"><span>AUM a fin de Año 1 (2027)</span><span>${fmtUSD(f.aumEndOfYear_usd["2027"])}</span></div>
       <div class="fund-row fund-row-detail"><span>· en pesos</span><span>${fmtARS(f.aumEndOfYear_ars["2027"])}</span></div>
       <div class="fund-row fund-row-divider"><span>AUM a fin de Año 2 (2028)</span><span>${fmtUSD(f.aumEndOfYear_usd["2028"])}</span></div>

@@ -247,18 +247,26 @@ const INPUTS = {
   ],
 
   // return_monthly_pct = devengamiento de cartera (rendimiento del fondo) por mes, sin cambios.
-  // newMoney_monthly_pct = captación de dinero nuevo por mes: en esta versión del Sheet ya no es
-  // un valor fijo del 5%, sino que escalona en 4 semestres (ene-27 a dic-28): 2.50% / 3.50% /
-  // 4.50% / 5.50%, igual para los 4 fondos. Se muestra el promedio de los 4 semestres (4.00%)
-  // como aproximación de una sola cifra — el detalle por semestre no se modela en el dashboard.
+  // La captación de dinero nuevo (new money) ya no es un valor fijo del 5%: escalona en 4
+  // semestres (ene-27 a dic-28), igual para los 4 fondos — ver newMoneySemesters más abajo.
   // aumEndOfYear_ars = AUM de este fondo a Dic-27 (Año 1) y Dic-28 (Año 2), tomado de la serie
   // mensual de AUM por fondo de la hoja "Resultado económico" (misma fuente que aum_total_ars).
   // La suma de los 4 fondos en cada año coincide exactamente con aum_total_ars de ese mes.
   funds: [
-    { name: "Money Market $", aum_projected_ars: 37605451141.76, fee_annual_pct: 0.0181, return_annual_pct: 0.3004, return_monthly_pct: 0.0250, newMoney_monthly_pct: 0.0400, aumEndOfYear_ars: { "2027": 63899862195, "2028": 152232268656 } },
-    { name: "Renta Fija $", aum_projected_ars: 4780009363.52, fee_annual_pct: 0.0210, return_annual_pct: 0.4280, return_monthly_pct: 0.0357, newMoney_monthly_pct: 0.0400, aumEndOfYear_ars: { "2027": 12386969681, "2028": 33209921654 } },
-    { name: "Renta Fija USD", aum_projected_ars: 7321523514.97, fee_annual_pct: 0.0140, return_annual_pct: 0.3423, return_monthly_pct: 0.0285, newMoney_monthly_pct: 0.0400, aumEndOfYear_ars: { "2027": 16920901376, "2028": 41911199166 } },
-    { name: "Renta Variable $", aum_projected_ars: 959285181.66, fee_annual_pct: 0.0290, return_annual_pct: 0.5283, return_monthly_pct: 0.0440, newMoney_monthly_pct: 0.0400, aumEndOfYear_ars: { "2027": 2839525449, "2028": 8346767054 } }
+    { name: "Money Market $", aum_projected_ars: 37605451141.76, fee_annual_pct: 0.0181, return_annual_pct: 0.3004, return_monthly_pct: 0.0250, aumEndOfYear_ars: { "2027": 63899862195, "2028": 152232268656 } },
+    { name: "Renta Fija $", aum_projected_ars: 4780009363.52, fee_annual_pct: 0.0210, return_annual_pct: 0.4280, return_monthly_pct: 0.0357, aumEndOfYear_ars: { "2027": 12386969681, "2028": 33209921654 } },
+    { name: "Renta Fija USD", aum_projected_ars: 7321523514.97, fee_annual_pct: 0.0140, return_annual_pct: 0.3423, return_monthly_pct: 0.0285, aumEndOfYear_ars: { "2027": 16920901376, "2028": 41911199166 } },
+    { name: "Renta Variable $", aum_projected_ars: 959285181.66, fee_annual_pct: 0.0290, return_annual_pct: 0.5283, return_monthly_pct: 0.0440, aumEndOfYear_ars: { "2027": 2839525449, "2028": 8346767054 } }
+  ],
+
+  // Tasa mensual de captación de dinero nuevo (new money), igual para los 4 fondos, escalonada
+  // en 4 semestres desde el lanzamiento (ene-27) hasta fin del horizonte (dic-28). Fuente: hoja
+  // "Supuestos" del Sheet, fila "Tasa NM 1S/2S/3S/4S".
+  newMoneySemesters: [
+    { label: "1S · ene-jun 2027", pct: 0.025 },
+    { label: "2S · jul-dic 2027", pct: 0.035 },
+    { label: "3S · ene-jun 2028", pct: 0.045 },
+    { label: "4S · jul-dic 2028", pct: 0.055 }
   ],
 
   timeline: {

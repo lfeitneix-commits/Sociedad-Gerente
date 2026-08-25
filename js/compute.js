@@ -373,6 +373,7 @@ function computeModel(inputs) {
     regulatory,
     neixAumHoy: inputs.neixAumHoy,
     pasosASeguir: inputs.pasosASeguir,
+    newMoneySemesters: inputs.newMoneySemesters,
     industryContext: inputs.industryContext,
     initialInvestmentItems: inputs.initialInvestmentItems,
     timeline,
