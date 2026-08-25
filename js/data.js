@@ -203,18 +203,27 @@ const INPUTS = {
   // Contexto (Resumen): tamaño de la industria de FCI y AUM que Neix gestiona HOY, y cómo se
   // distribuye por canal y por tipo de fondo. Fuente: deck interno "Neix Asset Management —
   // Proyección Interna, Agosto 2026".
+  // totalIndustriaArs/bancariasArs/independientesArs: el deck escribe "$108.585 millones" pero
+  // eso trunca 3 ceros — la hoja "Industria - mensual 2026" (fuente: CAFCI) tiene la columna en
+  // "Millones de Pesos" y el total de jul-26 es 108.585.000 en esa unidad, o sea $108.585
+  // billones (millones de millones), no $108.585 mil millones. Corregido acá; bancarias/
+  // independientes escalan igual (guardan el mismo 59.8%/40.2% del deck). neixAumArs NO se
+  // escala — es la cifra propia de Neix, no sale de esa tabla de industria, y a esta escala
+  // corregida su participación real da ~0.047% (recalculada; el deck dice "0.12%", que no
+  // cierra ni con su propia cifra de industria sin corregir ni con la corregida — se prioriza
+  // el cálculo propio, consistente con el resto del dashboard, sobre el texto suelto del deck).
   industryContext: {
     fechaReferencia: "jul-26",
-    totalIndustriaArs: 108585000000,
-    bancariasArs: 64721000000,
+    totalIndustriaArs: 108585000000000,
+    bancariasArs: 64721000000000,
     bancariasPct: 0.598,
-    independientesArs: 43577000000,
+    independientesArs: 43577000000000,
     independientesPct: 0.402,
     periodoFlujos: "ago-25 a jul-26",
     flujoNetoIndependientesPct: 0.20,
     flujoNetoBancariasPct: 0.13,
     neixAumArs: 50666000000,
-    neixMarketSharePct: 0.0012
+    neixMarketSharePct: 0.000467
   },
   neixAumHoy: {
     totalArs: 50666000000,

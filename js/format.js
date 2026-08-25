@@ -10,6 +10,9 @@ const fmtUSD = (v, opts = {}) => {
 const fmtARS = (v, opts = {}) => {
   const abs = Math.abs(v);
   const sign = v < 0 ? "-" : "";
+  // billones = millones de millones (10^12) — solo aparece en cifras de industria (CAFCI), nunca
+  // en el modelo propio de la SG (que no pasa de los cientos de miles de millones).
+  if (abs >= 1e12) return `${sign}$ ${(abs / 1e12).toFixed(opts.decimals ?? 1)} billones ARS`;
   if (abs >= 1e9) return `${sign}$ ${(abs / 1e9).toFixed(opts.decimals ?? 1)}MM ARS`;
   if (abs >= 1e6) return `${sign}$ ${(abs / 1e6).toFixed(opts.decimals ?? 1)}M ARS`;
   return `${sign}$ ${abs.toLocaleString("es-AR", { maximumFractionDigits: 0 })} ARS`;
