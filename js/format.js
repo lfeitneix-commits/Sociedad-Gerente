@@ -7,32 +7,25 @@ const fmtUSD = (v, opts = {}) => {
   if (abs >= 1e3) return `${sign}US$ ${(abs / 1e3).toFixed(0)}K`;
   return `${sign}US$ ${abs.toLocaleString("es-AR", { maximumFractionDigits: 0 })}`;
 };
-// "MM" nunca pasa de aquí: no hay ningún tier de "billones" en el dashboard — genera demasiada
-// confusión de unidades (¿miles de millones? ¿millones de millones?). Cifras que llegan a esa
-// escala (industria, AUM) se muestran con fmtARSMillones en vez de con esta función.
+// Siempre en millones ("M"), nunca "MM" ni "billones": esas siglas significan cosas distintas
+// según el país/la plaza y generan dudas. "M" (millón, sin ambigüedad) con separador de miles
+// es clara a cualquier escala. Si el número en millones ya pasa de 1.000, se redondea sin
+// decimal (a esa magnitud el decimal no aporta); si es más chico, mantiene 1 decimal.
 const fmtARS = (v, opts = {}) => {
   const abs = Math.abs(v);
   const sign = v < 0 ? "-" : "";
-  if (abs >= 1e9) {
-    const mm = abs / 1e9;
-    // A esta escala (industria) el valor en MM ya pasa de 1.000: se agrupa con separador de
-    // miles y se redondea (sin decimal, que a esa magnitud no aporta) para que se lea
-    // "108.585MM" y no "108585.0MM". Valores más chicos (costos, etc.) mantienen el decimal.
-    const mmText = mm >= 1000 ? Math.round(mm).toLocaleString("es-AR") : mm.toFixed(opts.decimals ?? 1);
-    return `${sign}$ ${mmText}MM ARS`;
+  if (abs >= 1e6) {
+    const millones = abs / 1e6;
+    const text = millones >= 1000
+      ? Math.round(millones).toLocaleString("es-AR")
+      : millones.toFixed(opts.decimals ?? 1);
+    return `${sign}$ ${text} M ARS`;
   }
-  if (abs >= 1e6) return `${sign}$ ${(abs / 1e6).toFixed(opts.decimals ?? 1)}M ARS`;
   return `${sign}$ ${abs.toLocaleString("es-AR", { maximumFractionDigits: 0 })} ARS`;
 };
 
-// Para AUM, patrimonio de industria y otras cifras grandes en pesos: siempre en millones ("M"),
-// con separador de miles, nunca abreviado a MM/billones. "M" con separador de miles es
-// inequívoco a cualquier escala, y es como la propia planilla y el deck expresan estas cifras.
-const fmtARSMillones = (v) => {
-  const abs = Math.abs(v);
-  const sign = v < 0 ? "-" : "";
-  return `${sign}$ ${Math.round(abs / 1e6).toLocaleString("es-AR")} M ARS`;
-};
+// Alias histórico — fmtARS ya siempre expresa en millones.
+const fmtARSMillones = fmtARS;
 
 const MONTH_EN_TO_ES = { Jan: "Ene", Feb: "Feb", Mar: "Mar", Apr: "Abr", May: "May", Jun: "Jun", Jul: "Jul", Aug: "Ago", Sep: "Sep", Oct: "Oct", Nov: "Nov", Dec: "Dic" };
 const MONTH_ES_NAME_TO_EN = {
