@@ -7,22 +7,20 @@ const fmtUSD = (v, opts = {}) => {
   if (abs >= 1e3) return `${sign}US$ ${(abs / 1e3).toFixed(0)}K`;
   return `${sign}US$ ${abs.toLocaleString("es-AR", { maximumFractionDigits: 0 })}`;
 };
+// "MM" nunca pasa de aquí: no hay ningún tier de "billones" en el dashboard — genera demasiada
+// confusión de unidades (¿miles de millones? ¿millones de millones?). Cifras que llegan a esa
+// escala (industria, AUM) se muestran con fmtARSMillones en vez de con esta función.
 const fmtARS = (v, opts = {}) => {
   const abs = Math.abs(v);
   const sign = v < 0 ? "-" : "";
-  // billones = millones de millones (10^12) — solo aparece en cifras de industria (CAFCI), nunca
-  // en el modelo propio de la SG (que no pasa de los cientos de miles de millones).
-  if (abs >= 1e12) return `${sign}$ ${(abs / 1e12).toFixed(opts.decimals ?? 1)} billones ARS`;
   if (abs >= 1e9) return `${sign}$ ${(abs / 1e9).toFixed(opts.decimals ?? 1)}MM ARS`;
   if (abs >= 1e6) return `${sign}$ ${(abs / 1e6).toFixed(opts.decimals ?? 1)}M ARS`;
   return `${sign}$ ${abs.toLocaleString("es-AR", { maximumFractionDigits: 0 })} ARS`;
 };
 
-// AUM en pesos: siempre en millones ("M"), nunca abreviado a MM/billones — a diferencia de
-// fmtARS, que sí usa esos tiers para otras cifras (costos, industria, etc.). El AUM del modelo
-// se mueve entre cientos de millones y algunos cientos de miles de millones de pesos, un rango
-// donde "MM" (¿miles de millones? ¿millones de millones?) genera dudas — "M" con separador de
-// miles es inequívoco y es como la propia planilla y el deck expresan el AUM.
+// Para AUM, patrimonio de industria y otras cifras grandes en pesos: siempre en millones ("M"),
+// con separador de miles, nunca abreviado a MM/billones. "M" con separador de miles es
+// inequívoco a cualquier escala, y es como la propia planilla y el deck expresan estas cifras.
 const fmtARSMillones = (v) => {
   const abs = Math.abs(v);
   const sign = v < 0 ? "-" : "";
