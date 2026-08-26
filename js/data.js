@@ -230,9 +230,10 @@ const INPUTS = {
   // aumEndOfYear_ars = AUM de este fondo a Dic-27 (Año 1) y Dic-28 (Año 2), tomado de la serie
   // mensual de AUM por fondo de la hoja "Resultado económico" (misma fuente que aum_total_ars).
   // Desde esta versión, la suma de estos 4 fondos YA NO coincide con aum_total_ars: el Sheet
-  // suma además una línea nueva "Fondos dedicados" (mandatos institucionales, arrancan en
-  // abr-27 con $10.000M ARS y fee anual 0,80%, no descriptos en el deck) que explica la
-  // diferencia — a dic-28, por ejemplo, "Fondos dedicados" agrega $73.122MM ARS más.
+  // suma además una línea nueva "Fondos dedicados" (mandatos institucionales, ver detalle en
+  // otrosSupuestos: 4 fondos de $10.000 M ARS cada uno, 2 en 2027 y 2 en 2028, fee anual 0,80%,
+  // no descriptos en el deck) que explica la diferencia — a dic-28, por ejemplo, "Fondos
+  // dedicados" agrega $73.122 M ARS más.
   funds: [
     { name: "Money Market $", aum_projected_ars: 37605451141.76, fee_annual_pct: 0.0181, return_annual_pct: 0.2630, return_monthly_pct: 0.0219, aumEndOfYear_ars: { "2027": 86801760301, "2028": 199711980679 } },
     { name: "Renta Fija $", aum_projected_ars: 4780009363.52, fee_annual_pct: 0.0210, return_annual_pct: 0.3000, return_monthly_pct: 0.0250, aumEndOfYear_ars: { "2027": 11597015262, "2028": 27617949282 } },
@@ -386,7 +387,7 @@ const INPUTS = {
     },
     {
       titulo: "Fondos dedicados (mandatos institucionales)",
-      detalle: "El modelo suma, además de los cuatro fondos, una línea de \"Fondos dedicados\" que arranca en abril de 2027 con $10.000M ARS y crece con altas periódicas de nuevos mandatos, con un fee anual del 0,80%. No está descripta en el deck; sale de la hoja de cálculo del modelo y ya está incluida en el AUM total y en los ingresos proyectados."
+      detalle: "Además de los cuatro fondos, se supone incorporar cuatro fondos dedicados nuevos, de $10.000 M ARS de AUM cada uno: dos en 2027 (abril y septiembre) y dos en 2028 (abril y septiembre), con un fee anual del 0,80%. No están descriptos en el deck; salen de la hoja de cálculo del modelo y ya están incluidos en el AUM total y en los ingresos proyectados."
     },
     {
       titulo: "Fee de la Sociedad Gerente",
