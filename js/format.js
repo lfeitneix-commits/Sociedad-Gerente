@@ -13,7 +13,14 @@ const fmtUSD = (v, opts = {}) => {
 const fmtARS = (v, opts = {}) => {
   const abs = Math.abs(v);
   const sign = v < 0 ? "-" : "";
-  if (abs >= 1e9) return `${sign}$ ${(abs / 1e9).toFixed(opts.decimals ?? 1)}MM ARS`;
+  if (abs >= 1e9) {
+    const mm = abs / 1e9;
+    // A esta escala (industria) el valor en MM ya pasa de 1.000: se agrupa con separador de
+    // miles y se redondea (sin decimal, que a esa magnitud no aporta) para que se lea
+    // "108.585MM" y no "108585.0MM". Valores más chicos (costos, etc.) mantienen el decimal.
+    const mmText = mm >= 1000 ? Math.round(mm).toLocaleString("es-AR") : mm.toFixed(opts.decimals ?? 1);
+    return `${sign}$ ${mmText}MM ARS`;
+  }
   if (abs >= 1e6) return `${sign}$ ${(abs / 1e6).toFixed(opts.decimals ?? 1)}M ARS`;
   return `${sign}$ ${abs.toLocaleString("es-AR", { maximumFractionDigits: 0 })} ARS`;
 };
