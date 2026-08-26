@@ -387,7 +387,7 @@ const INPUTS = {
     },
     {
       titulo: "Fondos dedicados (mandatos institucionales)",
-      detalle: "Además de los cuatro fondos, se supone incorporar cuatro fondos dedicados nuevos, de $10.000 M ARS de AUM cada uno: dos en 2027 (abril y septiembre) y dos en 2028 (abril y septiembre), con un fee anual del 0,80%. No están descriptos en el deck; salen de la hoja de cálculo del modelo y ya están incluidos en el AUM total y en los ingresos proyectados."
+      detalle: "Además de los cuatro fondos, se supone incorporar cuatro fondos dedicados nuevos, de $10.000 M ARS de AUM cada uno: dos en 2027 (abril y septiembre) y dos en 2028 (abril y octubre), con un fee anual del 0,80%. No están descriptos en el deck; salen de la hoja de cálculo del modelo y ya están incluidos en el AUM total y en los ingresos proyectados."
     },
     {
       titulo: "Fee de la Sociedad Gerente",
