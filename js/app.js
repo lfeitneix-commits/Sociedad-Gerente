@@ -179,7 +179,7 @@ function renderNeixAumHoy() {
 
   let industryHtml = "";
   if (ic) {
-    industryHtml = `<p>Del patrimonio total de la industria de FCI (<strong>${fmtARSMillones(ic.totalIndustriaArs)}</strong> a ${ic.fechaReferencia}), las sociedades gerentes bancarias concentran el <strong>${(ic.bancariasPct * 100).toFixed(1)}%</strong> (${fmtARSMillones(ic.bancariasArs)}) y las independientes el <strong>${(ic.independientesPct * 100).toFixed(1)}%</strong> (${fmtARSMillones(ic.independientesArs)}). En los últimos 12 meses (${ic.periodoFlujos}), las independientes tuvieron suscripciones netas equivalentes al <strong>${(ic.flujoNetoIndependientesPct * 100).toFixed(0)}%</strong> de su patrimonio, contra solo el <strong>${(ic.flujoNetoBancariasPct * 100).toFixed(0)}%</strong> de las bancarias. El AUM de Neix representa una participación del <strong>${(ic.neixMarketSharePct * 100).toFixed(2)}%</strong> de la industria.</p>`;
+    industryHtml = `<p>Del patrimonio total de la industria de FCI (<strong>${fmtARS(ic.totalIndustriaArs)}</strong> a ${ic.fechaReferencia}), las sociedades gerentes bancarias concentran el <strong>${(ic.bancariasPct * 100).toFixed(1)}%</strong> (${fmtARS(ic.bancariasArs)}) y las independientes el <strong>${(ic.independientesPct * 100).toFixed(1)}%</strong> (${fmtARS(ic.independientesArs)}). En los últimos 12 meses (${ic.periodoFlujos}), las independientes tuvieron suscripciones netas equivalentes al <strong>${(ic.flujoNetoIndependientesPct * 100).toFixed(0)}%</strong> de su patrimonio, contra solo el <strong>${(ic.flujoNetoBancariasPct * 100).toFixed(0)}%</strong> de las bancarias. El AUM de Neix representa una participación del <strong>${(ic.neixMarketSharePct * 100).toFixed(2)}%</strong> de la industria.</p>`;
   }
 
   let neixHtml = "";
