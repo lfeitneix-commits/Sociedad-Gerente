@@ -1,5 +1,5 @@
 /* Hand-built inline-SVG charts. No external chart library / no CDN dependency.
- * fmtUSD/fmtARS come from js/format.js (loaded before this file). */
+ * fmtUSD/fmtARS/fmtARSMillones come from js/format.js (loaded before this file). */
 
 let tooltipEl = null;
 function getTooltip() {
@@ -79,7 +79,7 @@ function renderAumChart(containerId, model) {
     const gy = y(val);
     svg.appendChild(el("line", { x1: padL, x2: W - padR, y1: gy, y2: gy, stroke: "var(--gridline)", "stroke-width": 1 }));
     const label = el("text", { x: padL - 8, y: gy + 4, "text-anchor": "end", "font-size": 10.5, fill: "var(--text-muted)" });
-    label.textContent = fmtARS(val, { decimals: 0 });
+    label.textContent = `${Math.round(val / 1e6).toLocaleString("es-AR")} M`;
     svg.appendChild(label);
   });
 
@@ -88,7 +88,7 @@ function renderAumChart(containerId, model) {
   const beLine = el("line", { x1: padL, x2: W - padR, y1: beY, y2: beY, stroke: "var(--series-ref)", "stroke-width": 2, "stroke-dasharray": "5 4" });
   svg.appendChild(beLine);
   const beLabel = el("text", { x: W - padR, y: beY - 6, "text-anchor": "end", "font-size": 11, "font-weight": 650, fill: "var(--series-ref)" });
-  beLabel.textContent = `Break-even: ${fmtARS(breakEven)}`;
+  beLabel.textContent = `Break-even: ${fmtARSMillones(breakEven)}`;
   svg.appendChild(beLabel);
 
   // x-axis month labels (every 3rd month)
@@ -154,7 +154,7 @@ function renderAumChart(containerId, model) {
     crosshair.setAttribute("x1", x(idx)); crosshair.setAttribute("x2", x(idx)); crosshair.setAttribute("opacity", 1);
     hoverDot.setAttribute("cx", x(idx)); hoverDot.setAttribute("cy", y(p.ars)); hoverDot.setAttribute("opacity", 1);
     const aboveBE = p.ars >= breakEven;
-    showTooltip(e.clientX, e.clientY, `<div class="tt-row"><span>${p.m}</span></div><div class="tt-row"><span>AUM total</span><span class="tt-value">${fmtARS(p.ars)}</span></div><div class="tt-row"><span>${fmtUSD(p.usd)}</span></div><div class="tt-row"><span>${aboveBE ? "Sobre" : "Bajo"} break-even</span></div>`);
+    showTooltip(e.clientX, e.clientY, `<div class="tt-row"><span>${p.m}</span></div><div class="tt-row"><span>AUM total</span><span class="tt-value">${fmtARSMillones(p.ars)}</span></div><div class="tt-row"><span>${fmtUSD(p.usd)}</span></div><div class="tt-row"><span>${aboveBE ? "Sobre" : "Bajo"} break-even</span></div>`);
   });
   overlay.addEventListener("pointerleave", () => { crosshair.setAttribute("opacity", 0); hoverDot.setAttribute("opacity", 0); hideTooltip(); });
   svg.appendChild(overlay);

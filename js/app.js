@@ -39,7 +39,7 @@ function breakEvenStatHtml(m) {
   return `
     <div class="hero-stat">
       <p class="hero-stat-label">AUM break-even</p>
-      <div class="hero-stat-value">${fmtARS(m.kpis.breakEven.ars)}</div>
+      <div class="hero-stat-value">${fmtARSMillones(m.kpis.breakEven.ars)}</div>
       <p class="hero-stat-sub">${fmtUSD(m.kpis.breakEven.usd)}</p>
     </div>
   `;
@@ -105,7 +105,7 @@ function renderYearSummary() {
   const rows = MODEL.years.map(y => `
     <tr>
       <td>${y.label} · ${y.year}</td>
-      <td class="num">${y.aum_end_ars != null ? `${fmtARS(y.aum_end_ars)}<span class="ars-sub">${fmtUSD(y.aum_end_usd)}</span>` : "—"}</td>
+      <td class="num">${y.aum_end_ars != null ? `${fmtARSMillones(y.aum_end_ars)}<span class="ars-sub">${fmtUSD(y.aum_end_usd)}</span>` : "—"}</td>
       <td class="num"><span class="${y.result_usd >= 0 ? "pos-text" : "neg-text"}">${fmtUSD(y.result_usd)}</span></td>
       <td class="num"><span class="${y.result_usd_cum >= 0 ? "pos-text" : "neg-text"}">${fmtUSD(y.result_usd_cum)}</span></td>
     </tr>
@@ -287,9 +287,9 @@ function renderFunds() {
       <div class="fund-row fund-row-divider"><span>Captación de dinero nuevo (mensual, por semestre)</span><span></span></div>
       ${newMoneyRows}
       <div class="fund-row fund-row-divider"><span>AUM a fin de Año 1 (2027)</span><span>${fmtUSD(f.aumEndOfYear_usd["2027"])}</span></div>
-      <div class="fund-row fund-row-detail"><span>· en pesos</span><span>${fmtARS(f.aumEndOfYear_ars["2027"])}</span></div>
+      <div class="fund-row fund-row-detail"><span>· en pesos</span><span>${fmtARSMillones(f.aumEndOfYear_ars["2027"])}</span></div>
       <div class="fund-row fund-row-divider"><span>AUM a fin de Año 2 (2028)</span><span>${fmtUSD(f.aumEndOfYear_usd["2028"])}</span></div>
-      <div class="fund-row fund-row-detail"><span>· en pesos</span><span>${fmtARS(f.aumEndOfYear_ars["2028"])}</span></div>
+      <div class="fund-row fund-row-detail"><span>· en pesos</span><span>${fmtARSMillones(f.aumEndOfYear_ars["2028"])}</span></div>
     </div>
   `).join("");
 

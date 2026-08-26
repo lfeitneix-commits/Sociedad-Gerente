@@ -18,6 +18,17 @@ const fmtARS = (v, opts = {}) => {
   return `${sign}$ ${abs.toLocaleString("es-AR", { maximumFractionDigits: 0 })} ARS`;
 };
 
+// AUM en pesos: siempre en millones ("M"), nunca abreviado a MM/billones — a diferencia de
+// fmtARS, que sí usa esos tiers para otras cifras (costos, industria, etc.). El AUM del modelo
+// se mueve entre cientos de millones y algunos cientos de miles de millones de pesos, un rango
+// donde "MM" (¿miles de millones? ¿millones de millones?) genera dudas — "M" con separador de
+// miles es inequívoco y es como la propia planilla y el deck expresan el AUM.
+const fmtARSMillones = (v) => {
+  const abs = Math.abs(v);
+  const sign = v < 0 ? "-" : "";
+  return `${sign}$ ${Math.round(abs / 1e6).toLocaleString("es-AR")} M ARS`;
+};
+
 const MONTH_EN_TO_ES = { Jan: "Ene", Feb: "Feb", Mar: "Mar", Apr: "Abr", May: "May", Jun: "Jun", Jul: "Jul", Aug: "Ago", Sep: "Sep", Oct: "Oct", Nov: "Nov", Dec: "Dic" };
 const MONTH_ES_NAME_TO_EN = {
   enero: "Jan", febrero: "Feb", marzo: "Mar", abril: "Apr", mayo: "May", junio: "Jun",

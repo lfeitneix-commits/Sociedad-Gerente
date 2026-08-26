@@ -239,7 +239,7 @@ function computeTimeline(inputs, aumSeries, paybackKey) {
     breakEven: {
       label: "Break-even de AUM",
       date: crossLabel ? `${crossLabel.split("-")[0]}-20${crossLabel.split("-")[1]}` : "—",
-      detail: `El AUM gestionado supera por primera vez el umbral de equilibrio (${fmtARS(aumSeries.breakEvenArs)}).`
+      detail: `El AUM gestionado supera por primera vez el umbral de equilibrio (${fmtARSMillones(aumSeries.breakEvenArs)}).`
     },
     payback: {
       label: "Recupero de la inversión",
